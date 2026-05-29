@@ -217,6 +217,23 @@ body {
   box-shadow: var(--shadow);
 }
 
+/* Reading lines — plain guide text, not a copyable card */
+.item--read {
+  background: transparent;
+  border-color: transparent;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.item--read:hover {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.item--read .item-num {
+  color: var(--accent);
+}
+
 .item-num {
   align-self: flex-start;
   font-size: 12px;

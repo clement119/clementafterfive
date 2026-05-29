@@ -12,9 +12,11 @@
  *     sections: [                           // collapsible groups
  *       {
  *         title: "Section name",
- *         items: [                          // each item gets a copy button
- *           "A prompt or note line.",
- *           ...
+ *         items: [
+ *           // An item can be any of these:
+ *           "A prompt.",                    //  string  -> copyable prompt
+ *           { prompt: "A prompt." },        //  prompt  -> copyable prompt
+ *           { text: "A guide line." },      //  text    -> plain, NOT copyable
  *         ]
  *       }
  *     ],
@@ -90,24 +92,33 @@ const journal = [
       {
         title: "The trap",
         items: [
-          "A single huge task — even with lots of context — makes the agent burn time and tokens just figuring out how to break it down, often running out of credits before it delivers.",
-          "Sites with anti-crawl blockers quietly defeat any \"do it all at once\" attempt.",
+          { text: "A single huge task — even with lots of context — makes the agent burn time and tokens just figuring out how to break it down, often running out of credits before it delivers." },
+          { text: "Sites with anti-crawl blockers quietly defeat any \"do it all at once\" attempt." },
         ],
       },
       {
         title: "Do this instead",
         items: [
-          "Split the work into small, sequential steps.",
-          "Add a checkpoint after each step — review the output and confirm before continuing.",
-          "End with one step that integrates all the pieces into a single result.",
+          { text: "Split the work into small, sequential steps." },
+          { text: "Add a checkpoint after each step — review the output and confirm before continuing." },
+          { text: "End with one step that integrates all the pieces into a single result." },
         ],
       },
       {
         title: "Example — scraping 400+ URLs",
         items: [
-          "First, ask the agent to extract only the list of sub-section URLs (~400).",
-          "Then process them in batches, pausing every 50 to verify the output is correct.",
-          "Once all 400 are done, ask it to merge every batch into one integrated document.",
+          { text: "First, ask the agent to extract only the list of sub-section URLs (~400)." },
+          { text: "Then process them in batches, pausing every 50 to verify the output is correct." },
+          { text: "Once all 400 are done, ask it to merge every batch into one integrated document." },
+        ],
+      },
+      {
+        title: "Kick it off — copy this prompt",
+        items: [
+          {
+            prompt:
+              "I have a large task for you. Don't start it yet. First, brainstorm and think through how this task should be broken down into smaller, sequential sub-tasks. Give me the breakdown as a numbered plan, flag any steps that might hit blockers or should run in batches, and wait for my confirmation before you begin step one. Here's the task: [describe your task].",
+          },
         ],
       },
     ],

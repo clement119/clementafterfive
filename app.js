@@ -142,9 +142,20 @@
   }
 
   /* ---------------- Rendering ---------------- */
-  function buildItem(text, i) {
-    const item = document.createElement("div");
-    item.className = "item";
+  // Items can be a plain string (copyable prompt), { prompt } (copyable),
+  // or { text } (plain reading line, not copyable).
+  function normalizeItem(item) {
+    if (typeof item === "string") return { text: item, copyable: true };
+    if (item && item.prompt != null) return { text: item.prompt, copyable: true };
+    if (item && item.text != null) return { text: item.text, copyable: item.copy === true };
+    return { text: String(item), copyable: false };
+  }
+
+  function buildItem(item, i) {
+    const { text, copyable } = normalizeItem(item);
+
+    const el = document.createElement("div");
+    el.className = copyable ? "item" : "item item--read";
 
     const num = document.createElement("span");
     num.className = "item-num";
@@ -154,15 +165,19 @@
     p.className = "item-text";
     p.textContent = text;
 
-    const btn = document.createElement("button");
-    btn.className = "copy-btn";
-    btn.type = "button";
-    btn.setAttribute("aria-label", "Copy to clipboard");
-    btn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
-    btn.addEventListener("click", () => copyText(text, btn));
+    el.append(num, p);
 
-    item.append(num, p, btn);
-    return item;
+    if (copyable) {
+      const btn = document.createElement("button");
+      btn.className = "copy-btn";
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Copy to clipboard");
+      btn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+      btn.addEventListener("click", () => copyText(text, btn));
+      el.append(btn);
+    }
+
+    return el;
   }
 
   function buildSection(section, openByDefault) {
