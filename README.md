@@ -1,9 +1,18 @@
 # Learning Journal
 
 A minimalist, vibe-coded journal for the things worth keeping. Browse notes by
-dimension, expand a section, and copy any line with one click.
+dimension, expand a section, and copy any line with one click — built to nudge
+you from reading to *doing*.
 
 No build step, no dependencies. Open `index.html` in a browser.
+
+**Live:** https://clement119.github.io/clementafterfive/ (deploys automatically
+on every push via GitHub Actions — see [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml)).
+
+## Settings
+
+A gear icon (top-right) opens settings. Dark mode lives there — your choice is
+remembered, and it follows your system preference until you override it.
 
 ## Adding a note
 
