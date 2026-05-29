@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learning Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;450;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="masthead">
+        <p class="eyebrow">Learning Journal</p>
+        <h1 id="note-title">—</h1>
+        <p class="subtitle" id="note-subtitle"></p>
+        <p class="meta" id="note-meta"></p>
+      </header>
+
+      <nav class="dimensions" id="dimensions" aria-label="Dimensions"></nav>
+
+      <main id="content"></main>
+
+      <footer class="colophon" id="note-footer"></footer>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
