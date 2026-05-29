@@ -11,7 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;450;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=5" />
   </head>
   <body>
     <!-- Settings -->
@@ -65,7 +65,24 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
 
-    <script src="data.js"></script>
-    <script src="app.js"></script>
+    <!--
+      Load scripts with a cache-busting query so new notes always show up
+      immediately, even though GitHub Pages caches static files. data.js must
+      load before app.js.
+    -->
+    <script>
+      (function () {
+        var v = Date.now();
+        function load(src, next) {
+          var s = document.createElement("script");
+          s.src = src + "?v=" + v;
+          s.onload = next || function () {};
+          document.body.appendChild(s);
+        }
+        load("data.js", function () {
+          load("app.js");
+        });
+      })();
+    </script>
   </body>
 </html>
