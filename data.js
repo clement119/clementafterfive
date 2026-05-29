@@ -79,4 +79,39 @@ const journal = [
     footer:
       "Pick 2–3 per piece of content. That's enough to sharpen thinking, improve clarity, and increase performance.",
   },
+
+  {
+    dimension: "Working with AI Agents",
+    title: "Break Big Tasks Into Sequential Steps",
+    subtitle:
+      "Don't hand an agent one mega-task. Chunk it, pause to review, then proceed.",
+    date: "2026-05-29",
+    sections: [
+      {
+        title: "The trap",
+        items: [
+          "A single huge task — even with lots of context — makes the agent burn time and tokens just figuring out how to break it down, often running out of credits before it delivers.",
+          "Sites with anti-crawl blockers quietly defeat any \"do it all at once\" attempt.",
+        ],
+      },
+      {
+        title: "Do this instead",
+        items: [
+          "Split the work into small, sequential steps.",
+          "Add a checkpoint after each step — review the output and confirm before continuing.",
+          "End with one step that integrates all the pieces into a single result.",
+        ],
+      },
+      {
+        title: "Example — scraping 400+ URLs",
+        items: [
+          "First, ask the agent to extract only the list of sub-section URLs (~400).",
+          "Then process them in batches, pausing every 50 to verify the output is correct.",
+          "Once all 400 are done, ask it to merge every batch into one integrated document.",
+        ],
+      },
+    ],
+    footer:
+      "Smaller steps give the agent more context, fewer dead ends, and far less wasted time and spend.",
+  },
 ];
