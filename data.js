@@ -187,9 +187,10 @@ const journal = [
           {
             builder: {
               template:
+                "Source: Animate the provided image. Treat it as the exact first frame and the only visual reference — reproduce every element faithfully and add nothing that isn't already in it.\n" +
                 "Action: {pace} {motion}\n" +
                 "Fidelity: Strictly preserve the original lighting, textures, colors, and structural geometry of the scene. Maintain a clean, high-resolution {style} with {lighting} throughout the entire motion.\n" +
-                "Guardrails: No morphing, warping, or melting of surfaces. No structural distortion, text overlays, watermarks{people}. {focus}",
+                "Guardrails: The only change across the clip is camera movement — introduce no new objects, scenery, or elements. No morphing, warping, or melting of surfaces. No structural distortion, text overlays, watermarks{people}. {focus}",
               controls: [
                 {
                   id: "motion",
