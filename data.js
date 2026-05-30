@@ -125,4 +125,43 @@ const journal = [
     footer:
       "Smaller steps give the agent more context, fewer dead ends, and far less wasted time and spend.",
   },
+
+  {
+    dimension: "Systemize Your Work",
+    title: "Audit, Standardize, Automate",
+    subtitle:
+      "Study the process first: what can be automated, what to keep manual, what to turn into an SOP.",
+    date: "2026-05-30",
+    sections: [
+      {
+        title: "1 — One-hour workflow audit",
+        items: [
+          {
+            prompt:
+              "I am a [your job]. Audit my full workflow and show me how to use Claude to finish in 1 hour what normally takes me much longer. Break it into:\n- tasks Claude can do now\n- tasks I should still do myself\n- the best order to do the work\n- the exact prompts to use at each step\n- one simple workflow I can repeat every week\nKeep it practical and specific to my field.",
+          },
+        ],
+      },
+      {
+        title: "2 — Repetitive task killer",
+        items: [
+          {
+            prompt:
+              "I do these tasks again and again: [list tasks]. Turn them into a Claude system. For each task, give me:\n- the goal\n- the input I need to provide\n- the best prompt\n- the output format\n- how to check quality fast\nMake this feel like a simple playbook.",
+          },
+        ],
+      },
+      {
+        title: "3 — SOP builder",
+        items: [
+          {
+            prompt:
+              "I want to turn this messy process into a clean SOP: [describe process]. Create:\n- a simple step by step SOP\n- a Claude prompt for each step\n- a quality checklist\n- common mistakes to avoid\n- a version I can hand to a teammate or assistant\nUse plain English.",
+          },
+        ],
+      },
+    ],
+    footer:
+      "Run them in order: audit to see the whole picture, kill the repetitive work, then lock it in as an SOP you can hand off.",
+  },
 ];

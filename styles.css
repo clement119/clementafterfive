@@ -249,6 +249,7 @@ body {
   font-size: 15px;
   line-height: 1.5;
   color: var(--ink);
+  white-space: pre-wrap;
 }
 
 /* Action button — reads as a CTA */
