@@ -152,6 +152,8 @@
   }
 
   function buildItem(item, i) {
+    if (item && item.builder) return buildBuilder(item.builder);
+
     const { text, copyable } = normalizeItem(item);
 
     const el = document.createElement("div");
@@ -178,6 +180,83 @@
     }
 
     return el;
+  }
+
+  // Interactive prompt builder: pick options, the prompt assembles live.
+  function buildBuilder(cfg) {
+    const wrap = document.createElement("div");
+    wrap.className = "builder";
+
+    const controls = Array.isArray(cfg.controls) ? cfg.controls : [];
+    const state = {}; // control id -> selected choice index (default 0)
+
+    function assemble() {
+      return cfg.template.replace(/\{(\w+)\}/g, (m, id) => {
+        const ctrl = controls.find((c) => c.id === id);
+        if (!ctrl) return m;
+        const choice = ctrl.choices[state[id] || 0];
+        return choice ? choice.value : "";
+      });
+    }
+
+    const output = document.createElement("p");
+    output.className = "item-text";
+
+    function update() {
+      output.textContent = assemble();
+    }
+
+    controls.forEach((ctrl) => {
+      state[ctrl.id] = 0;
+
+      const group = document.createElement("div");
+      group.className = "builder-control";
+
+      const label = document.createElement("span");
+      label.className = "builder-label";
+      label.textContent = ctrl.label;
+      group.appendChild(label);
+
+      const choices = document.createElement("div");
+      choices.className = "builder-choices";
+
+      ctrl.choices.forEach((choice, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "choice-btn";
+        btn.textContent = choice.label;
+        btn.setAttribute("aria-pressed", idx === 0 ? "true" : "false");
+        btn.addEventListener("click", () => {
+          state[ctrl.id] = idx;
+          choices
+            .querySelectorAll(".choice-btn")
+            .forEach((b) => b.setAttribute("aria-pressed", "false"));
+          btn.setAttribute("aria-pressed", "true");
+          update();
+        });
+        choices.appendChild(btn);
+      });
+
+      group.appendChild(choices);
+      wrap.appendChild(group);
+    });
+
+    // Live output + copy
+    const out = document.createElement("div");
+    out.className = "item builder-output";
+    out.appendChild(output);
+
+    const btn = document.createElement("button");
+    btn.className = "copy-btn";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Copy to clipboard");
+    btn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+    btn.addEventListener("click", () => copyText(assemble(), btn));
+    out.appendChild(btn);
+
+    wrap.appendChild(out);
+    update();
+    return wrap;
   }
 
   function buildSection(section, openByDefault) {
@@ -230,7 +309,8 @@
       }
 
       (note.sections || []).forEach((section, sIdx) => {
-        els.content.appendChild(buildSection(section, noteIdx === 0 && sIdx === 0));
+        const open = section.open === true || (noteIdx === 0 && sIdx === 0);
+        els.content.appendChild(buildSection(section, open));
       });
 
       if (note.footer) footerParts.push(note.footer);

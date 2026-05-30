@@ -17,6 +17,7 @@
  *           "A prompt.",                    //  string  -> copyable prompt
  *           { prompt: "A prompt." },        //  prompt  -> copyable prompt
  *           { text: "A guide line." },      //  text    -> plain, NOT copyable
+ *           { builder: { template, controls } }, // interactive prompt builder
  *         ]
  *       }
  *     ],
@@ -163,5 +164,97 @@ const journal = [
     ],
     footer:
       "Run them in order: audit to see the whole picture, kill the repetitive work, then lock it in as an SOP you can hand off.",
+  },
+
+  {
+    dimension: "Image & Video",
+    title: "Image to Life",
+    subtitle:
+      "Turn any interior, exterior, or concept image into a faithful motion shot — pick your settings, copy the prompt.",
+    date: "2026-05-30",
+    sections: [
+      {
+        title: "How it works",
+        items: [
+          { text: "Treat your image as a rigid, high-fidelity reference — not a starting point to transform. The goal is motion without changing what's in the frame." },
+          { text: "Keep the move simple: wide scene → a slow pan; clear focal point → a slow push-in. The fidelity and guardrail lines stay constant — they're your defense against morphing and artifacts." },
+        ],
+      },
+      {
+        title: "Build your prompt",
+        open: true,
+        items: [
+          {
+            builder: {
+              template:
+                "Action: {pace} {motion}\n" +
+                "Fidelity: Strictly preserve the original lighting, textures, colors, and structural geometry of the scene. Maintain a clean, high-resolution {style} with {lighting} throughout the entire motion.\n" +
+                "Guardrails: No morphing, warping, or melting of surfaces. No structural distortion, text overlays, watermarks{people}. {focus}",
+              controls: [
+                {
+                  id: "motion",
+                  label: "Camera move",
+                  choices: [
+                    { label: "Pan left → right", value: "horizontal camera pan from left to right." },
+                    { label: "Pan right → left", value: "horizontal camera pan from right to left." },
+                    { label: "Tilt up", value: "vertical camera tilt from bottom to top." },
+                    { label: "Tilt down", value: "vertical camera tilt from top to bottom." },
+                    { label: "Push in", value: "forward push-in (zoom) toward the focal point." },
+                    { label: "Pull out", value: "backward pull-out (zoom) revealing the wider scene." },
+                    { label: "Orbit left", value: "orbital arc curving to the left around the subject." },
+                    { label: "Orbit right", value: "orbital arc curving to the right around the subject." },
+                  ],
+                },
+                {
+                  id: "pace",
+                  label: "Pace",
+                  choices: [
+                    { label: "Slow & steady", value: "Slow, steady" },
+                    { label: "Smooth moderate", value: "Smooth, moderate-speed" },
+                    { label: "Dynamic", value: "Dynamic, brisk" },
+                  ],
+                },
+                {
+                  id: "style",
+                  label: "Showcase style",
+                  choices: [
+                    { label: "Architectural", value: "architectural showcase style" },
+                    { label: "Cinematic reveal", value: "cinematic reveal style" },
+                    { label: "Product hero", value: "product hero style" },
+                  ],
+                },
+                {
+                  id: "lighting",
+                  label: "Lighting",
+                  choices: [
+                    { label: "Keep as-is", value: "consistent illumination" },
+                    { label: "Daylight", value: "consistent natural daylight" },
+                    { label: "Night & mood", value: "consistent night and mood lighting" },
+                  ],
+                },
+                {
+                  id: "people",
+                  label: "People",
+                  choices: [
+                    { label: "Exclude", value: ", or people" },
+                    { label: "Allow", value: "" },
+                  ],
+                },
+                {
+                  id: "focus",
+                  label: "Focus",
+                  choices: [
+                    { label: "Sharp everywhere", value: "Prevent any depth-of-field blurring; maintain sharp, crisp focus across all planes throughout the movement." },
+                    { label: "Cinematic depth", value: "Allow a gentle, cinematic depth of field on the focal point while keeping all surfaces stable and undistorted." },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+    footer:
+      "The fidelity and guardrail core stays fixed for every image — only the motion and a few finishing choices change.",
   },
 ];

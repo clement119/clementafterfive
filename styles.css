@@ -295,6 +295,72 @@ body {
   color: var(--ok);
 }
 
+/* ---------- Prompt builder ---------- */
+.builder {
+  display: grid;
+  gap: 18px;
+  padding: 4px 0 2px;
+}
+
+.builder-control {
+  display: grid;
+  gap: 8px;
+}
+
+.builder-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.builder-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.choice-btn {
+  appearance: none;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.choice-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.choice-btn[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+.builder-output {
+  margin-top: 6px;
+  background: var(--accent-soft);
+  border-color: transparent;
+  align-items: center;
+}
+
+.builder-output:hover {
+  box-shadow: none;
+}
+
+.builder-output .item-text {
+  font-size: 14.5px;
+}
+
 /* ---------- Footer ---------- */
 .colophon {
   margin-top: 48px;
