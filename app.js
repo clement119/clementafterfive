@@ -183,61 +183,100 @@
   }
 
   // Interactive prompt builder: pick options, the prompt assembles live.
+  // Controls are choice pills by default, or { type: "input" } for free text.
+  // A control with { showWhen: { otherId: index } } only appears for that choice.
   function buildBuilder(cfg) {
     const wrap = document.createElement("div");
     wrap.className = "builder";
 
     const controls = Array.isArray(cfg.controls) ? cfg.controls : [];
-    const state = {}; // control id -> selected choice index (default 0)
+    const state = {}; // id -> selected choice index, or input string
+    const groups = {}; // id -> control's DOM wrapper (for show/hide)
 
+    function resolve(id) {
+      const ctrl = controls.find((c) => c.id === id);
+      if (!ctrl) return null;
+      if (ctrl.type === "input") {
+        const v = String(state[id] || "").trim();
+        return v || ctrl.fallback || "";
+      }
+      const choice = ctrl.choices[state[id] || 0];
+      return choice ? choice.value : "";
+    }
+
+    // Resolve tokens repeatedly so choice values may themselves hold {tokens}.
     function assemble() {
-      return cfg.template.replace(/\{(\w+)\}/g, (m, id) => {
-        const ctrl = controls.find((c) => c.id === id);
-        if (!ctrl) return m;
-        const choice = ctrl.choices[state[id] || 0];
-        return choice ? choice.value : "";
-      });
+      let out = cfg.template;
+      for (let pass = 0; pass < 6 && /\{(\w+)\}/.test(out); pass++) {
+        out = out.replace(/\{(\w+)\}/g, (m, id) => {
+          const r = resolve(id);
+          return r == null ? m : r;
+        });
+      }
+      return out;
     }
 
     const output = document.createElement("p");
     output.className = "item-text";
 
+    function refreshVisibility() {
+      controls.forEach((ctrl) => {
+        if (!ctrl.showWhen) return;
+        const depId = Object.keys(ctrl.showWhen)[0];
+        groups[ctrl.id].hidden = state[depId] !== ctrl.showWhen[depId];
+      });
+    }
+
     function update() {
       output.textContent = assemble();
+      refreshVisibility();
     }
 
     controls.forEach((ctrl) => {
-      state[ctrl.id] = 0;
-
       const group = document.createElement("div");
       group.className = "builder-control";
+      groups[ctrl.id] = group;
 
       const label = document.createElement("span");
       label.className = "builder-label";
       label.textContent = ctrl.label;
       group.appendChild(label);
 
-      const choices = document.createElement("div");
-      choices.className = "builder-choices";
-
-      ctrl.choices.forEach((choice, idx) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "choice-btn";
-        btn.textContent = choice.label;
-        btn.setAttribute("aria-pressed", idx === 0 ? "true" : "false");
-        btn.addEventListener("click", () => {
-          state[ctrl.id] = idx;
-          choices
-            .querySelectorAll(".choice-btn")
-            .forEach((b) => b.setAttribute("aria-pressed", "false"));
-          btn.setAttribute("aria-pressed", "true");
+      if (ctrl.type === "input") {
+        state[ctrl.id] = ctrl.default || "";
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "builder-input";
+        input.placeholder = ctrl.placeholder || "";
+        input.value = state[ctrl.id];
+        input.addEventListener("input", () => {
+          state[ctrl.id] = input.value;
           update();
         });
-        choices.appendChild(btn);
-      });
+        group.appendChild(input);
+      } else {
+        state[ctrl.id] = 0;
+        const choices = document.createElement("div");
+        choices.className = "builder-choices";
+        ctrl.choices.forEach((choice, idx) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "choice-btn";
+          btn.textContent = choice.label;
+          btn.setAttribute("aria-pressed", idx === 0 ? "true" : "false");
+          btn.addEventListener("click", () => {
+            state[ctrl.id] = idx;
+            choices
+              .querySelectorAll(".choice-btn")
+              .forEach((b) => b.setAttribute("aria-pressed", "false"));
+            btn.setAttribute("aria-pressed", "true");
+            update();
+          });
+          choices.appendChild(btn);
+        });
+        group.appendChild(choices);
+      }
 
-      group.appendChild(choices);
       wrap.appendChild(group);
     });
 

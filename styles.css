@@ -346,6 +346,32 @@ body {
   color: var(--bg);
 }
 
+.builder-input {
+  appearance: none;
+  width: 100%;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  padding: 9px 13px;
+  border-radius: 10px;
+  transition: border-color 0.16s ease;
+}
+
+.builder-input::placeholder {
+  color: var(--ink-soft);
+}
+
+.builder-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.builder-control[hidden] {
+  display: none;
+}
+
 .builder-output {
   margin-top: 6px;
   background: var(--accent-soft);

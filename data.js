@@ -167,23 +167,67 @@ const journal = [
   },
 
   {
-    dimension: "Image & Video",
-    title: "Image to Life",
+    dimension: "Digital Asset Generation",
+    title: "Digital Asset Generation",
     subtitle:
-      "Turn any interior, exterior, or concept image into a faithful motion shot — pick your settings, copy the prompt.",
-    date: "2026-05-30",
+      "Builders for generating image and video assets — pick your settings, copy the prompt.",
+    date: "2026-05-31",
     sections: [
       {
-        title: "How it works",
+        title: "Image Generation",
+        open: true,
         items: [
-          { text: "Treat your image as a rigid, high-fidelity reference — not a starting point to transform. The goal is motion without changing what's in the frame." },
-          { text: "Keep the move simple: wide scene → a slow pan; clear focal point → a slow push-in. The fidelity and guardrail lines stay constant — they're your defense against morphing and artifacts." },
+          { text: "Doodle icon sticker sheet — a loose, hand-drawn icon set. Choose the ink color and fill, then either use an uploaded image or describe the object yourself." },
+          {
+            builder: {
+              template:
+                "Minimalist hand-drawn doodle icon sticker sheet of {subject} in {color} ink line art, single color, loose imperfect hand-drawn strokes, {fill}, each icon separated with whitespace, transparent white background",
+              controls: [
+                {
+                  id: "subject",
+                  label: "Source",
+                  choices: [
+                    { label: "From uploaded image", value: "the object in the uploaded image" },
+                    { label: "Describe an object", value: "{object}" },
+                  ],
+                },
+                {
+                  id: "object",
+                  label: "Object to draw",
+                  type: "input",
+                  placeholder: "e.g. a coffee cup, a bicycle, a potted plant",
+                  fallback: "[object]",
+                  showWhen: { subject: 1 },
+                },
+                {
+                  id: "color",
+                  label: "Ink color",
+                  choices: [
+                    { label: "Black", value: "black" },
+                    { label: "Blue", value: "blue" },
+                    { label: "Red", value: "red" },
+                    { label: "Green", value: "green" },
+                    { label: "Orange", value: "orange" },
+                    { label: "Purple", value: "purple" },
+                  ],
+                },
+                {
+                  id: "fill",
+                  label: "Fill",
+                  choices: [
+                    { label: "Outline only", value: "no fill, outline only" },
+                    { label: "Filled", value: "solid color fill" },
+                  ],
+                },
+              ],
+            },
+          },
         ],
       },
       {
-        title: "Build your prompt",
-        open: true,
+        title: "Video Generation",
         items: [
+          { text: "Image to Life — turn any interior, exterior, or concept image into a faithful motion shot. Treat the image as a rigid reference; keep the move simple (wide → pan, focal point → push-in); the guardrails defend against morphing and artifacts." },
           {
             builder: {
               template:
@@ -256,6 +300,6 @@ const journal = [
       },
     ],
     footer:
-      "The fidelity and guardrail core stays fixed for every image — only the motion and a few finishing choices change.",
+      "Two asset types, one tab: generate icons and images, or bring a still to life as video.",
   },
 ];
