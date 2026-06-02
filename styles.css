@@ -267,6 +267,25 @@ body {
   box-shadow: var(--shadow);
 }
 
+/* Sub-heading within a tip (e.g. workflow step titles) */
+.item-heading {
+  margin: 14px 0 2px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.item-heading:first-child {
+  margin-top: 4px;
+}
+
+/* Un-numbered plain text (workflow descriptions) */
+.item--plain {
+  padding-left: 4px;
+}
+
 /* Reading lines — plain guide text, not a copyable card */
 .item--read {
   background: transparent;

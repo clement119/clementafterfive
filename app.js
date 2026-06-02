@@ -142,32 +142,46 @@
   }
 
   /* ---------------- Rendering ---------------- */
-  // Items can be a plain string (copyable prompt), { prompt } (copyable),
-  // or { text } (plain reading line, not copyable).
+  // Items can be: a plain string (copyable prompt), { prompt } (copyable),
+  // { text } (plain reading line), { heading } (a small sub-heading), or a
+  // { builder }. Add `plain: true` to any text/prompt to hide its number badge.
   function normalizeItem(item) {
-    if (typeof item === "string") return { text: item, copyable: true };
-    if (item && item.prompt != null) return { text: item.prompt, copyable: true };
-    if (item && item.text != null) return { text: item.text, copyable: item.copy === true };
-    return { text: String(item), copyable: false };
+    if (typeof item === "string") return { text: item, copyable: true, plain: false };
+    if (item && item.prompt != null)
+      return { text: item.prompt, copyable: true, plain: item.plain === true };
+    if (item && item.text != null)
+      return { text: item.text, copyable: item.copy === true, plain: item.plain === true };
+    return { text: String(item), copyable: false, plain: false };
+  }
+
+  function buildHeading(text) {
+    const h = document.createElement("p");
+    h.className = "item-heading";
+    h.textContent = text;
+    return h;
   }
 
   function buildItem(item, i) {
     if (item && item.builder) return buildBuilder(item.builder);
+    if (item && item.heading != null) return buildHeading(item.heading);
 
-    const { text, copyable } = normalizeItem(item);
+    const { text, copyable, plain } = normalizeItem(item);
 
     const el = document.createElement("div");
     el.className = copyable ? "item" : "item item--read";
+    if (plain) el.classList.add("item--plain");
 
-    const num = document.createElement("span");
-    num.className = "item-num";
-    num.textContent = String(i + 1).padStart(2, "0");
+    if (!plain) {
+      const num = document.createElement("span");
+      num.className = "item-num";
+      num.textContent = String(i + 1).padStart(2, "0");
+      el.append(num);
+    }
 
     const p = document.createElement("p");
     p.className = "item-text";
     p.textContent = text;
-
-    el.append(num, p);
+    el.append(p);
 
     if (copyable) {
       const btn = document.createElement("button");

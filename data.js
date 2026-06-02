@@ -231,14 +231,19 @@ const journal = [
           {
             title: "Product Showcase Grid",
             items: [
-              { text: "The look: minimalist editorial / MUJI catalog — products cut out, centered on a warm-gray field with soft shadows and generous whitespace, arranged in a clean grid." },
-              { text: "Upload several clean product photos at once and let a multi-image model compose the whole grid. For pixel-perfect spacing and labels you can still composite the outputs in Canva or Figma." },
-              { text: "No clean product image yet? Run the clean-up prompt first (one per messy photo), then feed the clean cutouts into the grid prompt below." },
-              { text: "[Living example image to be added here later.]" },
+              { text: "Builds a clean, minimal MUJI-style catalog grid from your own product photos. Follow the steps in order — the whole grid is generated in one shot by a multi-image model (e.g. Gemini 2.5 Flash Image / GPT-image).", plain: true },
+              { text: "[Living example image to be added here later.]", plain: true },
+
+              { heading: "Step 1 · Get clean product shots" },
+              { text: "Each product should sit on a plain white or transparent background. Already have clean cutouts? Skip to Step 2. If your photos are busy or poorly lit, run this once per product to clean it up:", plain: true },
               {
                 prompt:
                   "Extract the product from the uploaded photo onto a pure white background. Remove all background clutter, reflections, and distractions; apply even, neutral studio lighting. Preserve the product's exact shape, colors, materials, and details. Output a clean, centered product cutout.",
+                plain: true,
               },
+
+              { heading: "Step 2 · Generate the grid" },
+              { text: "Upload all your clean product images together, then run this prompt — pick the background, columns, labels, and format:", plain: true },
               {
                 builder: {
                   template:
@@ -283,6 +288,9 @@ const journal = [
                   ],
                 },
               },
+
+              { heading: "Step 3 · Refine (optional)" },
+              { text: "Drop the generated grid into Canva or Figma to fine-tune spacing, gaps, and the name labels — that's where you get pixel-perfect control.", plain: true },
             ],
           },
         ],
