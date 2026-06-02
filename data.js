@@ -176,51 +176,114 @@ const journal = [
       {
         title: "Image Generation",
         open: true,
-        items: [
-          { text: "Doodle icon sticker sheet — a loose, hand-drawn icon set. Choose the ink color and fill, then either use an uploaded image or describe the object yourself." },
+        tips: [
           {
-            builder: {
-              template:
-                "Minimalist hand-drawn doodle icon sticker sheet of {subject} in {color} ink line art, single color, loose imperfect hand-drawn strokes, {fill}, each icon separated with whitespace, transparent white background",
-              controls: [
-                {
-                  id: "subject",
-                  label: "Source",
-                  choices: [
-                    { label: "From uploaded image", value: "the object in the uploaded image" },
-                    { label: "Describe an object", value: "{object}" },
+            title: "Doodle Icon Sheet",
+            open: true,
+            items: [
+              { text: "A loose, hand-drawn icon set. Choose the ink color and fill, then either use an uploaded image or describe the object yourself." },
+              {
+                builder: {
+                  template:
+                    "Minimalist hand-drawn doodle icon sticker sheet of {subject} in {color} ink line art, single color, loose imperfect hand-drawn strokes, {fill}, each icon separated with whitespace, transparent white background",
+                  controls: [
+                    {
+                      id: "subject",
+                      label: "Source",
+                      choices: [
+                        { label: "From uploaded image", value: "the object in the uploaded image" },
+                        { label: "Describe an object", value: "{object}" },
+                      ],
+                    },
+                    {
+                      id: "object",
+                      label: "Object to draw",
+                      type: "input",
+                      placeholder: "e.g. a coffee cup, a bicycle, a potted plant",
+                      fallback: "[object]",
+                      showWhen: { subject: 1 },
+                    },
+                    {
+                      id: "color",
+                      label: "Ink color",
+                      choices: [
+                        { label: "Black", value: "black" },
+                        { label: "Blue", value: "blue" },
+                        { label: "Red", value: "red" },
+                        { label: "Green", value: "green" },
+                        { label: "Orange", value: "orange" },
+                        { label: "Purple", value: "purple" },
+                      ],
+                    },
+                    {
+                      id: "fill",
+                      label: "Fill",
+                      choices: [
+                        { label: "Outline only", value: "no fill, outline only" },
+                        { label: "Filled", value: "solid color fill" },
+                      ],
+                    },
                   ],
                 },
-                {
-                  id: "object",
-                  label: "Object to draw",
-                  type: "input",
-                  placeholder: "e.g. a coffee cup, a bicycle, a potted plant",
-                  fallback: "[object]",
-                  showWhen: { subject: 1 },
-                },
-                {
-                  id: "color",
-                  label: "Ink color",
-                  choices: [
-                    { label: "Black", value: "black" },
-                    { label: "Blue", value: "blue" },
-                    { label: "Red", value: "red" },
-                    { label: "Green", value: "green" },
-                    { label: "Orange", value: "orange" },
-                    { label: "Purple", value: "purple" },
+              },
+            ],
+          },
+          {
+            title: "Product Showcase Grid",
+            items: [
+              { text: "The look: minimalist editorial / MUJI catalog — products cut out, centered on a warm-gray field with soft shadows and generous whitespace, arranged in a clean grid." },
+              { text: "Upload several clean product photos at once and let a multi-image model compose the whole grid. For pixel-perfect spacing and labels you can still composite the outputs in Canva or Figma." },
+              { text: "No clean product image yet? Run the clean-up prompt first (one per messy photo), then feed the clean cutouts into the grid prompt below." },
+              { text: "[Living example image to be added here later.]" },
+              {
+                prompt:
+                  "Extract the product from the uploaded photo onto a pure white background. Remove all background clutter, reflections, and distractions; apply even, neutral studio lighting. Preserve the product's exact shape, colors, materials, and details. Output a clean, centered product cutout.",
+              },
+              {
+                builder: {
+                  template:
+                    "Arrange the products from the uploaded images into a clean, minimal product showcase grid on a {bg} background. Extract each product and render it centered in its own cell with soft, even studio lighting and a single subtle drop shadow beneath it. Use identical scale, lighting, shadow, and spacing across all products so the set looks consistent. Preserve each product's exact shape, colors, materials, proportions, and details — do not redesign or restyle any product. Lay them out in a {cols} grid with generous whitespace and consistent gaps. {label}{format}Minimalist editorial, MUJI-inspired e-commerce catalog aesthetic; no borders, no props, no decorative elements.",
+                  controls: [
+                    {
+                      id: "bg",
+                      label: "Background",
+                      choices: [
+                        { label: "Warm gray #F0EFED", value: "warm light gray (#F0EFED)" },
+                        { label: "Pure white", value: "pure white (#FFFFFF)" },
+                        { label: "Soft beige", value: "soft beige (#EFE9E1)" },
+                        { label: "Charcoal", value: "charcoal gray (#2A2A2A)" },
+                      ],
+                    },
+                    {
+                      id: "cols",
+                      label: "Columns",
+                      choices: [
+                        { label: "3-column", value: "3-column" },
+                        { label: "2-column", value: "2-column" },
+                        { label: "4-column", value: "4-column" },
+                      ],
+                    },
+                    {
+                      id: "label",
+                      label: "Labels",
+                      choices: [
+                        { label: "With name labels", value: "Label each product with its name centered below it in clean dark-gray sans-serif type. " },
+                        { label: "No labels", value: "" },
+                      ],
+                    },
+                    {
+                      id: "format",
+                      label: "Format",
+                      choices: [
+                        { label: "Square 1:1", value: "Output in square 1:1 format. " },
+                        { label: "Portrait 4:5", value: "Output in portrait 4:5 format. " },
+                        { label: "Landscape 3:2", value: "Output in landscape 3:2 format. " },
+                      ],
+                    },
                   ],
                 },
-                {
-                  id: "fill",
-                  label: "Fill",
-                  choices: [
-                    { label: "Outline only", value: "no fill, outline only" },
-                    { label: "Filled", value: "solid color fill" },
-                  ],
-                },
-              ],
-            },
+              },
+            ],
           },
         ],
       },

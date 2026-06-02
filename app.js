@@ -303,14 +303,16 @@
     details.className = "section";
     if (openByDefault) details.open = true;
 
+    const tips = Array.isArray(section.tips) ? section.tips : null;
     const items = Array.isArray(section.items) ? section.items : [];
+    const count = tips ? tips.length : items.length;
 
     const summary = document.createElement("summary");
     summary.className = "section-head";
     summary.innerHTML = `
       <span class="section-title"></span>
       <span class="section-aside">
-        <span class="section-count">${items.length}</span>
+        <span class="section-count">${count}</span>
         ${chevronSVG}
       </span>`;
     summary.querySelector(".section-title").textContent = section.title || "Untitled";
@@ -318,7 +320,34 @@
 
     const body = document.createElement("div");
     body.className = "section-body";
-    items.forEach((text, i) => body.appendChild(buildItem(text, i)));
+    if (tips) {
+      tips.forEach((tip, i) => body.appendChild(buildSubsection(tip, i === 0)));
+    } else {
+      items.forEach((item, i) => body.appendChild(buildItem(item, i)));
+    }
+    details.appendChild(body);
+    return details;
+  }
+
+  // A nested, collapsible tip inside a section.
+  function buildSubsection(tip, openByDefault) {
+    const details = document.createElement("details");
+    details.className = "subsection";
+    if (tip.open === true || openByDefault) details.open = true;
+
+    const items = Array.isArray(tip.items) ? tip.items : [];
+
+    const summary = document.createElement("summary");
+    summary.className = "subsection-head";
+    summary.innerHTML = `
+      <span class="subsection-title"></span>
+      ${chevronSVG}`;
+    summary.querySelector(".subsection-title").textContent = tip.title || "Untitled";
+    details.appendChild(summary);
+
+    const body = document.createElement("div");
+    body.className = "section-body";
+    items.forEach((item, i) => body.appendChild(buildItem(item, i)));
     details.appendChild(body);
     return details;
   }

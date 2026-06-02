@@ -200,6 +200,56 @@ body {
   gap: 8px;
 }
 
+/* ---------- Nested tips (subsections) ---------- */
+.subsection {
+  border-top: 1px solid var(--line);
+}
+
+.subsection:first-child {
+  border-top: 0;
+}
+
+.subsection-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 2px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--ink);
+}
+
+.subsection-head::-webkit-details-marker {
+  display: none;
+}
+
+.subsection-head:hover .subsection-title {
+  opacity: 0.62;
+}
+
+.subsection-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: opacity 0.18s ease;
+}
+
+.subsection-head .chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--ink-soft);
+}
+
+.subsection[open] .subsection-head .chevron {
+  transform: rotate(180deg);
+}
+
+.subsection .section-body {
+  padding-top: 0;
+  padding-bottom: 16px;
+}
+
 /* ---------- Prompt items ---------- */
 .item {
   display: flex;
