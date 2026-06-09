@@ -373,4 +373,102 @@ const journal = [
     footer:
       "Two asset types, one tab: generate icons and images, or bring a still to life as video.",
   },
+  {
+    dimension: "Cowork",
+    title: "Cowork",
+    subtitle:
+      "Copilot Cowork tasks you set up once and let run on a schedule — they draft, you review and send.",
+    date: "2026-06-09",
+    sections: [
+      {
+        title: "Set up a Cowork task",
+        open: true,
+        items: [
+          { text: "Cowork tasks are recurring jobs that run on their own and leave the results waiting for you. Every task here is built the same way — set it up once, then it works in the background on the schedule you pick.", plain: true },
+          { heading: "How to set one up" },
+          { text: "1 · Open Copilot Cowork (in Outlook) and start a new task.", plain: true },
+          { text: "2 · Set the model to Claude Opus 4.7.", plain: true },
+          { text: "3 · Copy a task prompt from below and paste it in. The cadence is baked into the first line of the prompt, so the schedule travels with it.", plain: true },
+          { text: "4 · Save it as a scheduled / recurring task and confirm the day and time match the prompt.", plain: true },
+          { text: "5 · When it runs, review what it produced before acting on it.", plain: true },
+          { heading: "The golden rule" },
+          { text: "These tasks draft only — they never auto-send. Everything lands in your Drafts (plus a summary email) for you to read, edit, and send yourself. Nothing leaves your outbox without you hitting Send.", plain: true },
+        ],
+      },
+      {
+        title: "Scheduled tasks",
+        tips: [
+          {
+            title: "Monday Follow-Up Nudges",
+            open: true,
+            items: [
+              { heading: "What it does" },
+              { text: "Tracks who still owes you a reply. It scans your Sent mail for asks that went unanswered, drafts a polite nudge in your own voice for each one, and emails you a single summary so you can review and send in a couple of minutes.", plain: true },
+              { heading: "At a glance" },
+              { text: "Platform — Copilot Cowork (Outlook)", plain: true },
+              { text: "Model — Claude Opus 4.7", plain: true },
+              { text: "Schedule — weekly (e.g. every Monday, 7:30 AM)", plain: true },
+              { text: "Deliverable — a reply draft per unanswered thread, plus one summary email", plain: true },
+              { heading: "The prompt" },
+              { text: "Personalize the fields, then copy. Leave [date] and [N] as-is — Cowork fills those in each run.", plain: true },
+              {
+                builder: {
+                  template:
+                    "Schedule: Run automatically every {day} at {time}.\n\n" +
+                    "Role: You are my proactive follow-up assistant. Find emails I sent where I asked someone for something and never heard back, then draft polite nudges in my voice so I can review and send them with one click.\n\n" +
+                    "Step 1 — Scan: Look through my Sent folder from the last {window} business days. Flag messages where I asked a question, made a request, or clearly expected a reply AND the recipient has not yet responded. Ignore newsletters, automated mail, pure FYIs, and any thread that already got a reply or was resolved.\n\n" +
+                    "Step 2 — Draft: For each unanswered ask, create a reply draft in the existing thread — do NOT send it. Keep it short, warm, and professional, matching the tone of my original email. Briefly reference the original request, give a gentle nudge, and make it easy for them to respond. Sign off as {name}.\n\n" +
+                    "Step 3 — Summarize: When the drafts are ready, send me one summary email to {email} with the subject \"{day} Follow-Up Nudges — [date] ([N] drafts ready to send)\". List each person I'm following up with, what the original ask was, how many days it has been waiting, and a one-line preview of the draft.\n\n" +
+                    "Rules: Never send anything automatically — every follow-up stays in Drafts for me to review and send. Never invent facts, commitments, or deadlines. If there is nothing to follow up on, just send me a short note saying the inbox is clear.",
+                  controls: [
+                    {
+                      id: "day",
+                      label: "Run day",
+                      choices: [
+                        { label: "Monday", value: "Monday" },
+                        { label: "Tuesday", value: "Tuesday" },
+                        { label: "Wednesday", value: "Wednesday" },
+                        { label: "Thursday", value: "Thursday" },
+                        { label: "Friday", value: "Friday" },
+                      ],
+                    },
+                    {
+                      id: "time",
+                      label: "Run time",
+                      type: "input",
+                      placeholder: "7:30 AM",
+                      fallback: "7:30 AM",
+                    },
+                    {
+                      id: "window",
+                      label: "Look back (business days)",
+                      type: "input",
+                      placeholder: "5",
+                      fallback: "5",
+                    },
+                    {
+                      id: "name",
+                      label: "Sign-off name",
+                      type: "input",
+                      placeholder: "Your name",
+                      fallback: "[Your Name]",
+                    },
+                    {
+                      id: "email",
+                      label: "Summary email to",
+                      type: "input",
+                      placeholder: "you@email.com",
+                      fallback: "[your email]",
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    footer:
+      "One tab for set-and-forget Copilot Cowork tasks. They draft on a schedule; you stay the one who hits Send.",
+  },
 ];
