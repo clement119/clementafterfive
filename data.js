@@ -377,7 +377,7 @@ const journal = [
     dimension: "Cowork",
     title: "Cowork",
     subtitle:
-      "Copilot Cowork tasks you set up once and let run on a schedule — they draft, you review and send.",
+      "Cowork tasks you set up once and let run on a schedule — they draft, you review and send. Works in Claude Cowork or Microsoft Copilot.",
     date: "2026-06-09",
     sections: [
       {
@@ -386,8 +386,8 @@ const journal = [
         items: [
           { text: "Cowork tasks are recurring jobs that run on their own and leave the results waiting for you. Every task here is built the same way — set it up once, then it works in the background on the schedule you pick.", plain: true },
           { heading: "How to set one up" },
-          { text: "1 · Open Copilot Cowork (in Outlook) and start a new task.", plain: true },
-          { text: "2 · Set the model to Claude Opus 4.7.", plain: true },
+          { text: "1 · Open Cowork — either Claude Cowork or Microsoft Copilot's Cowork — and start a new task.", plain: true },
+          { text: "2 · In Claude Cowork, set the model to Claude Opus 4.7. In Microsoft Copilot, use whichever model it offers.", plain: true },
           { text: "3 · Copy a task prompt from below and paste it in. The cadence is baked into the first line of the prompt, so the schedule travels with it.", plain: true },
           { text: "4 · Save it as a scheduled / recurring task and confirm the day and time match the prompt.", plain: true },
           { text: "5 · When it runs, review what it produced before acting on it.", plain: true },
@@ -405,8 +405,8 @@ const journal = [
               { heading: "What it does" },
               { text: "Tracks who still owes you a reply. It scans your Sent mail for asks that went unanswered, drafts a polite nudge in your own voice for each one, and emails you a single summary so you can review and send in a couple of minutes.", plain: true },
               { heading: "At a glance" },
-              { text: "Platform — Copilot Cowork (Outlook)", plain: true },
-              { text: "Model — Claude Opus 4.7", plain: true },
+              { text: "Platform — Claude Cowork or Microsoft Copilot", plain: true },
+              { text: "Model — Claude Opus 4.7 (in Claude Cowork)", plain: true },
               { text: "Schedule — weekly (e.g. every Monday, 7:30 AM)", plain: true },
               { text: "Deliverable — a reply draft per unanswered thread, plus one summary email", plain: true },
               { heading: "The prompt" },
@@ -469,6 +469,6 @@ const journal = [
       },
     ],
     footer:
-      "One tab for set-and-forget Copilot Cowork tasks. They draft on a schedule; you stay the one who hits Send.",
+      "One tab for set-and-forget Cowork tasks — in Claude Cowork or Microsoft Copilot. They draft on a schedule; you stay the one who hits Send.",
   },
 ];
