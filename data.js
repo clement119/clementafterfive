@@ -471,4 +471,71 @@ const journal = [
     footer:
       "One tab for set-and-forget Cowork tasks — in Claude Cowork or Microsoft Copilot. They draft on a schedule; you stay the one who hits Send.",
   },
+
+  {
+    dimension: "Investment",
+    title: "The Holy Grail of Investing",
+    subtitle:
+      "Aim for ~15 good, uncorrelated, risk-balanced bets — then engineer the risk. Educational notes, not financial advice.",
+    date: "2026-06-15",
+    sections: [
+      {
+        title: "The principle — 15 uncorrelated bets",
+        open: true,
+        items: [
+          { text: "Hold a diversified portfolio of only your most confident, uncorrelated bets and engineer it to the risk level you want. That beats a concentrated bet on a return-to-risk basis — and you can lever it up for higher returns at the same risk. This isn't an opinion; it's a mathematical certainty.", plain: true },
+          { text: "The more risk is concentrated in one area of the market, the more you should diversify — especially when the market is driven by a revolutionary new technology, which inherently produces great uncertainty.", plain: true },
+          { heading: "The math" },
+          { text: "One bet generally assumed for equities: ~6% return with an 18% standard deviation — a 0.3 return-to-risk ratio. Keep the same 6% return but spread it across 5, 10, or 15 good uncorrelated bets and the risk falls to roughly 8%, 6%, and 5% standard deviation. With 15, the ratio climbs from 0.3 to ~1.29 — about a 4.3x improvement in return for the risk taken.", plain: true },
+          { heading: "Diversification calculator" },
+          { text: "Pick a number of good, uncorrelated bets and see what happens to the same 6% expected return. Then copy the line.", plain: true },
+          {
+            builder: {
+              template: "With {scenario}",
+              controls: [
+                {
+                  id: "scenario",
+                  label: "Number of uncorrelated bets",
+                  choices: [
+                    { label: "1 bet", value: "1 bet at a 0.3 return-to-risk ratio (6% expected return, 18% standard deviation), you carry the full 18% of risk for that 6% return." },
+                    { label: "5 bets", value: "5 good uncorrelated bets, the same 6% expected return comes with only ~8% standard deviation — a ~0.75 return-to-risk ratio, more than double a single bet." },
+                    { label: "10 bets", value: "10 good uncorrelated bets, the same 6% expected return comes with only ~6% standard deviation — a ~1.0 return-to-risk ratio." },
+                    { label: "15 bets", value: "15 good uncorrelated bets, the same 6% expected return comes with only ~5% standard deviation — a ~1.29 return-to-risk ratio, a 4.3x improvement over a single bet (which you can then lever up for higher returns at the same risk)." },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      },
+      {
+        title: "The five big forces",
+        items: [
+          { text: "Big uncertainties tend to come from a handful of big drivers. Plug these circumstances into your investment system when you decide how to place your bets — while you do your own thinking about what to bet on.", plain: true },
+          { text: "1 · Debt and money — what's happening with credit, currencies, and the value of money.", plain: true },
+          { text: "2 · Politics and social issues — what can drive taxes and other politically-driven influences on markets.", plain: true },
+          { text: "3 · Geopolitics — conflicts and wars and their influence on markets.", plain: true },
+          { text: "4 · Acts of nature — droughts, floods, pandemics, and other shocks.", plain: true },
+          { text: "5 · New technologies — what's being created and disrupted.", plain: true },
+        ],
+      },
+      {
+        title: "Applying it today",
+        items: [
+          { text: "Given these forces, the most important question is how to place your bets relative to the broad index (e.g. the S&P 500). You have three choices: (a) overweight the new technology — bet on the sector or a few of its best companies more than the index does; (b) keep your exposures at about index weights; or (c) diversify away from that concentration.", plain: true },
+          { text: "Knowing what you don't know — and deciding when not to bet — is as important as knowing what you do know. It's generally too hard to justify concentrated bets, so hold a diversified portfolio of only your most confident uncorrelated bets and engineer it to the risk level you want. That is the holy grail.", plain: true },
+          { text: "Right now, no one knows this technology-driven market well enough to place a big, concentrated bet. Avoiding concentration and staying diversified is the best way to deal with that not-knowing — even if it runs contrary to the textbook view that markets are efficient so you should just trust the market.", plain: true },
+          { text: "Don't confuse excitement about a new technology with the attractiveness of its stocks. An unusually concentrated market centered on a revolutionary technology tempts people to throw caution to the wind and pile into high-risk, high-correlation bets — when you can get equally attractive returns with much less risk through smart diversification.", plain: true },
+          { heading: "Pressure-test your own portfolio" },
+          { text: "Take a screenshot of your current holdings (positions and rough weights) and upload or paste it with the prompt below, so the analysis is grounded in what you actually own.", plain: true },
+          {
+            prompt:
+              "I've attached a screenshot of my current investment portfolio. Read my holdings and approximate weights from it, then analyze it through the lens of diversification and risk balancing. Specifically:\n1. Estimate how concentrated I am — by position, sector, and underlying theme (e.g. a single new technology) — and roughly how correlated my biggest holdings are with each other.\n2. Map my exposure to the five big forces: debt & money, politics/taxes, geopolitics, acts of nature, and new technologies. Flag where I'm unknowingly making one big, correlated bet.\n3. Tell me my approximate return-to-risk profile and compare it to a more diversified set of uncorrelated bets.\n4. Suggest concrete ways to move toward ~15 good, uncorrelated, risk-balanced bets engineered to a [conservative / moderate / aggressive] risk level — including what to trim, what kinds of uncorrelated exposures I'm missing, and how I'd think about levering to a target risk.\nBe specific and show your reasoning. Treat this as educational analysis, not personalized financial advice, and note the key assumptions and uncertainties.",
+          },
+        ],
+      },
+    ],
+    footer:
+      "Diversify your most confident uncorrelated bets and engineer the risk — don't let excitement about a new technology turn into one big concentrated bet. Educational notes only, not financial advice.",
+  },
 ];
