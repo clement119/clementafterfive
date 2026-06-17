@@ -353,16 +353,21 @@
       c.className = "persona-card";
       c.dataset.camp = card.camp || "";
 
+      // Optional semi-transparent portrait behind the card content. Removes
+      // itself if the image is missing, so the card falls back to its tint.
+      if (card.image) {
+        const bg = document.createElement("img");
+        bg.className = "persona-bg";
+        bg.src = card.image;
+        bg.alt = "";
+        bg.setAttribute("aria-hidden", "true");
+        bg.addEventListener("error", () => bg.remove());
+        c.appendChild(bg);
+      }
+
       const avatar = document.createElement("div");
       avatar.className = "persona-avatar";
-      if (card.image) {
-        const img = document.createElement("img");
-        img.src = card.image;
-        img.alt = card.name || "";
-        avatar.appendChild(img);
-      } else {
-        avatar.textContent = card.initials || "";
-      }
+      avatar.textContent = card.initials || "";
 
       const name = document.createElement("h3");
       name.className = "persona-name";
