@@ -615,6 +615,180 @@ body {
   transform: translate(-50%, 0);
 }
 
+/* ---------- Investor persona deck ---------- */
+.persona {
+  display: grid;
+  gap: 16px;
+  padding: 4px 0 2px;
+}
+
+.persona-ticker {
+  max-width: 260px;
+}
+
+.persona-deck {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 2px;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 2px 8px;
+  scrollbar-width: none;
+}
+.persona-deck::-webkit-scrollbar {
+  display: none;
+}
+
+.persona-card {
+  flex: 0 0 78%;
+  max-width: 290px;
+  aspect-ratio: 1 / 1;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+@media (min-width: 620px) {
+  .persona-card {
+    flex-basis: 252px;
+  }
+}
+
+.persona-avatar {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.persona-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.persona-card[data-camp="quality"] .persona-avatar {
+  background: rgba(47, 125, 79, 0.14);
+  color: #2f7d4f;
+}
+.persona-card[data-camp="growth"] .persona-avatar {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.persona-card[data-camp="contrarian"] .persona-avatar {
+  background: rgba(63, 102, 173, 0.16);
+  color: #3f66ad;
+}
+[data-theme="dark"] .persona-card[data-camp="quality"] .persona-avatar {
+  color: #6fc78d;
+}
+[data-theme="dark"] .persona-card[data-camp="contrarian"] .persona-avatar {
+  color: #93b1e6;
+}
+
+.persona-name {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 2px 0 0;
+  color: var(--ink);
+}
+
+.persona-tag {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0;
+}
+
+.persona-voice {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.persona-copy {
+  margin-top: auto;
+}
+
+.persona-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.persona-arrow {
+  appearance: none;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+.persona-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+.persona-arrow:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.persona-arrow:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.persona-dots {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.persona-dot {
+  appearance: none;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--line-strong);
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+.persona-dot[aria-current="true"] {
+  background: var(--accent);
+  transform: scale(1.35);
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;

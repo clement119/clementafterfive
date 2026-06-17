@@ -162,6 +162,7 @@
   }
 
   function buildItem(item, i) {
+    if (item && item.deck) return buildPersonaDeck(item.deck);
     if (item && item.builder) return buildBuilder(item.builder);
     if (item && item.heading != null) return buildHeading(item.heading);
 
@@ -309,6 +310,152 @@
 
     wrap.appendChild(out);
     update();
+    return wrap;
+  }
+
+  // Swipeable deck of investor personas. Each card copies that investor's
+  // master prompt with a shared ticker substituted into the {TICKER} token.
+  function buildPersonaDeck(cfg) {
+    const wrap = document.createElement("div");
+    wrap.className = "persona";
+
+    const cards = Array.isArray(cfg.cards) ? cfg.cards : [];
+    const tcfg = cfg.ticker || {};
+    const fallback = tcfg.fallback || "[TICKER]";
+    let ticker = "";
+
+    function resolvePrompt(p) {
+      const t = ticker.trim().toUpperCase() || fallback;
+      return String(p).replace(/\{TICKER\}/g, t);
+    }
+
+    // Shared ticker input — read live at copy time.
+    const tickerGroup = document.createElement("div");
+    tickerGroup.className = "builder-control persona-ticker";
+    const tlabel = document.createElement("span");
+    tlabel.className = "builder-label";
+    tlabel.textContent = tcfg.label || "Ticker";
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "builder-input";
+    input.placeholder = tcfg.placeholder || "";
+    input.setAttribute("aria-label", tcfg.label || "Ticker");
+    input.addEventListener("input", () => { ticker = input.value; });
+    tickerGroup.append(tlabel, input);
+    wrap.appendChild(tickerGroup);
+
+    // Card track — native scroll-snap handles touch/trackpad swiping.
+    const deck = document.createElement("div");
+    deck.className = "persona-deck";
+
+    cards.forEach((card) => {
+      const c = document.createElement("article");
+      c.className = "persona-card";
+      c.dataset.camp = card.camp || "";
+
+      const avatar = document.createElement("div");
+      avatar.className = "persona-avatar";
+      if (card.image) {
+        const img = document.createElement("img");
+        img.src = card.image;
+        img.alt = card.name || "";
+        avatar.appendChild(img);
+      } else {
+        avatar.textContent = card.initials || "";
+      }
+
+      const name = document.createElement("h3");
+      name.className = "persona-name";
+      name.textContent = card.name || "";
+
+      const tag = document.createElement("p");
+      tag.className = "persona-tag";
+      tag.textContent = card.tag || "";
+
+      const voice = document.createElement("p");
+      voice.className = "persona-voice";
+      voice.textContent = card.voice ? "Voice — " + card.voice : "";
+
+      const btn = document.createElement("button");
+      btn.className = "copy-btn persona-copy";
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Copy " + (card.name || "investor") + " prompt");
+      btn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy prompt</span>`;
+      btn.addEventListener("click", () => copyText(resolvePrompt(card.prompt), btn));
+
+      c.append(avatar, name, tag, voice, btn);
+      deck.appendChild(c);
+    });
+
+    wrap.appendChild(deck);
+
+    // Navigation — prev/next arrows plus a dot per card.
+    const nav = document.createElement("div");
+    nav.className = "persona-nav";
+
+    const prev = document.createElement("button");
+    prev.type = "button";
+    prev.className = "persona-arrow";
+    prev.setAttribute("aria-label", "Previous investor");
+    prev.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>`;
+
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className = "persona-arrow";
+    next.setAttribute("aria-label", "Next investor");
+    next.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>`;
+
+    const dots = document.createElement("div");
+    dots.className = "persona-dots";
+    const dotEls = cards.map((card, idx) => {
+      const d = document.createElement("button");
+      d.type = "button";
+      d.className = "persona-dot";
+      d.setAttribute("aria-label", "Go to " + (card.name || "card " + (idx + 1)));
+      d.addEventListener("click", () => scrollToCard(idx));
+      dots.appendChild(d);
+      return d;
+    });
+
+    function cardStep() {
+      const first = deck.querySelector(".persona-card");
+      if (!first) return deck.clientWidth || 1;
+      const cs = getComputedStyle(deck);
+      const gap = parseFloat(cs.columnGap || cs.gap || "0") || 0;
+      return first.getBoundingClientRect().width + gap;
+    }
+
+    function activeIndex() {
+      return Math.round(deck.scrollLeft / cardStep());
+    }
+
+    function scrollToCard(i) {
+      const idx = Math.max(0, Math.min(cards.length - 1, i));
+      deck.scrollTo({ left: idx * cardStep(), behavior: "smooth" });
+    }
+
+    function syncDots() {
+      const a = Math.max(0, Math.min(cards.length - 1, activeIndex()));
+      dotEls.forEach((d, i) => d.setAttribute("aria-current", i === a ? "true" : "false"));
+      prev.disabled = a <= 0;
+      next.disabled = a >= cards.length - 1;
+    }
+
+    prev.addEventListener("click", () => scrollToCard(activeIndex() - 1));
+    next.addEventListener("click", () => scrollToCard(activeIndex() + 1));
+
+    let raf;
+    deck.addEventListener("scroll", () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(syncDots);
+    });
+
+    nav.append(prev, dots, next);
+    wrap.appendChild(nav);
+
+    // Set initial dot/arrow state once laid out.
+    requestAnimationFrame(syncDots);
+
     return wrap;
   }
 
