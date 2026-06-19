@@ -816,12 +816,15 @@ body {
 /* ---------- Skills list ---------- */
 .skill-list {
   display: grid;
+  /* minmax(0, …) keeps long, non-wrapping content from widening the track */
+  grid-template-columns: minmax(0, 1fr);
   gap: 14px;
 }
 
 .skill-card {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   gap: 11px;
   padding: 18px;
   background: var(--surface);
@@ -844,11 +847,13 @@ body {
 
 .skill-name {
   margin: 0;
+  min-width: 0;
   font-family: "Fraunces", Georgia, serif;
   font-size: 19px;
   font-weight: 600;
   line-height: 1.2;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 .skill-tag {
@@ -873,6 +878,7 @@ body {
 .skill-install {
   display: flex;
   align-items: center;
+  min-width: 0;
   gap: 10px;
   background: var(--surface-2);
   border: 1px solid var(--line);
