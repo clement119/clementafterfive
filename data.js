@@ -628,4 +628,77 @@ const journal = [
     footer:
       "Diversify your most confident uncorrelated bets and engineer the risk — don't let excitement about a new technology turn into one big concentrated bet. Educational notes only, not financial advice.",
   },
+
+  {
+    dimension: "Skills",
+    title: "Skills — teach your AI new tricks",
+    subtitle:
+      "Drop-in packages that give Claude a specific, reusable capability. What they are, how to add them, and four worth trying.",
+    date: "2026-06-19",
+    sections: [
+      {
+        title: "What is a Skill?",
+        open: true,
+        items: [
+          { text: "A Skill is a small, self-contained package — a folder with a SKILL.md file (a short description plus instructions) and any optional scripts, templates, or reference files — that teaches your AI assistant how to do one specific job well.", plain: true },
+          { text: "Claude only loads a skill's full instructions when your request actually matches what it's for, so you can keep many skills installed without slowing things down or cluttering every chat.", plain: true },
+          { text: "Think of them as reusable expertise you can hand over: design taste, app-store screenshots, video generation, a whole design-ops toolkit — each one packaged so the assistant knows exactly when and how to use it.", plain: true },
+        ],
+      },
+      {
+        title: "How to install & invoke",
+        items: [
+          { heading: "Install" },
+          { text: "Most skills are shared as a GitHub repo. To add one, put its folder in your skills directory: ~/.claude/skills/<skill-name>/ for yourself, or .claude/skills/<skill-name>/ inside a project to share it with that repo or team.", plain: true },
+          { text: "The quickest way is to clone the repo straight into that folder (the copyable commands on each card below do exactly this). Each skill folder needs a SKILL.md at its root to register. Some repos are collections of many skills or ship their own installer — if so, follow that repo's README instead.", plain: true },
+          { prompt: "git clone <repo-url> ~/.claude/skills/<skill-name>" },
+          { heading: "Invoke" },
+          { text: "Automatic — just describe what you want. If your request matches a skill's description, the assistant reaches for it on its own.", plain: true },
+          { text: "Explicit — type a slash command with the skill's name, like /taste-skill, to run it directly.", plain: true },
+          { text: "Not sure what's loaded? Ask your assistant which skills it currently has available.", plain: true },
+        ],
+      },
+      {
+        title: "Four skills worth trying",
+        open: true,
+        items: [
+          { text: "Browse the cards below. Each has a short description and a copyable install command — paste it into your terminal to add the skill, then invoke it by name.", plain: true },
+          {
+            skills: [
+              {
+                name: "Taste Skill",
+                tag: "UI taste",
+                desc: "Upgrades your vibe-coded interface and kills the AI-slop look. Also bundles image-generation skills for building reference and mood boards.",
+                repo: "https://github.com/leonxlnx/taste-skill",
+                install: "git clone https://github.com/leonxlnx/taste-skill ~/.claude/skills/taste-skill",
+              },
+              {
+                name: "App Store & Google Play Screenshot Generator",
+                tag: "App mockups",
+                desc: "Generates realistic app-store mockups in a Next.js editor, with realistic device frames included — ready to drop into your store listing.",
+                repo: "https://github.com/ParthJadhav/app-store-screenshots",
+                install: "git clone https://github.com/ParthJadhav/app-store-screenshots ~/.claude/skills/app-store-screenshots",
+              },
+              {
+                name: "Hyperframes",
+                tag: "Animated video",
+                desc: "An open-source framework for turning prompts into animated MP4 videos using plain HTML, CSS, and JS — great for a quick promo clip for your app.",
+                repo: "https://github.com/heygen-com/hyperframes",
+                install: "git clone https://github.com/heygen-com/hyperframes ~/.claude/skills/hyperframes",
+              },
+              {
+                name: "Designer Skills",
+                tag: "Design toolkit",
+                desc: "A toolkit of 239 skills, 88 commands, and 33 plugins — covering everything from research and UX strategy to design ops and AI-agent design.",
+                repo: "https://github.com/Owl-Listener/designer-skills",
+                install: "git clone https://github.com/Owl-Listener/designer-skills ~/.claude/skills/designer-skills",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    footer:
+      "New to skills? Start with one, install it, and invoke it by name — then add more as you find jobs you do often.",
+  },
 ];

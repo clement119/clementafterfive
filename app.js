@@ -161,8 +161,77 @@
     return h;
   }
 
+  // A browsable list of skills. Each card shows the name, a short tag and
+  // description, a copyable install command, and a link to the repo.
+  function buildSkillList(skills) {
+    const list = document.createElement("div");
+    list.className = "skill-list";
+
+    (skills || []).forEach((s) => {
+      const card = document.createElement("article");
+      card.className = "skill-card";
+
+      const head = document.createElement("div");
+      head.className = "skill-head";
+
+      const name = document.createElement("h3");
+      name.className = "skill-name";
+      name.textContent = s.name || "";
+      head.appendChild(name);
+
+      if (s.tag) {
+        const tag = document.createElement("span");
+        tag.className = "skill-tag";
+        tag.textContent = s.tag;
+        head.appendChild(tag);
+      }
+      card.appendChild(head);
+
+      if (s.desc) {
+        const desc = document.createElement("p");
+        desc.className = "skill-desc";
+        desc.textContent = s.desc;
+        card.appendChild(desc);
+      }
+
+      if (s.install) {
+        const inst = document.createElement("div");
+        inst.className = "skill-install";
+
+        const code = document.createElement("code");
+        code.className = "skill-cmd";
+        code.textContent = s.install;
+
+        const btn = document.createElement("button");
+        btn.className = "copy-btn";
+        btn.type = "button";
+        btn.setAttribute("aria-label", "Copy install command for " + (s.name || "skill"));
+        btn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+        btn.addEventListener("click", () => copyText(s.install, btn));
+
+        inst.append(code, btn);
+        card.appendChild(inst);
+      }
+
+      if (s.repo) {
+        const link = document.createElement("a");
+        link.className = "skill-link";
+        link.href = s.repo;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "View on GitHub →";
+        card.appendChild(link);
+      }
+
+      list.appendChild(card);
+    });
+
+    return list;
+  }
+
   function buildItem(item, i) {
     if (item && item.deck) return buildPersonaDeck(item.deck);
+    if (item && item.skills) return buildSkillList(item.skills);
     if (item && item.builder) return buildBuilder(item.builder);
     if (item && item.heading != null) return buildHeading(item.heading);
 
