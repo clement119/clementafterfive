@@ -814,11 +814,65 @@ body {
 }
 
 /* ---------- Skills list ---------- */
+.skill-filter {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.skill-filter-btn {
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+.skill-filter-btn:hover {
+  color: var(--ink);
+}
+.skill-filter-btn[aria-selected="true"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
 .skill-list {
   display: grid;
   /* minmax(0, …) keeps long, non-wrapping content from widening the track */
   grid-template-columns: minmax(0, 1fr);
   gap: 14px;
+}
+
+/* Type badge — distinguishes a single skill from a plugin marketplace */
+.skill-type {
+  flex: none;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+.skill-type[data-type="skill"] {
+  color: var(--ok);
+  background: rgba(47, 125, 79, 0.12);
+}
+.skill-type[data-type="marketplace"] {
+  color: var(--ink-soft);
+  background: var(--surface-2);
+  border-color: var(--line-strong);
+}
+[data-theme="dark"] .skill-type[data-type="skill"] {
+  background: rgba(111, 199, 141, 0.14);
 }
 
 .skill-card {

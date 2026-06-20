@@ -161,62 +161,119 @@
     return h;
   }
 
-  // A browsable, selectable list of skills. Each card has a checkbox, name,
-  // tag, description, a copyable install command, and a repo link. Picking
-  // skills builds one combined prompt that installs them into a project's
-  // .claude/skills/ via Claude Code.
+  // A browsable, selectable list of skills. Two kinds:
+  //   • single skill  — one SKILL.md; multi-selectable, combined into one
+  //     `npx skills add` install prompt.
+  //   • plugin marketplace — a bundle of many skills; not selectable, each
+  //     installs with its own command shown on the card.
+  // A filter switches between All / single skills / marketplaces.
   function buildSkillList(skills) {
     skills = Array.isArray(skills) ? skills : [];
+    const isMkt = (s) => s && s.type === "marketplace";
+
+    const singles = skills.filter((s) => !isMkt(s));
+    const markets = skills.filter(isMkt);
 
     const wrap = document.createElement("div");
     wrap.className = "skill-tool";
+
+    // ----- Filter (only shown when both kinds are present) -----
+    const modes = [
+      { key: "all", label: "All", n: skills.length },
+      { key: "skill", label: "Single skills", n: singles.length },
+      { key: "marketplace", label: "Marketplaces", n: markets.length },
+    ];
+    let current = "all";
+    const filterBtns = {};
+    const filter = document.createElement("div");
+    filter.className = "skill-filter";
+    filter.setAttribute("role", "tablist");
+    filter.setAttribute("aria-label", "Filter skills by type");
+    modes.forEach((m) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "skill-filter-btn";
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", m.key === current ? "true" : "false");
+      b.textContent = m.label + " (" + m.n + ")";
+      b.addEventListener("click", () => applyFilter(m.key));
+      filterBtns[m.key] = b;
+      filter.appendChild(b);
+    });
+    if (singles.length && markets.length) wrap.appendChild(filter);
 
     const list = document.createElement("div");
     list.className = "skill-list";
 
     const selected = new Set();
-    const checks = [];
+    const singleChecks = []; // { cb, skill, card }
+    const cardEls = []; // { card, marketplace }
 
-    // Assemble a single prompt from the chosen skills.
+    // Assemble one install prompt from the chosen single skills.
     function buildPrompt() {
-      const chosen = skills.filter((s) => selected.has(s));
+      const chosen = singles.filter((s) => selected.has(s));
       const lines = chosen
         .map((s) => "- " + (s.name || "Skill") + " — " + (s.repo || ""))
         .join("\n");
       return (
-        "Set up the following Claude Code skills in this repository so I can use them in this project.\n\n" +
-        "For each skill below:\n" +
-        "1. Clone its GitHub repo into `.claude/skills/` at the root of this repo (create the folder if it doesn't exist).\n" +
-        "2. If the repo is a single skill, make sure its `SKILL.md` ends up at `.claude/skills/<skill-name>/SKILL.md`. If the repo is a collection of several skills or plugins, place each one so its `SKILL.md` sits directly inside its own folder under `.claude/skills/`.\n" +
-        "3. If a repo's README specifies a different install step, follow that instead.\n" +
-        "4. Show me exactly what you added, and don't commit anything unless I ask.\n\n" +
-        "When you're done, list every skill now available in this project, each with a one-line description and how to invoke it (its slash command, or the kind of request that triggers it).\n\n" +
+        "Install the following Claude Code skills so I can use them in this project.\n\n" +
+        "For each skill below, run `npx skills add <owner/repo or repo URL>` — the skills CLI finds the SKILL.md inside each repo automatically. By default it adds to my skills library; pass `-a claude-code` to target Claude Code, or `-g` for a global install. If a repo's README gives a different step, follow that instead.\n\n" +
+        "Show me exactly what you added and where, and don't commit anything unless I ask. When you're done, list every skill now available, each with a one-line description and how to invoke it.\n\n" +
         "Skills to install:\n" +
         lines
       );
     }
 
     skills.forEach((s) => {
+      const marketplace = isMkt(s);
+
       const card = document.createElement("article");
       card.className = "skill-card";
+      card.dataset.type = marketplace ? "marketplace" : "skill";
 
       const head = document.createElement("div");
       head.className = "skill-head";
 
-      const select = document.createElement("label");
-      select.className = "skill-select";
+      // Single skills get a checkbox; marketplaces just show the name.
+      if (marketplace) {
+        const name = document.createElement("h3");
+        name.className = "skill-name";
+        name.textContent = s.name || "";
+        head.appendChild(name);
+      } else {
+        const select = document.createElement("label");
+        select.className = "skill-select";
 
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.className = "skill-check";
-      cb.setAttribute("aria-label", "Select " + (s.name || "skill"));
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.className = "skill-check";
+        cb.setAttribute("aria-label", "Select " + (s.name || "skill"));
 
-      const name = document.createElement("h3");
-      name.className = "skill-name";
-      name.textContent = s.name || "";
+        const name = document.createElement("h3");
+        name.className = "skill-name";
+        name.textContent = s.name || "";
 
-      select.append(cb, name);
-      head.appendChild(select);
+        select.append(cb, name);
+        head.appendChild(select);
+
+        cb.addEventListener("change", () => {
+          if (cb.checked) {
+            selected.add(s);
+            card.classList.add("selected");
+          } else {
+            selected.delete(s);
+            card.classList.remove("selected");
+          }
+          syncBar();
+        });
+        singleChecks.push({ cb: cb, skill: s, card: card });
+      }
+
+      const type = document.createElement("span");
+      type.className = "skill-type";
+      type.dataset.type = marketplace ? "marketplace" : "skill";
+      type.textContent = marketplace ? "Plugin marketplace" : "Single skill";
+      head.appendChild(type);
 
       if (s.tag) {
         const tag = document.createElement("span");
@@ -225,18 +282,6 @@
         head.appendChild(tag);
       }
       card.appendChild(head);
-
-      cb.addEventListener("change", () => {
-        if (cb.checked) {
-          selected.add(s);
-          card.classList.add("selected");
-        } else {
-          selected.delete(s);
-          card.classList.remove("selected");
-        }
-        syncBar();
-      });
-      checks.push(cb);
 
       if (s.desc) {
         const desc = document.createElement("p");
@@ -274,12 +319,13 @@
         card.appendChild(link);
       }
 
+      cardEls.push({ card: card, marketplace: marketplace });
       list.appendChild(card);
     });
 
     wrap.appendChild(list);
 
-    // Action bar — select all / clear, a live count, and the combined copy.
+    // ----- Action bar — only for single skills -----
     const bar = document.createElement("div");
     bar.className = "skill-actions";
 
@@ -301,17 +347,15 @@
     });
 
     selectAll.addEventListener("click", () => {
-      const makeAll = selected.size !== skills.length;
-      checks.forEach((cb, idx) => {
+      const makeAll = selected.size !== singles.length;
+      singleChecks.forEach(({ cb, skill, card }) => {
         cb.checked = makeAll;
-        const s = skills[idx];
-        const card = cb.closest(".skill-card");
         if (makeAll) {
-          selected.add(s);
-          if (card) card.classList.add("selected");
+          selected.add(skill);
+          card.classList.add("selected");
         } else {
-          selected.delete(s);
-          if (card) card.classList.remove("selected");
+          selected.delete(skill);
+          card.classList.remove("selected");
         }
       });
       syncBar();
@@ -321,15 +365,32 @@
       const n = selected.size;
       status.textContent = n
         ? n + (n === 1 ? " skill selected" : " skills selected")
-        : "Select skills to build a prompt";
-      selectAll.textContent = n === skills.length && n > 0 ? "Clear all" : "Select all";
+        : "Tick single skills to build one install prompt";
+      selectAll.textContent =
+        n === singles.length && n > 0 ? "Clear all" : "Select all";
       copyAll.disabled = n === 0;
     }
 
     bar.append(selectAll, status, copyAll);
-    wrap.appendChild(bar);
+    if (singles.length) wrap.appendChild(bar);
+
+    // ----- Filtering -----
+    function applyFilter(mode) {
+      current = mode;
+      Object.keys(filterBtns).forEach((k) =>
+        filterBtns[k].setAttribute("aria-selected", k === mode ? "true" : "false")
+      );
+      cardEls.forEach(({ card, marketplace }) => {
+        const type = marketplace ? "marketplace" : "skill";
+        card.style.display = mode === "all" || mode === type ? "" : "none";
+      });
+      // The combined-prompt bar is only relevant when single skills are visible.
+      const showBar = singles.length > 0 && mode !== "marketplace";
+      bar.style.display = showBar ? "" : "none";
+    }
 
     syncBar();
+    applyFilter("all");
     return wrap;
   }
 
