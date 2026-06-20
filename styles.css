@@ -838,11 +838,34 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
+.skill-card.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow);
+}
+
 .skill-head {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 8px 12px;
+}
+
+.skill-select {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.skill-check {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  align-self: center;
+  accent-color: var(--accent);
+  cursor: pointer;
 }
 
 .skill-name {
@@ -908,6 +931,50 @@ body {
 }
 .skill-link:hover {
   text-decoration: underline;
+}
+
+/* Action bar — select all / clear, live count, and combined copy */
+.skill-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.skill-selectall {
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+}
+.skill-selectall:hover {
+  text-decoration: underline;
+}
+
+.skill-status {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.copy-btn:disabled,
+.copy-btn:disabled:hover {
+  opacity: 0.45;
+  cursor: default;
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  border-color: var(--line-strong);
+  box-shadow: none;
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

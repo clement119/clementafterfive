@@ -662,7 +662,7 @@ const journal = [
         title: "Four skills worth trying",
         open: true,
         items: [
-          { text: "Browse the cards below. Each has a short description and a copyable install command — paste it into your terminal to add the skill, then invoke it by name.", plain: true },
+          { text: "Tick the skills you want, then hit Copy install prompt for a single prompt that tells Claude Code to install them into your project repo's .claude/skills/. Each card also has its own copyable install command if you'd rather add one by hand.", plain: true },
           {
             skills: [
               {

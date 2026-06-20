@@ -124,7 +124,7 @@
     setTimeout(() => {
       btn.classList.remove("copied");
       btn.querySelector(".copy-icon").innerHTML = copyIconSVG;
-      if (label) label.textContent = "Copy";
+      if (label) label.textContent = btn.dataset.copyLabel || "Copy";
     }, 1300);
   }
 
@@ -161,23 +161,62 @@
     return h;
   }
 
-  // A browsable list of skills. Each card shows the name, a short tag and
-  // description, a copyable install command, and a link to the repo.
+  // A browsable, selectable list of skills. Each card has a checkbox, name,
+  // tag, description, a copyable install command, and a repo link. Picking
+  // skills builds one combined prompt that installs them into a project's
+  // .claude/skills/ via Claude Code.
   function buildSkillList(skills) {
+    skills = Array.isArray(skills) ? skills : [];
+
+    const wrap = document.createElement("div");
+    wrap.className = "skill-tool";
+
     const list = document.createElement("div");
     list.className = "skill-list";
 
-    (skills || []).forEach((s) => {
+    const selected = new Set();
+    const checks = [];
+
+    // Assemble a single prompt from the chosen skills.
+    function buildPrompt() {
+      const chosen = skills.filter((s) => selected.has(s));
+      const lines = chosen
+        .map((s) => "- " + (s.name || "Skill") + " — " + (s.repo || ""))
+        .join("\n");
+      return (
+        "Set up the following Claude Code skills in this repository so I can use them in this project.\n\n" +
+        "For each skill below:\n" +
+        "1. Clone its GitHub repo into `.claude/skills/` at the root of this repo (create the folder if it doesn't exist).\n" +
+        "2. If the repo is a single skill, make sure its `SKILL.md` ends up at `.claude/skills/<skill-name>/SKILL.md`. If the repo is a collection of several skills or plugins, place each one so its `SKILL.md` sits directly inside its own folder under `.claude/skills/`.\n" +
+        "3. If a repo's README specifies a different install step, follow that instead.\n" +
+        "4. Show me exactly what you added, and don't commit anything unless I ask.\n\n" +
+        "When you're done, list every skill now available in this project, each with a one-line description and how to invoke it (its slash command, or the kind of request that triggers it).\n\n" +
+        "Skills to install:\n" +
+        lines
+      );
+    }
+
+    skills.forEach((s) => {
       const card = document.createElement("article");
       card.className = "skill-card";
 
       const head = document.createElement("div");
       head.className = "skill-head";
 
+      const select = document.createElement("label");
+      select.className = "skill-select";
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.className = "skill-check";
+      cb.setAttribute("aria-label", "Select " + (s.name || "skill"));
+
       const name = document.createElement("h3");
       name.className = "skill-name";
       name.textContent = s.name || "";
-      head.appendChild(name);
+
+      select.append(cb, name);
+      head.appendChild(select);
 
       if (s.tag) {
         const tag = document.createElement("span");
@@ -186,6 +225,18 @@
         head.appendChild(tag);
       }
       card.appendChild(head);
+
+      cb.addEventListener("change", () => {
+        if (cb.checked) {
+          selected.add(s);
+          card.classList.add("selected");
+        } else {
+          selected.delete(s);
+          card.classList.remove("selected");
+        }
+        syncBar();
+      });
+      checks.push(cb);
 
       if (s.desc) {
         const desc = document.createElement("p");
@@ -226,8 +277,62 @@
       list.appendChild(card);
     });
 
-    return list;
+    wrap.appendChild(list);
+
+    // Action bar — select all / clear, a live count, and the combined copy.
+    const bar = document.createElement("div");
+    bar.className = "skill-actions";
+
+    const selectAll = document.createElement("button");
+    selectAll.type = "button";
+    selectAll.className = "skill-selectall";
+
+    const status = document.createElement("span");
+    status.className = "skill-status";
+
+    const copyAll = document.createElement("button");
+    copyAll.className = "copy-btn skill-copy-all";
+    copyAll.type = "button";
+    copyAll.dataset.copyLabel = "Copy install prompt";
+    copyAll.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy install prompt</span>`;
+    copyAll.addEventListener("click", () => {
+      if (selected.size === 0) return;
+      copyText(buildPrompt(), copyAll);
+    });
+
+    selectAll.addEventListener("click", () => {
+      const makeAll = selected.size !== skills.length;
+      checks.forEach((cb, idx) => {
+        cb.checked = makeAll;
+        const s = skills[idx];
+        const card = cb.closest(".skill-card");
+        if (makeAll) {
+          selected.add(s);
+          if (card) card.classList.add("selected");
+        } else {
+          selected.delete(s);
+          if (card) card.classList.remove("selected");
+        }
+      });
+      syncBar();
+    });
+
+    function syncBar() {
+      const n = selected.size;
+      status.textContent = n
+        ? n + (n === 1 ? " skill selected" : " skills selected")
+        : "Select skills to build a prompt";
+      selectAll.textContent = n === skills.length && n > 0 ? "Clear all" : "Select all";
+      copyAll.disabled = n === 0;
+    }
+
+    bar.append(selectAll, status, copyAll);
+    wrap.appendChild(bar);
+
+    syncBar();
+    return wrap;
   }
+
 
   function buildItem(item, i) {
     if (item && item.deck) return buildPersonaDeck(item.deck);
