@@ -183,6 +183,13 @@ const journal = [
             items: [
               { text: "A loose, hand-drawn icon set. Choose the ink color and fill, then either use an uploaded image or describe the object yourself." },
               {
+                compare: {
+                  before: "assets/examples/doodle-icon-before.png",
+                  after: "assets/examples/doodle-icon-after.png",
+                  caption: "Original photo → hand-drawn doodle icon sheet",
+                },
+              },
+              {
                 builder: {
                   template:
                     "Minimalist hand-drawn doodle icon sticker sheet of {subject} in {color} ink line art, single color, loose imperfect hand-drawn strokes, {fill}, each icon separated with whitespace, transparent white background",
