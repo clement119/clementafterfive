@@ -250,6 +250,26 @@ const journal = [
             ],
           },
           {
+            title: "Handwritten Photo Notes",
+            items: [
+              { text: "Annotates each item in a photo with cute, handwritten white notes — flavour, texture, mood — in a relaxed Instagram-story / diary style. Upload your photo, switch the prompt to your language, then copy.", plain: true },
+              {
+                compare: {
+                  before: "assets/examples/photo-notes-before.jpg",
+                  after: "assets/examples/photo-notes-after.jpg",
+                  caption: "Original photo → handwritten diary-style annotations",
+                },
+              },
+              {
+                promptI18n: {
+                  defaultLang: "zh",
+                  zh: "請觀察照片中的元素，並為每個物件加上有意義的手繪風註解。\n\n【畫面內容】\n請填寫照片中的物品（例：冰奶茶、甜甜圈）\n\n【描寫規則】\n・使用像白色筆畫的細手繪線條\n・一筆畫風格，隨性、略帶不均勻感\n・沿著物件外圍加上描邊輪廓\n・用箭頭或虛線做出視線引導\n\n【文字規則】\n・手寫風格字體（偏日系可愛感）\n・句子簡短，像自言自語的小碎念\n・語氣偏日記感、帶一點情緒\n\n【註解生成規則】\n・飲料 → 味道、溫度、心情（例：清爽、微甜、剛剛好）\n・食物 → 口感、好吃程度（例：鬆軟、超好吃）\n・空間 → 氛圍（例：很放鬆、喜歡這種感覺）\n・整體 → 一句總結（例：今天有點幸福～）\n\n【裝飾】\n・適度加入熱氣、閃光、愛心、小表情等元素\n・不要過多，保留一些留白\n\n【完成風格】\n・像 Instagram 限時動態、雜誌隨手筆記風\n・自然、有質感、帶點慵懶感",
+                  en: "Look at the elements in the photo and add a meaningful hand-drawn-style annotation to each object.\n\n【Scene content】\nFill in the items in the photo (e.g. iced milk tea, donut)\n\n【Drawing rules】\n・Use fine hand-drawn lines that look like white pen strokes\n・One-stroke style — casual, with a slightly uneven feel\n・Trace an outline along the edge of each object\n・Use arrows or dotted lines to guide the eye\n\n【Text rules】\n・Handwritten-style font (cute, Japanese-leaning)\n・Short sentences, like little murmurs to yourself\n・A diary-like tone with a touch of emotion\n\n【Annotation rules】\n・Drinks → taste, temperature, mood (e.g. refreshing, lightly sweet, just right)\n・Food → texture and how tasty (e.g. fluffy, so good)\n・Space → atmosphere (e.g. very relaxing, love this feeling)\n・Overall → a one-line summary (e.g. feeling a little happy today~)\n\n【Decoration】\n・Add elements like steam, sparkles, hearts, and small emoji in moderation\n・Don't overdo it — leave some white space\n\n【Finished style】\n・Like an Instagram Story or a casual magazine note\n・Natural, with nice texture and a slightly laid-back feel",
+                },
+              },
+            ],
+          },
+          {
             title: "Product Showcase Grid",
             items: [
               { text: "Builds a clean, minimal MUJI-style catalog grid from your own product photos. Follow the steps in order — the whole grid is generated in one shot by a multi-image model (e.g. Gemini 2.5 Flash Image / GPT-image).", plain: true },

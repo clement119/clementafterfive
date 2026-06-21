@@ -437,10 +437,72 @@
   }
 
 
+  // A copyable prompt offered in more than one language. A toggle switches the
+  // shown text; Copy always grabs whichever language is currently displayed.
+  function buildI18nPrompt(cfg) {
+    cfg = cfg || {};
+    const langs = [
+      { key: "zh", label: "中文" },
+      { key: "en", label: "English" },
+    ].filter((l) => cfg[l.key]);
+    if (!langs.length) return buildItem(String(cfg.zh || cfg.en || ""), 0);
+
+    let current =
+      cfg.defaultLang && cfg[cfg.defaultLang] ? cfg.defaultLang : langs[0].key;
+
+    const el = document.createElement("div");
+    el.className = "item i18n-prompt";
+
+    const head = document.createElement("div");
+    head.className = "i18n-head";
+
+    const toggle = document.createElement("div");
+    toggle.className = "lang-toggle";
+    toggle.setAttribute("role", "group");
+    toggle.setAttribute("aria-label", "Prompt language");
+
+    const btns = {};
+    langs.forEach((l) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "lang-btn";
+      b.textContent = l.label;
+      b.setAttribute("aria-pressed", l.key === current ? "true" : "false");
+      b.addEventListener("click", () => setLang(l.key));
+      btns[l.key] = b;
+      toggle.appendChild(b);
+    });
+
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy-btn";
+    copyBtn.type = "button";
+    copyBtn.setAttribute("aria-label", "Copy prompt");
+    copyBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+    copyBtn.addEventListener("click", () => copyText(cfg[current], copyBtn));
+
+    head.append(toggle, copyBtn);
+
+    const text = document.createElement("p");
+    text.className = "item-text i18n-text";
+
+    function setLang(k) {
+      current = k;
+      Object.keys(btns).forEach((key) =>
+        btns[key].setAttribute("aria-pressed", key === current ? "true" : "false")
+      );
+      text.textContent = cfg[current];
+    }
+    setLang(current);
+
+    el.append(head, text);
+    return el;
+  }
+
   function buildItem(item, i) {
     if (item && item.deck) return buildPersonaDeck(item.deck);
     if (item && item.skills) return buildSkillList(item.skills);
     if (item && item.compare) return buildBeforeAfter(item.compare);
+    if (item && item.promptI18n) return buildI18nPrompt(item.promptI18n);
     if (item && item.builder) return buildBuilder(item.builder);
     if (item && item.heading != null) return buildHeading(item.heading);
 
