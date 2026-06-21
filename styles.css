@@ -813,6 +813,48 @@ body {
   transform: scale(1.35);
 }
 
+/* ---------- Before / after example ---------- */
+.ba-figure {
+  margin: 6px 0 8px;
+}
+.ba-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.ba-cell {
+  position: relative;
+}
+.ba-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.ba-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(28, 26, 23, 0.62);
+  padding: 3px 9px;
+  border-radius: 999px;
+  backdrop-filter: blur(2px);
+}
+.ba-caption {
+  margin-top: 9px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
 /* ---------- Skills list ---------- */
 .skill-filter {
   display: inline-flex;

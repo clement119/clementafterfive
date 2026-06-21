@@ -161,6 +161,48 @@
     return h;
   }
 
+  // A before/after example pair — two labelled images side by side, with an
+  // optional caption. Used to show what a prompt produces.
+  function buildBeforeAfter(cfg) {
+    const fig = document.createElement("figure");
+    fig.className = "ba-figure";
+
+    const grid = document.createElement("div");
+    grid.className = "ba-grid";
+
+    [
+      ["before", cfg.beforeLabel || "Before"],
+      ["after", cfg.afterLabel || "After"],
+    ].forEach(([key, label]) => {
+      const src = cfg[key];
+      if (!src) return;
+      const cell = document.createElement("div");
+      cell.className = "ba-cell";
+
+      const img = document.createElement("img");
+      img.className = "ba-img";
+      img.src = src;
+      img.loading = "lazy";
+      img.alt = label + " example";
+
+      const tag = document.createElement("span");
+      tag.className = "ba-label";
+      tag.textContent = label;
+
+      cell.append(img, tag);
+      grid.appendChild(cell);
+    });
+    fig.appendChild(grid);
+
+    if (cfg.caption) {
+      const cap = document.createElement("figcaption");
+      cap.className = "ba-caption";
+      cap.textContent = cfg.caption;
+      fig.appendChild(cap);
+    }
+    return fig;
+  }
+
   // A browsable, selectable list of skills. Two kinds:
   //   • single skill  — one SKILL.md; multi-selectable, combined into one
   //     `npx skills add` install prompt.
@@ -398,6 +440,7 @@
   function buildItem(item, i) {
     if (item && item.deck) return buildPersonaDeck(item.deck);
     if (item && item.skills) return buildSkillList(item.skills);
+    if (item && item.compare) return buildBeforeAfter(item.compare);
     if (item && item.builder) return buildBuilder(item.builder);
     if (item && item.heading != null) return buildHeading(item.heading);
 

@@ -229,6 +229,20 @@ const journal = [
             ],
           },
           {
+            title: "Folk Flat Illustration",
+            items: [
+              { text: "Turns any photo into a cute, childlike folk illustration — clean flat hand-drawn shapes with playful doodle accents, as if drawn on white paper. Upload your photo, then copy the prompt.", plain: true },
+              {
+                compare: {
+                  before: "assets/examples/folk-flat-before.jpg",
+                  after: "assets/examples/folk-flat-after.jpg",
+                  caption: "Original photo → Decorative Folk Flat Illustration",
+                },
+              },
+              "Please transform the entire image into a single Decorative Folk Flat Illustration with Doodle elements. Use a bold and playful color palette, completely different from the original image. Simplify all details into clean, flat shapes with a handmade, slightly imperfect feel, as if drawn on a sheet of white paper. The overall style should look cute, childlike, and whimsical.",
+            ],
+          },
+          {
             title: "Product Showcase Grid",
             items: [
               { text: "Builds a clean, minimal MUJI-style catalog grid from your own product photos. Follow the steps in order — the whole grid is generated in one shot by a multi-image model (e.g. Gemini 2.5 Flash Image / GPT-image).", plain: true },
