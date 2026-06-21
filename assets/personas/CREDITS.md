@@ -13,11 +13,19 @@ licenses require.
 
 Images were downscaled for the web; no other modifications were made.
 
-## Personas without a portrait
+## Additional portraits — rights reserved
 
-Philip Fisher, Peter Lynch, Richard Driehaus, and John Templeton have no
-freely licensed portrait available on Wikimedia Commons, so their cards fall
-back to the colored camp tint. If a public-domain or Creative-Commons photo of
-any of them becomes available, drop it in here as `fisher.jpg`, `lynch.jpg`,
-`driehaus.jpg`, or `templeton.jpg` and re-add the matching `image:` field in
-`data.js` — the card code will pick it up automatically.
+The four portraits below were supplied by the site owner and are used as
+faint (~16–22% opacity) background images on a personal, non-commercial site.
+They are **not** free/Creative-Commons licensed; copyright remains with the
+respective rights holders. Listed here for provenance, not as a license grant.
+
+| File | Person | Source URL |
+|------|--------|------------|
+| `lynch.jpg` | Peter Lynch | img-s-msn-com.akamaized.net/…/AA1Qykmu.img |
+| `driehaus.jpg` | Richard Driehaus | tse2.mm.bing.net/th/id/OIP.fi31-iyeqXScUfaT8Sk3FAHaE7 |
+| `templeton.jpg` | John Templeton | https://www.templeton.org/wp-content/uploads/2017/01/Sir-John-3-1.jpg |
+| `fisher.jpg` | Philip Fisher | tse2.mm.bing.net/th/id/OIP.0Xqr2aJGP3sVnliOKT3YzAHaE6 |
+
+If you'd prefer everything fully licensed, replace these with public-domain /
+Creative-Commons photos (or stylized illustrations) and update this file.

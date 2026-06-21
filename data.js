@@ -606,6 +606,7 @@ const journal = [
                 },
                 {
                   name: "Philip Fisher",
+                  image: "assets/personas/fisher.jpg",
                   initials: "PF",
                   camp: "quality",
                   tag: "Fifteen Points and scuttlebutt on a growth compounder.",
@@ -615,6 +616,7 @@ const journal = [
                 },
                 {
                   name: "Peter Lynch",
+                  image: "assets/personas/lynch.jpg",
                   initials: "PL",
                   camp: "growth",
                   tag: "The two-minute story, priced by PEG.",
@@ -624,6 +626,7 @@ const journal = [
                 },
                 {
                   name: "Richard Driehaus",
+                  image: "assets/personas/driehaus.jpg",
                   initials: "RD",
                   camp: "growth",
                   tag: "Buy high, sell higher — momentum with a catalyst.",
@@ -653,6 +656,7 @@ const journal = [
                 },
                 {
                   name: "John Templeton",
+                  image: "assets/personas/templeton.jpg",
                   initials: "JT",
                   camp: "contrarian",
                   tag: "Buy at the point of maximum pessimism.",
