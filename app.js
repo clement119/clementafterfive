@@ -498,10 +498,28 @@
     return el;
   }
 
+  // A tappable link rendered as a CTA button. Opens in a new tab.
+  const externalIconSVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>`;
+  function buildLinkButton(cfg) {
+    const a = document.createElement("a");
+    a.className = "item-link";
+    a.href = cfg.href || "#";
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    const label = document.createElement("span");
+    label.textContent = cfg.label || cfg.href || "Open link";
+    const icon = document.createElement("span");
+    icon.className = "item-link-icon";
+    icon.innerHTML = externalIconSVG;
+    a.append(label, icon);
+    return a;
+  }
+
   function buildItem(item, i) {
     if (item && item.deck) return buildPersonaDeck(item.deck);
     if (item && item.skills) return buildSkillList(item.skills);
     if (item && item.compare) return buildBeforeAfter(item.compare);
+    if (item && item.link) return buildLinkButton(item.link);
     if (item && item.promptI18n) return buildI18nPrompt(item.promptI18n);
     if (item && item.builder) return buildBuilder(item.builder);
     if (item && item.heading != null) return buildHeading(item.heading);

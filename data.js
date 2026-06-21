@@ -416,14 +416,8 @@ const journal = [
           { text: "frame.md — your design system, ready for video.", plain: true },
           { text: "Every brand has a design.md. None of them were written for a camera. frame.md is the missing translation layer: it takes your web-context design spec and inverts it for the frame — the same tokens, the same rules, rewritten so an AI agent can compose a promo video without guessing at scale or reaching for web chrome.", plain: true },
           { text: "The output is a DESIGN.md superset your whole toolchain can read. Atoms stay sacred. Composition stays free. Numbers come from the script.", plain: true },
-          { heading: "Generate a frame.md from your design.md" },
-          { text: "Paste your existing design.md where marked, then run this with your coding agent. It pairs with the Hyperframes skill in the Skills tab.", plain: true },
-          {
-            prompt:
-              "You are translating a web design system into a motion design system for video. I'll give you my existing design.md — a web-context brand and design spec. Produce a frame.md: a superset of DESIGN.md rewritten for the camera (a 16:9 video frame) instead of the browser.\n\nFollow three rules:\n1. Atoms stay sacred — keep every brand token exactly as defined (colors, type families, logo, spacing scale, radii, iconography). Do not invent, rename, or restyle them.\n2. Composition stays free — re-express layout for a single 16:9 frame: safe margins, focal hierarchy, and where elements enter, rest, and exit. Drop web-only chrome (nav bars, scrollbars, hover states, breakpoints, buttons-as-links).\n3. Numbers come from the script — don't hardcode durations, sizes, or positions. Express them relative to the frame (e.g. scale as a fraction of frame height, dwell as a function of read time) and leave clearly marked placeholders the video script fills in per shot.\n\nTranslate, don't redesign: same tokens, same rules, inverted for the frame so an AI agent can compose a promo video without guessing at scale or reaching for web UI.\n\nOutput a single frame.md in Markdown, structured as a DESIGN.md superset — keep the original sections, then add the frame layer. Cover at least: Tokens (unchanged, referenced not redefined); Frame & safe area (16:9, title-safe margins); Type scale mapped to frame height; Motion defaults (easing, enter/exit, pacing); Element roles (enter / dwell / exit per element); and Omit-from-web (what to strip from the web spec). Wherever a value must be derived per shot, mark it as coming from the script rather than fixing a number.\n\nHere is my design.md:\n[paste your design.md here]",
-            plain: true,
-          },
-          { text: "Browse and remix example frame.md files at hyperframes.dev/design.", plain: true },
+          { text: "Make your own: paste your design.md into the tool and it translates it into a frame.md you can browse, remix, and drop into your video toolchain.", plain: true },
+          { link: { href: "https://hyperframes.dev/design", label: "Build your frame.md at hyperframes.dev/design" } },
         ],
       },
     ],

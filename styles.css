@@ -813,6 +813,38 @@ body {
   transform: scale(1.35);
 }
 
+/* ---------- Link button (CTA to an external page) ---------- */
+.item-link {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 6px;
+  padding: 11px 16px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 1px solid var(--accent);
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: box-shadow 0.16s ease, filter 0.16s ease, transform 0.12s ease;
+}
+.item-link:hover {
+  box-shadow: var(--shadow);
+  filter: brightness(1.06);
+}
+.item-link:active {
+  transform: scale(0.98);
+}
+.item-link-icon {
+  display: inline-flex;
+}
+.item-link-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
 /* ---------- Bilingual prompt (language toggle) ---------- */
 .i18n-prompt {
   flex-direction: column;
