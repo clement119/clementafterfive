@@ -519,7 +519,7 @@
     if (item && item.deck) return buildPersonaDeck(item.deck);
     if (item && item.skills) return buildSkillList(item.skills);
     if (item && item.compare) return buildBeforeAfter(item.compare);
-    if (item && item.link) return buildLinkButton(item.link);
+    if (item && typeof item === "object" && item.link) return buildLinkButton(item.link);
     if (item && item.promptI18n) return buildI18nPrompt(item.promptI18n);
     if (item && item.builder) return buildBuilder(item.builder);
     if (item && item.heading != null) return buildHeading(item.heading);
