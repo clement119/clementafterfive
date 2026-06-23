@@ -760,4 +760,53 @@ const journal = [
     footer:
       "New to skills? Start with one, install it, and invoke it by name — then add more as you find jobs you do often.",
   },
+
+  {
+    dimension: "UI/UX",
+    title: "Vibe-code beautiful UI",
+    subtitle:
+      "AI can design — you just have to drive it. A repeatable loop for vibe-coding UI that actually looks good: foundation → rules → examples → sharper prompts.",
+    date: "2026-06-23",
+    sections: [
+      {
+        title: "Step 1 · Give it a foundation",
+        open: true,
+        items: [
+          { text: "Start with a design.md — a style guide your agent reads before it builds. It stops the guessing and keeps your colors, type, spacing, and voice consistent. Grab a ready-made template, or ask Claude Code to write one from your brand.", plain: true },
+          { link: { href: "https://getdesign.md", label: "getdesign.md — what design.md is, and a ready-made example", compact: true } },
+        ],
+      },
+      {
+        title: "Step 2 · Give it rules",
+        open: true,
+        items: [
+          { text: "Install design skills so your agent knows the rules pros take for granted — like not putting emojis on everything. These bake taste and craft straight into how it generates. (Add them via the marketplace flow in your Skills tab.)", plain: true },
+          { link: { href: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill", label: "UI/UX Pro Max — design intelligence: styles, palettes, UX rules", compact: true } },
+          { link: { href: "https://github.com/pbakaus/impeccable", label: "Impeccable — a shared design vocabulary (polish, audit, critique…)", compact: true } },
+          { link: { href: "https://github.com/Leonxlnx/taste-skill", label: "Taste skill — anti-slop, motion-first taste (also in your Skills tab)", compact: true } },
+        ],
+      },
+      {
+        title: "Step 3 · Give it examples",
+        open: true,
+        items: [
+          { text: "Show it what “good” looks like. Drop visual references into your prompt — real screens, real motion — so the AI builds toward your vision instead of its default.", plain: true },
+          { link: { href: "https://mobbin.com", label: "Mobbin — real iOS / app screens", compact: true } },
+          { link: { href: "https://21st.dev", label: "21st.dev — polished UI components", compact: true } },
+          { link: { href: "https://tympanus.net/codrops/hub/", label: "Codrops Hub — motion + interaction inspiration", compact: true } },
+        ],
+      },
+      {
+        title: "Step 4 · Upgrade your prompts",
+        open: true,
+        items: [
+          { text: "Learn the UI basics so you can feel why something's off and describe it like a designer. Say “increase the contrast and tighten the line height so the heading reads first,” not “make it pop.” Precise words get precise UI.", plain: true },
+          { link: { href: "https://www.figma.com/resource-library/design-basics/", label: "Figma Design Basics — the fundamentals, free", compact: true } },
+          { link: { href: "https://index.how", label: "index.how — name what you see, articulate like a designer", compact: true } },
+        ],
+      },
+    ],
+    footer:
+      "Foundation, rules, examples, words — run the loop and the AI ships UI that looks good. No magic prompt required.",
+  },
 ];

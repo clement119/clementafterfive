@@ -845,6 +845,25 @@ body {
   height: 15px;
 }
 
+/* Soft variant — an outline chip for lists of resource links */
+.item-link--soft {
+  margin: 0;
+  padding: 9px 13px;
+  background: var(--surface);
+  color: var(--accent);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 13.5px;
+}
+.item-link--soft:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+  filter: none;
+}
+.item-link--soft .item-link-icon {
+  color: var(--ink-soft);
+}
+
 /* ---------- Bilingual prompt (language toggle) ---------- */
 .i18n-prompt {
   flex-direction: column;

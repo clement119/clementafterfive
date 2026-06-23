@@ -502,7 +502,7 @@
   const externalIconSVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>`;
   function buildLinkButton(cfg) {
     const a = document.createElement("a");
-    a.className = "item-link";
+    a.className = cfg.compact ? "item-link item-link--soft" : "item-link";
     a.href = cfg.href || "#";
     a.target = "_blank";
     a.rel = "noopener noreferrer";
