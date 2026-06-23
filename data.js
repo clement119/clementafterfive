@@ -729,6 +729,22 @@ const journal = [
                 install: "npx skills add https://github.com/leonxlnx/taste-skill",
               },
               {
+                name: "UI/UX Pro Max",
+                type: "marketplace",
+                tag: "Design intelligence",
+                desc: "A design-intelligence bundle — searchable styles, color palettes, font pairings, and UX guidelines across many stacks — that analyzes your project and generates a full design system.",
+                repo: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+                install: "/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill",
+              },
+              {
+                name: "Impeccable",
+                type: "marketplace",
+                tag: "Design vocabulary",
+                desc: "A shared design vocabulary that shifts your agent's baseline taste — one-word commands like polish, audit, and critique, backed by typography, color, motion, and UX-writing references. Anti-slop.",
+                repo: "https://github.com/pbakaus/impeccable",
+                install: "npx impeccable install",
+              },
+              {
                 name: "App Store & Google Play Screenshot Generator",
                 type: "skill",
                 tag: "App mockups",
