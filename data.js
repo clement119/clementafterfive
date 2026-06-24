@@ -111,7 +111,7 @@ const journal = [
           { text: "Keep one idea per slide. Carousels die when slides try to do two things.", plain: true },
           { heading: "Consistency at scale" },
           { text: "Treat the design system as a versioned asset. When you tweak it, regenerate a test carousel to catch drift before it propagates.", plain: true },
-          { text: "For The Casual Needs, this maps onto your existing Marketing OS — the locked design system is the same primitive you'd want as a reusable config, so a generated carousel slots into your content-pillar calendar instead of being a one-off.", plain: true },
+          { text: "Treat the locked design system as a reusable config in your wider marketing system — the same primitive across every campaign — so a generated carousel slots into your content calendar instead of being a one-off.", plain: true },
           { heading: "Reality check" },
           { text: "The post is marketing, so it understates the manual cleanup. Step 4 usually takes longer than implied — expect to hand-fix text overflow, awkward line breaks, and contrast on busy backgrounds. The automation gets you to 80%; the last 20% is still you.", plain: true },
         ],
