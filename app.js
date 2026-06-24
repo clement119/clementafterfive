@@ -515,10 +515,50 @@
     return a;
   }
 
+  // A grid of labelled reference images (e.g. carousel slides).
+  function buildGallery(cfg) {
+    const fig = document.createElement("figure");
+    fig.className = "ba-figure";
+
+    const grid = document.createElement("div");
+    grid.className = "gallery-grid";
+
+    (cfg.images || []).forEach((im) => {
+      if (!im || !im.src) return;
+      const cell = document.createElement("div");
+      cell.className = "ba-cell";
+
+      const img = document.createElement("img");
+      img.className = "ba-img";
+      img.src = im.src;
+      img.loading = "lazy";
+      img.alt = im.label || "";
+
+      cell.appendChild(img);
+      if (im.label) {
+        const tag = document.createElement("span");
+        tag.className = "ba-label";
+        tag.textContent = im.label;
+        cell.appendChild(tag);
+      }
+      grid.appendChild(cell);
+    });
+    fig.appendChild(grid);
+
+    if (cfg.caption) {
+      const cap = document.createElement("figcaption");
+      cap.className = "ba-caption";
+      cap.textContent = cfg.caption;
+      fig.appendChild(cap);
+    }
+    return fig;
+  }
+
   function buildItem(item, i) {
     if (item && item.deck) return buildPersonaDeck(item.deck);
     if (item && item.skills) return buildSkillList(item.skills);
     if (item && item.compare) return buildBeforeAfter(item.compare);
+    if (item && item.gallery) return buildGallery(item.gallery);
     if (item && typeof item === "object" && item.link) return buildLinkButton(item.link);
     if (item && item.promptI18n) return buildI18nPrompt(item.promptI18n);
     if (item && item.builder) return buildBuilder(item.builder);

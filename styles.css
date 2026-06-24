@@ -950,6 +950,13 @@ body {
   text-align: center;
 }
 
+/* Gallery — a responsive grid of labelled reference images */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
 /* ---------- Skills list ---------- */
 .skill-filter {
   display: inline-flex;
