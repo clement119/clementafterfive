@@ -1146,6 +1146,41 @@ body {
   font-style: italic;
 }
 
+/* Catalog filters + type badges (plug-in / skill / MCP) */
+.catalog-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+}
+.catalog-filter-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  min-width: 56px;
+}
+.catalog-count {
+  margin: 2px 0 16px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.skill-type[data-type="plugin"] {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: transparent;
+}
+.skill-type[data-type="mcp"] {
+  color: #3f66ad;
+  background: rgba(63, 102, 173, 0.14);
+  border-color: transparent;
+}
+[data-theme="dark"] .skill-type[data-type="mcp"] {
+  color: #93b1e6;
+}
+
 .skill-link {
   align-self: flex-start;
   font-size: 13px;

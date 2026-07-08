@@ -554,12 +554,69 @@
     return fig;
   }
 
-  // A catalog of installable items (plug-ins, skills, MCP servers). Simpler
-  // than the skills picker: no filter or selection, and each card's install
-  // command may be a single string OR an array of lines (for two-step plugin
-  // installs), rendered as a multi-line block that copies as a whole.
+  // A catalog of installable items (plug-ins, skills, MCP servers). Each card
+  // carries a `type` (plugin|skill|mcp) and a `domain`; install may be a string
+  // OR an array of lines (two-step plugin installs) copied as one block.
+  // When cfg.filters is true, render Type + Domain chip filters over the cards.
   function buildCatalog(cfg) {
     const items = cfg && Array.isArray(cfg.items) ? cfg.items : [];
+    const withFilters = cfg && cfg.filters === true;
+    const typeLabel = { plugin: "Plug-in", skill: "Skill", mcp: "MCP" };
+    const typeChip = { all: "All", plugin: "Plug-ins", skill: "Skills", mcp: "MCP servers" };
+
+    const wrap = document.createElement("div");
+    wrap.className = "catalog";
+
+    const cards = [];
+    let curType = "all";
+    let curDomain = "all";
+    const typeBtns = {};
+    const domainBtns = {};
+    let status = null;
+
+    function uniq(arr) {
+      const out = [];
+      arr.forEach((v) => { if (v && out.indexOf(v) === -1) out.push(v); });
+      return out;
+    }
+
+    function chipRow(labelText, values, current, btnMap, labelFor, onPick) {
+      const row = document.createElement("div");
+      row.className = "catalog-filter";
+      const lab = document.createElement("span");
+      lab.className = "catalog-filter-label";
+      lab.textContent = labelText;
+      const group = document.createElement("div");
+      group.className = "skill-filter";
+      group.setAttribute("role", "tablist");
+      group.setAttribute("aria-label", labelText + " filter");
+      values.forEach((v) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "skill-filter-btn";
+        b.setAttribute("role", "tab");
+        b.setAttribute("aria-selected", v === current ? "true" : "false");
+        b.textContent = labelFor(v);
+        b.addEventListener("click", () => onPick(v));
+        btnMap[v] = b;
+        group.appendChild(b);
+      });
+      row.append(lab, group);
+      return row;
+    }
+
+    if (withFilters) {
+      const types = ["all"].concat(uniq(items.map((i) => i.type)));
+      const domains = ["all"].concat(uniq(items.map((i) => i.domain)));
+      wrap.appendChild(chipRow("Type", types, curType, typeBtns,
+        (v) => typeChip[v] || v, (v) => { curType = v; apply(); }));
+      wrap.appendChild(chipRow("Domain", domains, curDomain, domainBtns,
+        (v) => (v === "all" ? "All" : v), (v) => { curDomain = v; apply(); }));
+      status = document.createElement("p");
+      status.className = "catalog-count";
+      wrap.appendChild(status);
+    }
+
     const list = document.createElement("div");
     list.className = "skill-list";
 
@@ -575,6 +632,13 @@
       name.textContent = s.name || "";
       head.appendChild(name);
 
+      if (s.type && typeLabel[s.type]) {
+        const badge = document.createElement("span");
+        badge.className = "skill-type";
+        badge.dataset.type = s.type;
+        badge.textContent = typeLabel[s.type];
+        head.appendChild(badge);
+      }
       if (s.star) {
         const star = document.createElement("span");
         star.className = "skill-star";
@@ -636,10 +700,31 @@
         card.appendChild(link);
       }
 
+      cards.push({ el: card, type: s.type || "", domain: s.domain || "" });
       list.appendChild(card);
     });
 
-    return list;
+    wrap.appendChild(list);
+
+    function setActive(map, cur) {
+      Object.keys(map).forEach((k) =>
+        map[k].setAttribute("aria-selected", k === cur ? "true" : "false"));
+    }
+    function apply() {
+      let n = 0;
+      cards.forEach((c) => {
+        const show = (curType === "all" || c.type === curType) &&
+          (curDomain === "all" || c.domain === curDomain);
+        c.el.style.display = show ? "" : "none";
+        if (show) n++;
+      });
+      if (status) status.textContent = n + " of " + cards.length + " shown";
+      setActive(typeBtns, curType);
+      setActive(domainBtns, curDomain);
+    }
+    if (withFilters) apply();
+
+    return wrap;
   }
 
   function buildItem(item, i) {
