@@ -723,96 +723,416 @@ const journal = [
   },
 
   {
-    dimension: "Skills",
-    title: "Skills — teach your AI new tricks",
-    subtitle:
-      "Drop-in packages that give Claude a specific, reusable capability. What they are, how to add them, and four worth trying.",
-    date: "2026-06-19",
-    sections: [
+    "dimension": "Claude Setup & Skills",
+    "title": "Claude Setup & Skills",
+    "subtitle": "Upgrade Claude like apps on your phone. Three kinds of add-on — plug-ins, skills, and MCP connectors — plus a curated catalog to install. You don't need all of them: start with 3, add one a week.",
+    "date": "2026-06-27",
+    "sections": [
       {
-        title: "What is a Skill?",
-        open: true,
-        items: [
-          { text: "A Skill is a small, self-contained package — a folder with a SKILL.md file (a short description plus instructions) and any optional scripts, templates, or reference files — that teaches your AI assistant how to do one specific job well.", plain: true },
-          { text: "Claude only loads a skill's full instructions when your request actually matches what it's for, so you can keep many skills installed without slowing things down or cluttering every chat.", plain: true },
-          { text: "Think of them as reusable expertise you can hand over: design taste, app-store screenshots, video generation, a whole design-ops toolkit — each one packaged so the assistant knows exactly when and how to use it.", plain: true },
-        ],
-      },
-      {
-        title: "How to install & invoke",
-        items: [
-          { heading: "Install" },
-          { text: "Most skills are shared as a GitHub repo. To add one, put its folder in your skills directory: ~/.claude/skills/<skill-name>/ for yourself, or .claude/skills/<skill-name>/ inside a project to share it with that repo or team.", plain: true },
-          { text: "The quickest way is to clone the repo straight into that folder (the copyable commands on each card below do exactly this). Each skill folder needs a SKILL.md at its root to register. Some repos are collections of many skills or ship their own installer — if so, follow that repo's README instead.", plain: true },
-          { prompt: "git clone <repo-url> ~/.claude/skills/<skill-name>" },
-          { heading: "Invoke" },
-          { text: "Automatic — just describe what you want. If your request matches a skill's description, the assistant reaches for it on its own.", plain: true },
-          { text: "Explicit — type a slash command with the skill's name, like /taste-skill, to run it directly.", plain: true },
-          { text: "Not sure what's loaded? Ask your assistant which skills it currently has available.", plain: true },
-        ],
-      },
-      {
-        title: "Four skills worth trying",
-        open: true,
-        items: [
-          { text: "Filter by type, then pick. A single skill is one SKILL.md you drop into a project — tick the ones you want and copy one install prompt for all of them. A plugin marketplace is a bundle of many skills; each installs with its own command (shown on the card), so those aren't multi-selectable.", plain: true },
+        "title": "First, the 3 building blocks",
+        "open": true,
+        "items": [
           {
-            skills: [
-              {
-                name: "Taste Skill",
-                type: "marketplace",
-                tag: "UI taste",
-                desc: "A bundle of 13 design-taste skills (brutalist, minimalist, soft, redesign, image-to-code, and more) that kill the AI-slop look. Pick the one you want by its install name.",
-                repo: "https://github.com/leonxlnx/taste-skill",
-                install: "npx skills add https://github.com/leonxlnx/taste-skill",
-              },
-              {
-                name: "UI/UX Pro Max",
-                type: "marketplace",
-                tag: "Design intelligence",
-                desc: "A design-intelligence bundle — searchable styles, color palettes, font pairings, and UX guidelines across many stacks — that analyzes your project and generates a full design system.",
-                repo: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
-                install: "/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill",
-              },
-              {
-                name: "Impeccable",
-                type: "marketplace",
-                tag: "Design vocabulary",
-                desc: "A shared design vocabulary that shifts your agent's baseline taste — one-word commands like polish, audit, and critique, backed by typography, color, motion, and UX-writing references. Anti-slop.",
-                repo: "https://github.com/pbakaus/impeccable",
-                install: "npx impeccable install",
-              },
-              {
-                name: "App Store & Google Play Screenshot Generator",
-                type: "skill",
-                tag: "App mockups",
-                desc: "A single skill that generates realistic app-store mockups with device frames in a Next.js editor — ready to drop into your store listing.",
-                repo: "https://github.com/ParthJadhav/app-store-screenshots",
-                install: "npx skills add ParthJadhav/app-store-screenshots",
-              },
-              {
-                name: "Hyperframes",
-                type: "marketplace",
-                tag: "Animated video",
-                desc: "A bundle of 17 skills (by HeyGen) for turning HTML, CSS, and JS into deterministic MP4 videos — animation, captions, voiceovers, and website-to-video.",
-                repo: "https://github.com/heygen-com/hyperframes",
-                install: "npx skills add heygen-com/hyperframes",
-              },
-              {
-                name: "Designer Skills",
-                type: "marketplace",
-                tag: "Design toolkit",
-                desc: "A marketplace of 90+ skills across research, UX strategy, UI, design ops, AI-agent design, and accessibility. Add the marketplace, then pick the collections you want.",
-                repo: "https://github.com/Owl-Listener/designer-skills",
-                install: "/plugin marketplace add Owl-Listener/designer-skills",
-              },
-            ],
+            "text": "Almost everything you install is one of three kinds. Get these down and the rest follows.",
+            "plain": true
           },
-        ],
+          {
+            "heading": "Plug-in — a whole crew in one install"
+          },
+          {
+            "text": "One command adds a bundle of related tools at once (a whole dev team, or a whole marketing team) instead of adding them one by one. Everyday analogy: ordering the full meal-deal instead of picking every item off the menu.",
+            "plain": true
+          },
+          {
+            "heading": "Skill — a single shortcut"
+          },
+          {
+            "text": "One short instruction file that teaches Claude a workflow you'd otherwise retype every time. Install once, trigger with a quick command. Everyday analogy: a saved recipe card — you just say “make that one.”",
+            "plain": true
+          },
+          {
+            "heading": "MCP server — a connector"
+          },
+          {
+            "text": "Model Context Protocol: the bridge that plugs Claude into your real apps and data (Notion, Slack, your calendar) so it can read and do things in them, live. Everyday analogy: the charging cable between two devices that lets them pass things back and forth.",
+            "plain": true
+          },
+          {
+            "text": "Rule of thumb: plug-in = a team, skill = a shortcut, MCP = a wire to your apps.",
+            "plain": true
+          }
+        ]
       },
+      {
+        "title": "How to install each type",
+        "items": [
+          {
+            "heading": "Install a plug-in"
+          },
+          {
+            "text": "Add its marketplace (the shelf it lives on), then install it:",
+            "plain": true
+          },
+          {
+            "prompt": "/plugin marketplace add <github-owner/repo>\n/plugin install <plugin-name>@<marketplace-name>",
+            "plain": true
+          },
+          {
+            "heading": "Install a skill"
+          },
+          {
+            "text": "Easiest: open a chat in Claude and paste the GitHub link, and it sets itself up. (Or in the web/desktop app: Settings → Skills → Upload.)",
+            "plain": true
+          },
+          {
+            "prompt": "Please install this Claude skill for me. The SKILL.md file is in this GitHub repo: <repo link>",
+            "plain": true
+          },
+          {
+            "heading": "Install an MCP server"
+          },
+          {
+            "text": "Friendliest: in the Claude app, click your profile → Settings → Connectors → Browse connectors, and connect one (Notion, Slack, and more are one-click). Power-user way, in Claude Code:",
+            "plain": true
+          },
+          {
+            "prompt": "claude mcp add --transport http <name> <server-url>",
+            "plain": true
+          }
+        ]
+      },
+      {
+        "title": "🧩 Plug-ins — a whole crew in one install",
+        "items": [
+          {
+            "text": "Each adds a bundle of tools in one go. Install pattern is the two lines above.",
+            "plain": true
+          },
+          {
+            "catalog": {
+              "items": [
+                {
+                  "name": "marketingskills",
+                  "star": true,
+                  "tag": "Marketing team",
+                  "desc": "A pack of marketing skills (CRO, copywriting, SEO, analytics, ads, social, growth) — the closest thing to a full growth team inside Claude.",
+                  "install": [
+                    "/plugin marketplace add coreyhaines31/marketingskills",
+                    "/plugin install marketing-skills"
+                  ],
+                  "repo": "https://github.com/coreyhaines31/marketingskills"
+                },
+                {
+                  "name": "social-media-skills",
+                  "tag": "Content engine",
+                  "desc": "Writes posts, threads, carousels, and captions across LinkedIn, X, Instagram, and more — in your voice.",
+                  "install": [
+                    "/plugin marketplace add charlie947/social-media-skills",
+                    "/plugin install social-media-skills"
+                  ],
+                  "repo": "https://github.com/charlie947/social-media-skills"
+                },
+                {
+                  "name": "gstack",
+                  "tag": "Dev crew",
+                  "desc": "Garry Tan's exact setup — 23 opinionated tools acting as CEO, Designer, Eng Manager, Release Manager, QA, and more.",
+                  "install": "git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/.claude/skills/gstack && cd ~/.claude/skills/gstack && ./setup",
+                  "repo": "https://github.com/garrytan/gstack"
+                },
+                {
+                  "name": "superpowers",
+                  "tag": "Build method",
+                  "desc": "A complete development method with composable skills, by obra — a structured, repeatable way for Claude to plan and build.",
+                  "install": [
+                    "/plugin marketplace add obra/superpowers-marketplace",
+                    "/plugin install superpowers@superpowers-marketplace"
+                  ],
+                  "repo": "https://github.com/obra/superpowers-marketplace"
+                },
+                {
+                  "name": "codex (codex-plugin-cc)",
+                  "tag": "Second AI brain",
+                  "desc": "OpenAI's official plug-in to run their Codex model inside Claude Code — a second brain for code review and delegating tasks.",
+                  "install": [
+                    "/plugin marketplace add openai/codex-plugin-cc",
+                    "/plugin install codex@openai-codex"
+                  ],
+                  "note": "Then run /reload-plugins and /codex:setup. Needs Node.js 18.18+ and a ChatGPT login or OpenAI key.",
+                  "repo": "https://github.com/openai/codex-plugin-cc"
+                },
+                {
+                  "name": "financial-services",
+                  "tag": "Finance",
+                  "desc": "A pack of finance workflows — investment banking, equity research, wealth management.",
+                  "install": [
+                    "/plugin marketplace add <owner/repo>",
+                    "/plugin install financial-services"
+                  ],
+                  "note": "Couldn't confirm the exact source — open /plugin in Claude Code and install it from the official directory."
+                },
+                {
+                  "name": "claude-for-legal",
+                  "tag": "Legal",
+                  "desc": "Legal workflows covering common practice areas, so Claude is useful for legal work out of the box.",
+                  "install": [
+                    "/plugin marketplace add <owner/repo>",
+                    "/plugin install claude-for-legal"
+                  ],
+                  "note": "Couldn't confirm the exact source — find the current marketplace in Claude Code's /plugin directory first."
+                },
+                {
+                  "name": "claude-skills",
+                  "tag": "Skill library",
+                  "desc": "A big community pack of ready-made skills installed in one go — pick what you use.",
+                  "install": [
+                    "/plugin marketplace add jezweb/claude-skills",
+                    "/plugin install <skill-name>@jezweb-skills"
+                  ],
+                  "repo": "https://github.com/jezweb/claude-skills"
+                },
+                {
+                  "name": "UI/UX Pro Max",
+                  "tag": "Design intelligence",
+                  "desc": "A design-intelligence bundle — searchable styles, palettes, font pairings, and UX rules across many stacks; generates a full design system.",
+                  "install": [
+                    "/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill",
+                    "/plugin install ui-ux-pro-max@ui-ux-pro-max-skill"
+                  ],
+                  "repo": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
+                },
+                {
+                  "name": "Designer Skills",
+                  "tag": "Design toolkit",
+                  "desc": "A marketplace of 90+ skills across research, UX strategy, UI, design ops, AI-agent design, and accessibility.",
+                  "install": "/plugin marketplace add Owl-Listener/designer-skills",
+                  "note": "Then open /plugin and install the collections you want.",
+                  "repo": "https://github.com/Owl-Listener/designer-skills"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "title": "⚡ Skills — one-line shortcuts",
+        "items": [
+          {
+            "text": "Each is a single shortcut installed once. The easy install for any skill is to paste its GitHub repo into Claude and ask it to install.",
+            "plain": true
+          },
+          {
+            "catalog": {
+              "items": [
+                {
+                  "name": "frontend-design",
+                  "star": true,
+                  "tag": "Taste fixer",
+                  "desc": "Kills the generic AI look and gives interfaces real taste — everyone's favourite. Anything Claude builds instantly looks more designed.",
+                  "install": [
+                    "/plugin marketplace add anthropics/claude-code",
+                    "/plugin install frontend-design@claude-code"
+                  ],
+                  "note": "In Anthropic's official directory — you can also just open /plugin and pick frontend-design.",
+                  "repo": "https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design"
+                },
+                {
+                  "name": "Taste skill",
+                  "tag": "UI taste",
+                  "desc": "Anti-slop, motion-first design taste — a bundle of taste skills (brutalist, minimalist, soft, redesign, image-to-code).",
+                  "install": "npx skills add https://github.com/leonxlnx/taste-skill",
+                  "repo": "https://github.com/leonxlnx/taste-skill"
+                },
+                {
+                  "name": "Impeccable",
+                  "tag": "Design vocabulary",
+                  "desc": "A shared design vocabulary that shifts Claude's baseline taste — one-word commands like polish, audit, and critique.",
+                  "install": "npx impeccable install",
+                  "repo": "https://github.com/pbakaus/impeccable"
+                },
+                {
+                  "name": "humanizer",
+                  "tag": "De-robot writing",
+                  "desc": "Strips the robotic tells out of AI writing — no more giveaway phrasing and stiff rhythm.",
+                  "install": "Please install this Claude skill for me. The SKILL.md file is in this GitHub repo: https://github.com/blader/humanizer",
+                  "repo": "https://github.com/blader/humanizer"
+                },
+                {
+                  "name": "ai-second-brain",
+                  "tag": "Personal wiki",
+                  "desc": "Turns your AI chat history into a personal, searchable wiki so one-off chats become a knowledge base.",
+                  "install": "Please install this Claude skill for me. The SKILL.md file is in this GitHub repo: <repo link>",
+                  "note": "Couldn't confirm the exact repo — search “ai-second-brain claude skill” and paste the repo link into the prompt."
+                },
+                {
+                  "name": "notebooklm-skill",
+                  "tag": "Search your notes",
+                  "desc": "Lets Claude search your own research and notes, so answers are grounded in your actual sources.",
+                  "install": "Please install this Claude skill for me. The SKILL.md file is in this GitHub repo: <repo link>",
+                  "note": "Couldn't confirm the exact repo — search “notebooklm skill claude” and paste the repo link in."
+                },
+                {
+                  "name": "claude-seo",
+                  "tag": "AI-search SEO",
+                  "desc": "Helps your content get found and quoted by AI search tools, not just ranked on Google.",
+                  "install": "Please install this Claude skill for me. The SKILL.md file is in this GitHub repo: <repo link>",
+                  "note": "Couldn't confirm the exact repo — search “claude-seo skill” and paste the repo link in."
+                },
+                {
+                  "name": "hyperframes",
+                  "tag": "HTML → video",
+                  "desc": "Writes HTML and renders it into a video — simple motion graphics and animated frames from code, built for agents.",
+                  "install": "npx skills add heygen-com/hyperframes",
+                  "repo": "https://github.com/heygen-com/hyperframes"
+                },
+                {
+                  "name": "doc skills",
+                  "tag": "Real documents",
+                  "desc": "Anthropic's official pack for making real Word, PDF, Excel, and PowerPoint files — actual downloads, not just chat text.",
+                  "install": "/plugin install document-skills@anthropic-agent-skills",
+                  "note": "From Anthropic's official directory — open /plugin if the marketplace isn't added yet.",
+                  "repo": "https://github.com/anthropics/skills"
+                },
+                {
+                  "name": "App Store & Google Play Screenshot Generator",
+                  "tag": "App mockups",
+                  "desc": "Generates realistic app-store mockups with device frames in a Next.js editor — ready for your store listing.",
+                  "install": "npx skills add ParthJadhav/app-store-screenshots",
+                  "repo": "https://github.com/ParthJadhav/app-store-screenshots"
+                },
+                {
+                  "name": "caveman",
+                  "tag": "Token saver",
+                  "desc": "A fun skill that makes Claude answer in short caveman-speak — ultra-short replies use fewer tokens.",
+                  "install": "Please install this Claude skill for me. The SKILL.md file is in this GitHub repo: <repo link>",
+                  "note": "Couldn't confirm the exact repo — search “caveman claude skill” and paste the repo link in."
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "title": "🔌 MCP servers — connect Claude to your apps",
+        "items": [
+          {
+            "text": "These plug Claude into apps you already use. Friendliest: Claude app → Settings → Connectors → Browse connectors. Power-user: claude mcp add in Claude Code.",
+            "plain": true
+          },
+          {
+            "catalog": {
+              "items": [
+                {
+                  "name": "notion",
+                  "star": true,
+                  "tag": "Workspace",
+                  "desc": "Reads and writes your Notion databases and docs — Claude can run your workspace, not just chat about it.",
+                  "install": "claude mcp add --transport http notion https://mcp.notion.com/mcp",
+                  "note": "Or in the Claude app: Settings → Connectors → add Notion."
+                },
+                {
+                  "name": "slack",
+                  "tag": "Team chat",
+                  "desc": "Reads channel history and posts updates, so Claude works where your team already talks.",
+                  "install": "claude mcp add --transport http slack <server-url>",
+                  "note": "Easiest: Claude app → Settings → Connectors → add Slack. Get the server URL from Slack's MCP docs if using the CLI."
+                },
+                {
+                  "name": "granola",
+                  "tag": "Meeting notes",
+                  "desc": "Feeds your Granola meeting notes into Claude — every meeting becomes searchable context.",
+                  "install": "claude mcp add --transport http granola <server-url>",
+                  "note": "Or connect from Settings → Connectors. Get the server URL from Granola's MCP docs."
+                },
+                {
+                  "name": "zapier",
+                  "tag": "Everything bridge",
+                  "desc": "One connector wiring Claude to thousands of apps and actions — the bridge when an app isn't on the connectors list.",
+                  "install": "claude mcp add --transport http zapier <your-endpoint-url>",
+                  "note": "Create your Zapier MCP endpoint at zapier.com — the URL is unique to your account."
+                },
+                {
+                  "name": "perplexity",
+                  "tag": "Live web search",
+                  "desc": "Adds live web search inside Claude, so it can pull current info mid-task.",
+                  "install": "claude mcp add --transport http perplexity <server-url>",
+                  "note": "Or add from Settings → Connectors. Get the server URL from Perplexity's MCP docs."
+                },
+                {
+                  "name": "context7",
+                  "tag": "Live docs",
+                  "desc": "Feeds Claude the latest real documentation for the tools you're coding with — code against current docs, not last year's.",
+                  "install": "claude mcp add --transport http context7 https://mcp.context7.com/mcp",
+                  "note": "Free; add --header “CONTEXT7_API_KEY: YOUR_KEY” for higher limits."
+                },
+                {
+                  "name": "higgsfield",
+                  "tag": "Image/video models",
+                  "desc": "A connector to 30+ image and video models (Kling, Veo, Seedance) from one place.",
+                  "install": "claude mcp add --transport http higgsfield <server-url>",
+                  "note": "Or connect from Settings → Connectors. Get the server URL from Higgsfield's MCP docs."
+                },
+                {
+                  "name": "agent-browser",
+                  "tag": "Real browser",
+                  "desc": "Lets Claude click around a real website for you — navigate and pull from sites without a tidy connector.",
+                  "install": "claude mcp add --transport http agent-browser <server-url>",
+                  "note": "Follow the agent-browser project's docs for the exact stdio/http command."
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "title": "✅ Start here — install these 3 first",
+        "items": [
+          {
+            "text": "No need to do all of them. Set up these 3 — one strong pick from each bucket — then add one a week so you actually learn it.",
+            "plain": true
+          },
+          {
+            "catalog": {
+              "items": [
+                {
+                  "name": "marketingskills",
+                  "star": true,
+                  "tag": "Plug-in",
+                  "desc": "Your whole growth toolkit in one install.",
+                  "install": [
+                    "/plugin marketplace add coreyhaines31/marketingskills",
+                    "/plugin install marketing-skills"
+                  ],
+                  "repo": "https://github.com/coreyhaines31/marketingskills"
+                },
+                {
+                  "name": "frontend-design",
+                  "star": true,
+                  "tag": "Skill",
+                  "desc": "Instantly makes anything Claude builds look good — from the official /plugin directory in Claude Code.",
+                  "install": [
+                    "/plugin marketplace add anthropics/claude-code",
+                    "/plugin install frontend-design@claude-code"
+                  ],
+                  "repo": "https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design"
+                },
+                {
+                  "name": "notion",
+                  "star": true,
+                  "tag": "MCP",
+                  "desc": "So Claude can actually run your workspace, not just chat.",
+                  "install": "claude mcp add --transport http notion https://mcp.notion.com/mcp"
+                }
+              ]
+            }
+          },
+          {
+            "text": "Each takes about 10 minutes. Add one new thing a week and you'll learn it instead of drowning in all of them at once.",
+            "plain": true
+          }
+        ]
+      }
     ],
-    footer:
-      "New to skills? Start with one, install it, and invoke it by name — then add more as you find jobs you do often.",
+    "footer": "Plug-in = a team, skill = a shortcut, MCP = a wire to your apps. Start with 3, add one a week."
   },
 
   {
@@ -837,7 +1157,7 @@ const journal = [
           { text: "Install design skills so your agent knows the rules pros take for granted — like not putting emojis on everything. These bake taste and craft straight into how it generates. (Add them via the marketplace flow in your Skills tab.)", plain: true },
           { link: { href: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill", label: "UI/UX Pro Max — design intelligence: styles, palettes, UX rules", compact: true } },
           { link: { href: "https://github.com/pbakaus/impeccable", label: "Impeccable — a shared design vocabulary (polish, audit, critique…)", compact: true } },
-          { link: { href: "https://github.com/Leonxlnx/taste-skill", label: "Taste skill — anti-slop, motion-first taste (also in your Skills tab)", compact: true } },
+          { link: { href: "https://github.com/Leonxlnx/taste-skill", label: "Taste skill — anti-slop, motion-first taste (also in your Claude Setup & Skills tab)", compact: true } },
         ],
       },
       {

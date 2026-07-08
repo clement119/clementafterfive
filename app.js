@@ -554,9 +554,98 @@
     return fig;
   }
 
+  // A catalog of installable items (plug-ins, skills, MCP servers). Simpler
+  // than the skills picker: no filter or selection, and each card's install
+  // command may be a single string OR an array of lines (for two-step plugin
+  // installs), rendered as a multi-line block that copies as a whole.
+  function buildCatalog(cfg) {
+    const items = cfg && Array.isArray(cfg.items) ? cfg.items : [];
+    const list = document.createElement("div");
+    list.className = "skill-list";
+
+    items.forEach((s) => {
+      const card = document.createElement("article");
+      card.className = "skill-card";
+
+      const head = document.createElement("div");
+      head.className = "skill-head";
+
+      const name = document.createElement("h3");
+      name.className = "skill-name";
+      name.textContent = s.name || "";
+      head.appendChild(name);
+
+      if (s.star) {
+        const star = document.createElement("span");
+        star.className = "skill-star";
+        star.textContent = "★ start here";
+        head.appendChild(star);
+      }
+      if (s.tag) {
+        const tag = document.createElement("span");
+        tag.className = "skill-tag";
+        tag.textContent = s.tag;
+        head.appendChild(tag);
+      }
+      card.appendChild(head);
+
+      if (s.desc) {
+        const desc = document.createElement("p");
+        desc.className = "skill-desc";
+        desc.textContent = s.desc;
+        card.appendChild(desc);
+      }
+
+      if (s.install) {
+        const lines = Array.isArray(s.install) ? s.install : [s.install];
+        const text = lines.join("\n");
+        const multi = lines.length > 1;
+
+        const inst = document.createElement("div");
+        inst.className = multi ? "skill-install skill-install--multi" : "skill-install";
+
+        const code = document.createElement("code");
+        code.className = multi ? "skill-cmd skill-cmd--multi" : "skill-cmd";
+        code.textContent = text;
+
+        const btn = document.createElement("button");
+        btn.className = "copy-btn";
+        btn.type = "button";
+        btn.setAttribute("aria-label", "Copy install command for " + (s.name || "item"));
+        btn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+        btn.addEventListener("click", () => copyText(text, btn));
+
+        inst.append(code, btn);
+        card.appendChild(inst);
+      }
+
+      if (s.note) {
+        const note = document.createElement("p");
+        note.className = "skill-note";
+        note.textContent = s.note;
+        card.appendChild(note);
+      }
+
+      if (s.repo) {
+        const link = document.createElement("a");
+        link.className = "skill-link";
+        link.href = s.repo;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = s.linkLabel || (s.repo.indexOf("github.com") > -1 ? "View on GitHub →" : "Open →");
+        card.appendChild(link);
+      }
+
+      list.appendChild(card);
+    });
+
+    return list;
+  }
+
   function buildItem(item, i) {
     if (item && item.deck) return buildPersonaDeck(item.deck);
     if (item && item.skills) return buildSkillList(item.skills);
+    if (item && item.catalog) return buildCatalog(item.catalog);
     if (item && item.compare) return buildBeforeAfter(item.compare);
     if (item && item.gallery) return buildGallery(item.gallery);
     if (item && typeof item === "object" && item.link) return buildLinkButton(item.link);

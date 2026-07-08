@@ -1120,6 +1120,32 @@ body {
   height: 0;
 }
 
+/* Catalog extras — multi-line install, start-here star, source note */
+.skill-cmd--multi {
+  white-space: pre;
+  line-height: 1.7;
+}
+.skill-install--multi {
+  align-items: flex-start;
+}
+.skill-star {
+  flex: none;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+.skill-note {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
 .skill-link {
   align-self: flex-start;
   font-size: 13px;
