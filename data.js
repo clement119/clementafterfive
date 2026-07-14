@@ -1219,4 +1219,187 @@ const journal = [
     footer:
       "Foundation, rules, examples, words — run the loop and the AI ships UI that looks good. No magic prompt required.",
   },
+
+  {
+    "dimension": "Branding",
+    "title": "How to Use Claude Fable 5 for Brands",
+    "subtitle": "Give it a rough idea and it adds the context, writes the copy, generates the images, animates the sections, and keeps everything on-brand — a finished, interactive brand asset in one pass.",
+    "date": "2026-07-14",
+    "sections": [
+      {
+        "title": "Why this model changes what you can build",
+        "open": true,
+        "items": [
+          {
+            "text": "Claude Fable 5 is built for creative, brand-facing work, not just code. That is the shift. Earlier tools could write logic, but you still had to bring the copy, the images, the motion and the art direction yourself. Fable 5 handles all of it in one pass.",
+            "plain": true
+          },
+          {
+            "text": "Give it a rough idea and it adds the context, writes the copy, generates the images (using MCPs), animates the sections, and keeps everything on-brand from start to finish. So instead of stitching together a writer, a designer, a developer and a motion artist, you describe what you want and get a finished, interactive brand asset back.",
+            "plain": true
+          },
+          {
+            "text": "Below are five use cases, each with what was built and the prompt to build it yourself.",
+            "plain": true
+          }
+        ]
+      },
+      {
+        "title": "1 · Build interactive brand experiences",
+        "items": [
+          {
+            "text": "Create a brand world your clients can interact with, not just look at. By combining gamification with world-building, you turn a flat message into something people can play with, move through and remember.",
+            "plain": true
+          },
+          {
+            "gallery": {
+              "images": [
+                {
+                  "src": "assets/examples/branding-puzzle.jpg",
+                  "label": "Sliding puzzle"
+                }
+              ],
+              "caption": "A live sliding puzzle — drag in any brand photo and the game rebuilds around it."
+            }
+          },
+          {
+            "text": "What was built: a live sliding puzzle where dragging in any brand photo instantly rebuilds the game around it, on-brand colours and logo included. The interaction itself becomes the demo moment.",
+            "plain": true
+          },
+          {
+            "heading": "Use Claude Cowork — copy this prompt"
+          },
+          {
+            "prompt": "Build me a sliding puzzle game as a single self-contained HTML file (no plugins, no external libraries, everything inline) that I can double-click to open in any browser.\n\nCore gameplay:\n- A 3x3 sliding tile puzzle (8 tiles plus one empty space)\n- Tiles slide by tapping/clicking, and arrow keys should also work\n- Always generate a solvable shuffle. Verify solvability so the puzzle is never impossible.\n- When solved: the missing 9th tile fades in to complete the image, confetti drops, and a CTA overlay appears\n\nBranding:\n- Let me drag in any brand photo and instantly rebuild the game around it\n- Use my brand colours and logo throughout, so the interaction itself becomes the demo moment",
+            "plain": true
+          }
+        ]
+      },
+      {
+        "title": "2 · Create a branded website",
+        "items": [
+          {
+            "text": "Turn a rough branding idea into a fully functional website. Fable 5 does not just code the structure — it adds context, writes the copy, generates the images, and animates every section of the site.",
+            "plain": true
+          },
+          {
+            "gallery": {
+              "images": [
+                {
+                  "src": "assets/examples/branding-website.jpg",
+                  "label": "Brand site hero"
+                }
+              ],
+              "caption": "The finished site's hero — real copy and visuals, animated, from a single brief."
+            }
+          },
+          {
+            "text": "What was built: a complete, animated site from a single brief, with real copy and visuals in place.",
+            "plain": true
+          },
+          {
+            "heading": "Use Claude Design — build the Design Guidelines first, then this prompt"
+          },
+          {
+            "prompt": "Build me a complete, fully functional brand website based on my input. I want a finished, animated site with real copy and real visuals in place, not a wireframe or placeholder blocks. Deliver it as a self-contained file I can open in the browser and hand to a client.",
+            "plain": true
+          }
+        ]
+      },
+      {
+        "title": "3 · Design a product display loop",
+        "items": [
+          {
+            "text": "Create a product showreel for an in-store screen or display. Fable designs the full showcase, animates each product moment, and turns your product information into a seamless loop made for screens.",
+            "plain": true
+          },
+          {
+            "gallery": {
+              "images": [
+                {
+                  "src": "assets/examples/branding-display.jpg",
+                  "label": "Menu display"
+                }
+              ],
+              "caption": "The looping menu screen — each product beat animates into one continuous sequence."
+            }
+          },
+          {
+            "text": "What was built: a looping product display that runs on repeat for retail screens and stands, animating each product beat into one continuous, hands-off sequence.",
+            "plain": true
+          },
+          {
+            "heading": "Use Claude Design once the Design Guidelines are created"
+          },
+          {
+            "prompt": "Build me a product display loop as a single self-contained HTML file (everything inline, no plugins) designed to run on an in-store screen or display. It should play on repeat automatically with no clicks needed, like a digital showreel. Deliver it as one file I can open fullscreen and hand to a client.\n\nWhat it should do:\n- Cycle through my products one at a time in a continuous, seamless loop\n- Animate each product moment: the product animates in, its details appear, then it transitions smoothly to the next\n- For each product, show [product name, a short line of copy, price, and a key detail or two]\n- Keep timing hands-off so it runs unattended all day, looping forever\n- Design it for a screen, so it should look great fullscreen and in [landscape / portrait] orientation",
+            "plain": true
+          }
+        ]
+      },
+      {
+        "title": "4 · Build a branded loyalty program",
+        "items": [
+          {
+            "text": "Build a fully branded loyalty experience for your members. Track usage, manage points, and reward customers with bonuses, all through one seamless branded flow.",
+            "plain": true
+          },
+          {
+            "gallery": {
+              "images": [
+                {
+                  "src": "assets/examples/branding-loyalty.jpg",
+                  "label": "Loyalty app"
+                }
+              ],
+              "caption": "The stamp-card flow — points, tiers and rewards in one branded interface."
+            }
+          },
+          {
+            "text": "What was built: a self-contained loyalty flow that handles points, member tracking and rewards in a single branded interface, so the whole program feels like part of the brand rather than a bolt-on tool.",
+            "plain": true
+          },
+          {
+            "heading": "Copy this prompt to create a demo version first"
+          },
+          {
+            "prompt": "Build me a fully branded loyalty program as a single self-contained HTML file (everything inline, no plugins) that I can open in the browser and hand to a client as a working demo.\n\nWhat it should do:\n- Let a member sign in or enter a name to start their loyalty profile\n- Track and display their current points balance clearly at the top\n- Let members earn points through actions (for example [purchase, check-in, referral, review]) with a button or simple flow for each\n- Show a rewards tier ladder, so members can see what they've unlocked and what's next\n- Let members redeem points for [rewards, e.g. discounts, free product, perks], with the balance updating live\n- Reward milestones with a bonus and a small celebration moment (confetti or an unlock animation)\n- Keep everything in one seamless branded flow, so it feels like part of the brand, not a bolt-on tool\n\nData:\n- Persist the member's points and status so it survives a page refresh (use in-browser storage)\n- Include a small “reset demo” control so I can show it fresh on camera\n\nRewards structure (edit to your brand):\n- [Tier 1: 100 pts → free coffee]\n- [Tier 2: 250 pts → 15% off]\n- [Tier 3: 500 pts → exclusive product]",
+            "plain": true
+          }
+        ]
+      },
+      {
+        "title": "5 · Create your own product configurator",
+        "items": [
+          {
+            "text": "Build an interactive configuration experience where customers choose their own product variation. Fable streamlines the full process, generating every variation, building the configuration functionality, and keeping the experience fully on-brand.",
+            "plain": true
+          },
+          {
+            "gallery": {
+              "images": [
+                {
+                  "src": "assets/examples/branding-configurator.jpg",
+                  "label": "Product configurator"
+                }
+              ],
+              "caption": "The working configurator — pick a variant, watch the live preview and price update."
+            }
+          },
+          {
+            "text": "What was built: a working configurator that generates each product option and lets customers combine them live, with the build logic and the brand styling handled in the same pass.",
+            "plain": true
+          },
+          {
+            "heading": "Copy this prompt"
+          },
+          {
+            "prompt": "Build me an interactive product configurator as a single self-contained HTML file (everything inline, no plugins) that I can open in the browser and hand to a client as a working demo.\n\nWhat it should do:\n- Let a customer build their own version of the product by choosing from a set of options\n- Update a live product preview as they make selections, so they see their choice change in real time\n- Show a running summary of their configuration and a live total price\n- End with a clear CTA (for example [Add to cart / Request a quote / Order now]) that reflects their final build",
+            "plain": true
+          }
+        ]
+      }
+    ],
+    "footer": "Describe the brand asset you want — copy, visuals, motion and interaction included — and hand the finished file to a client."
+  },
 ];
