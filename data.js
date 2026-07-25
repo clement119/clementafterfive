@@ -36,6 +36,7 @@ const journal = [
     sections: [
       {
         title: "Strategy Foundation",
+        pillar: "Strategic Planning",
         items: [
           "Act like a brand strategist. Break down my brand and tell me what feels weak.",
           "Give me 3 campaign ideas that would make this product impossible to ignore.",
@@ -47,6 +48,7 @@ const journal = [
       },
       {
         title: "Content Ideas",
+        pillar: "Strategic Planning",
         items: [
           "Give me 10 viral content ideas based on tension, not tips, in my niche.",
           "Turn this topic into 5 controversial takes that would spark engagement.",
@@ -58,6 +60,7 @@ const journal = [
       },
       {
         title: "Copy & Hooks",
+        pillar: "Strategic Planning",
         items: [
           "Rewrite this hook to create more curiosity and tension.",
           "Give me 5 hook variations that feel premium, not clickbait.",
@@ -69,6 +72,7 @@ const journal = [
       },
       {
         title: "Optimization & Growth",
+        pillar: "Strategic Planning",
         items: [
           "Analyze this post and tell me why people might scroll past it.",
           "Break down what's missing in this carousel to improve retention.",
@@ -80,6 +84,7 @@ const journal = [
       },
       {
         title: "Instagram carousels with Claude",
+        pillar: "Media Creation & Edit",
         items: [
           { text: "A 6-step pipeline for producing on-brand Instagram carousels in Claude Design — set up a design system once, then generate, tweak, and repurpose slides automatically. The whole pitch: AI slides that don't look like AI slides.", plain: true },
           {
@@ -118,6 +123,7 @@ const journal = [
       },
       {
         "title": "Font Library — Carousel Type",
+        "pillar": "Media Creation & Edit",
         "items": [
           {
             "text": "Browse the 17 fonts most used in viral IG/LinkedIn carousels (15 free + 2 paid stand-ins). Pick weight, case, and use-case, then copy a ready-to-paste style brief.",
@@ -700,7 +706,6 @@ const journal = [
     sections: [
       {
         title: "Image Generation",
-        open: true,
         tips: [
           {
             title: "Doodle Icon Sheet",
@@ -958,7 +963,6 @@ const journal = [
     sections: [
       {
         title: "Set up a Cowork task",
-        open: true,
         items: [
           { text: "Cowork tasks are recurring jobs that run on their own and leave the results waiting for you. Every task here is built the same way — set it up once, then it works in the background on the schedule you pick.", plain: true },
           { heading: "How to set one up" },
@@ -1057,7 +1061,6 @@ const journal = [
     sections: [
       {
         title: "The principle — 15 uncorrelated bets",
-        open: true,
         items: [
           { text: "Hold a diversified portfolio of only your most confident, uncorrelated bets and engineer it to the risk level you want. That beats a concentrated bet on a return-to-risk basis — and you can lever it up for higher returns at the same risk. This isn't an opinion; it's a mathematical certainty.", plain: true },
           { text: "The more risk is concentrated in one area of the market, the more you should diversify — especially when the market is driven by a revolutionary new technology, which inherently produces great uncertainty.", plain: true },
@@ -1112,7 +1115,6 @@ const journal = [
       },
       {
         title: "Eight investor personas — analyze any ticker",
-        open: true,
         items: [
           { text: "Eight legendary investors, each as a copyable master prompt that runs their documented method on a stock you choose. Type a ticker once below, then swipe the cards and copy the persona you want. Each prompt ends with a 0–100 score, a BUY / WATCH / PASS verdict, and a position-sizing note in that investor's own style.", plain: true },
           {
@@ -1217,7 +1219,6 @@ const journal = [
     "sections": [
       {
         "title": "First, the 3 building blocks",
-        "open": true,
         "items": [
           {
             "text": "Almost everything you install is one of three kinds. Get these down and the rest follows.",
@@ -1290,7 +1291,6 @@ const journal = [
       },
       {
         "title": "Browse & install",
-        "open": true,
         "items": [
           {
             "text": "All the add-ons in one place. Filter by type (plug-in, skill, MCP) or by domain, then copy the install command. Cards marked ★ are the beginner picks.",
@@ -1667,7 +1667,6 @@ const journal = [
     sections: [
       {
         title: "Step 1 · Give it a foundation",
-        open: true,
         items: [
           { text: "Start with a design.md — a style guide your agent reads before it builds. It stops the guessing and keeps your colors, type, spacing, and voice consistent. Grab a ready-made template, or ask Claude Code to write one from your brand.", plain: true },
           { link: { href: "https://getdesign.md", label: "getdesign.md — what design.md is, and a ready-made example", compact: true } },
@@ -1675,7 +1674,6 @@ const journal = [
       },
       {
         title: "Step 2 · Give it rules",
-        open: true,
         items: [
           { text: "Install design skills so your agent knows the rules pros take for granted — like not putting emojis on everything. These bake taste and craft straight into how it generates. (Add them via the marketplace flow in your Skills tab.)", plain: true },
           { link: { href: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill", label: "UI/UX Pro Max — design intelligence: styles, palettes, UX rules", compact: true } },
@@ -1685,7 +1683,6 @@ const journal = [
       },
       {
         title: "Step 3 · Give it examples",
-        open: true,
         items: [
           { text: "Show it what “good” looks like. Drop visual references into your prompt — real screens, real motion — so the AI builds toward your vision instead of its default.", plain: true },
           { link: { href: "https://mobbin.com", label: "Mobbin — real iOS / app screens", compact: true } },
@@ -1695,7 +1692,6 @@ const journal = [
       },
       {
         title: "Step 4 · Upgrade your prompts",
-        open: true,
         items: [
           { text: "Learn the UI basics so you can feel why something's off and describe it like a designer. Say “increase the contrast and tighten the line height so the heading reads first,” not “make it pop.” Precise words get precise UI.", plain: true },
           { link: { href: "https://www.figma.com/resource-library/design-basics/", label: "Figma Design Basics — the fundamentals, free", compact: true } },
@@ -1715,7 +1711,6 @@ const journal = [
     "sections": [
       {
         "title": "Why this model changes what you can build",
-        "open": true,
         "items": [
           {
             "text": "Claude Fable 5 is built for creative, brand-facing work, not just code. That is the shift. Earlier tools could write logic, but you still had to bring the copy, the images, the motion and the art direction yourself. Fable 5 handles all of it in one pass.",

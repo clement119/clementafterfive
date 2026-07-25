@@ -161,6 +161,16 @@
     return h;
   }
 
+  // A bold group label spanning multiple sections (e.g. "Strategic Planning"
+  // over several accordion sections). `isFirst` tightens the top margin for
+  // a pillar heading that opens a dimension, right under the subtitle/meta.
+  function buildPillarHeading(text, isFirst) {
+    const h = document.createElement("h2");
+    h.className = "pillar-heading" + (isFirst ? " pillar-heading--first" : "");
+    h.textContent = text;
+    return h;
+  }
+
   // A before/after example pair — two labelled images side by side, with an
   // optional caption. Used to show what a prompt produces.
   function buildBeforeAfter(cfg) {
@@ -1424,9 +1434,17 @@
         els.content.appendChild(h);
       }
 
-      (note.sections || []).forEach((section, sIdx) => {
-        const open = section.open === true || (noteIdx === 0 && sIdx === 0);
-        els.content.appendChild(buildSection(section, open));
+      // Sections may be grouped under a shared `pillar` label — insert a
+      // divider whenever it changes, so groups within one note get a
+      // heading without needing separate note objects.
+      let lastPillar = null;
+      (note.sections || []).forEach((section) => {
+        if (section.pillar && section.pillar !== lastPillar) {
+          const isFirst = els.content.children.length === 0;
+          els.content.appendChild(buildPillarHeading(section.pillar, isFirst));
+          lastPillar = section.pillar;
+        }
+        els.content.appendChild(buildSection(section, section.open === true));
       });
 
       if (note.footer) footerParts.push(note.footer);

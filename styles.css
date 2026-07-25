@@ -164,6 +164,21 @@ body {
   transition: opacity 0.18s ease;
 }
 
+/* A bold group label spanning several sections (e.g. "Strategic Planning"). */
+.pillar-heading {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 40px 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.pillar-heading--first {
+  margin-top: 6px;
+}
+
 .section-aside {
   display: flex;
   align-items: center;
