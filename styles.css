@@ -957,6 +957,14 @@ body {
 
 .sticker-html-copy {
   justify-self: start;
+  opacity: 0.75;
+}
+
+.sticker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-self: start;
 }
 
 /* ---------- Link button (CTA to an external page) ---------- */

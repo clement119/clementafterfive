@@ -1367,6 +1367,16 @@
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${sharedStyle}</style></head><body>${bodyHtml}</body></html>`;
   }
 
+  // Rasterizes the sticker's own element (not the .stage preview canvas)
+  // into a transparent PNG blob, read fresh from the iframe each call since
+  // its srcdoc gets rebuilt on every keystroke. Requires the iframe's
+  // sandbox to include "allow-same-origin" so contentDocument is reachable.
+  function exportStickerBlob(iframe) {
+    const node = iframe.contentDocument && iframe.contentDocument.querySelector(".sticker-capture");
+    if (!node || !window.htmlToImage) return Promise.reject(new Error("Sticker preview not ready"));
+    return window.htmlToImage.toBlob(node, { pixelRatio: 3, backgroundColor: undefined, cacheBust: true });
+  }
+
   // Instagram Story sticker mockups: fill in per-sticker fields (or leave
   // blank), see a live iframe-isolated preview update instantly, and get a
   // natural-language "overlay this onto my photo" prompt for an AI image
@@ -1486,14 +1496,68 @@
     previewWrap.className = "sticker-preview";
     const iframe = document.createElement("iframe");
     iframe.className = "sticker-preview-frame";
-    iframe.setAttribute("sandbox", "");
+    iframe.setAttribute("sandbox", "allow-same-origin");
     iframe.setAttribute("title", (sticker.label || "Sticker") + " preview");
     previewWrap.appendChild(iframe);
     card.appendChild(previewWrap);
 
+    const actionsRow = document.createElement("div");
+    actionsRow.className = "sticker-actions";
+
+    const downloadBtn = document.createElement("button");
+    downloadBtn.className = "copy-btn sticker-download";
+    downloadBtn.type = "button";
+    downloadBtn.dataset.copyLabel = "Download PNG";
+    downloadBtn.setAttribute("aria-label", "Download " + (sticker.label || "sticker") + " as a PNG image");
+    downloadBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Download PNG</span>`;
+    downloadBtn.addEventListener("click", () => {
+      exportStickerBlob(iframe)
+        .then((blob) => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = (sticker.id || "sticker") + ".png";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+          flashCopied(downloadBtn);
+        })
+        .catch(() => showToast("Couldn't export the image — try again"));
+    });
+    actionsRow.appendChild(downloadBtn);
+
+    // Writing images to the clipboard isn't universally supported (notably
+    // Firefox) — hide the button rather than show one that would just fail.
+    if (typeof ClipboardItem !== "undefined" && navigator.clipboard && navigator.clipboard.write) {
+      const copyImageBtn = document.createElement("button");
+      copyImageBtn.className = "copy-btn sticker-copy-image";
+      copyImageBtn.type = "button";
+      copyImageBtn.dataset.copyLabel = "Copy image";
+      copyImageBtn.setAttribute("aria-label", "Copy " + (sticker.label || "sticker") + " image to clipboard");
+      copyImageBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy image</span>`;
+      copyImageBtn.addEventListener("click", () => {
+        // The Blob promise must be handed to ClipboardItem synchronously
+        // (not awaited first) — Safari revokes clipboard-write permission
+        // once the call stack leaves the original user-gesture handler.
+        try {
+          const item = new ClipboardItem({ "image/png": exportStickerBlob(iframe) });
+          navigator.clipboard
+            .write([item])
+            .then(() => flashCopied(copyImageBtn))
+            .catch(() => showToast("Couldn't copy — try Download instead"));
+        } catch (err) {
+          showToast("Couldn't copy — try Download instead");
+        }
+      });
+      actionsRow.appendChild(copyImageBtn);
+    }
+    card.appendChild(actionsRow);
+
     const htmlCopyBtn = document.createElement("button");
     htmlCopyBtn.className = "copy-btn sticker-html-copy";
     htmlCopyBtn.type = "button";
+    htmlCopyBtn.dataset.copyLabel = "Copy sticker HTML";
     htmlCopyBtn.setAttribute("aria-label", "Copy " + (sticker.label || "sticker") + " HTML");
     htmlCopyBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy sticker HTML</span>`;
     htmlCopyBtn.addEventListener("click", () => copyText(currentDoc, htmlCopyBtn));

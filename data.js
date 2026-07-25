@@ -662,6 +662,14 @@ const journal = [
                 }
                 .stage.dark{background:linear-gradient(150deg,#2c2c2e,#050505);}
 
+                /* Export target: only this element (not .stage) gets rasterized
+                   into the downloadable/copyable sticker PNG, so the dark/light
+                   phone canvas above never ends up in the exported image. The
+                   padding keeps decorative bits that render slightly outside
+                   their own box (banner tag-ends, bubble tail) from clipping. */
+                .sticker-capture{display:inline-block;padding:10px;}
+                .sticker-capture--canvas{position:relative;width:260px;height:320px;padding:0;}
+
                 /* ---------- 1. Notes app card ---------- */
                 .notes-card{
                   width:230px;
@@ -812,7 +820,7 @@ const journal = [
                   buildHtml: function (v, esc) {
                     const items = (v.items || []).map((i) => `<li>${esc(i)}</li>`).join("");
                     const listClass = v.bulletStyle === "checkbox" ? "checklist" : "bullet";
-                    return `<div class="stage"><div class="notes-card"><div class="nav"><span>Notes</span><span>⋯</span></div><h4>${esc(v.headline)}</h4><ul class="${listClass}">${items}</ul></div></div>`;
+                    return `<div class="stage"><div class="sticker-capture"><div class="notes-card"><div class="nav"><span>Notes</span><span>⋯</span></div><h4>${esc(v.headline)}</h4><ul class="${listClass}">${items}</ul></div></div></div>`;
                   },
                   buildPrompt: function (v) {
                     const isChecklist = v.bulletStyle === "checkbox";
@@ -833,7 +841,7 @@ const journal = [
                     { key: "text", label: "Banner text", type: "text", default: "But I was the total opposite…" },
                   ],
                   buildHtml: function (v, esc) {
-                    return `<div class="stage dark"><span class="flag-banner">${esc(v.text)}</span></div>`;
+                    return `<div class="stage dark"><div class="sticker-capture"><span class="flag-banner">${esc(v.text)}</span></div></div>`;
                   },
                   buildPrompt: function (v) {
                     const textClause = v.text
@@ -850,7 +858,7 @@ const journal = [
                     { key: "message", label: "Message", type: "paragraph", default: "I want to be confident in myself. I wanted to prove to others and myself that you can be strong and fit, even if you've always been told something else." },
                   ],
                   buildHtml: function (v, esc) {
-                    return `<div class="stage"><div class="alert"><div class="body"><div class="title">${esc(v.title)}</div><div class="msg">${esc(v.message)}</div></div><div class="actions"><button>Okay</button><button>Got It!</button></div></div></div>`;
+                    return `<div class="stage"><div class="sticker-capture"><div class="alert"><div class="body"><div class="title">${esc(v.title)}</div><div class="msg">${esc(v.message)}</div></div><div class="actions"><button>Okay</button><button>Got It!</button></div></div></div></div>`;
                   },
                   buildPrompt: function (v) {
                     const titleClause = v.title
@@ -872,7 +880,7 @@ const journal = [
                     const labels = v.labels || [];
                     const classes = ["a", "b", "c", "d"];
                     const spans = classes.map((c, i) => `<span class="float-label ${c}">${esc(labels[i] || "")}</span>`).join("");
-                    return `<div class="stage dark"><div class="label-field">${spans}</div></div>`;
+                    return `<div class="stage dark"><div class="sticker-capture sticker-capture--canvas"><div class="label-field">${spans}</div></div></div>`;
                   },
                   buildPrompt: function (v) {
                     const labelsClause = v.labels && v.labels.length
@@ -888,7 +896,7 @@ const journal = [
                     { key: "text", label: "Bubble text", type: "paragraph", default: "Here, I used to get comments about how skinny I looked all the time." },
                   ],
                   buildHtml: function (v, esc) {
-                    return `<div class="stage"><span class="chat-bubble">${esc(v.text)}</span></div>`;
+                    return `<div class="stage"><div class="sticker-capture"><span class="chat-bubble">${esc(v.text)}</span></div></div>`;
                   },
                   buildPrompt: function (v) {
                     const textClause = v.text
