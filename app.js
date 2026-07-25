@@ -736,6 +736,7 @@
     if (item && typeof item === "object" && item.link) return buildLinkButton(item.link);
     if (item && item.promptI18n) return buildI18nPrompt(item.promptI18n);
     if (item && item.builder) return buildBuilder(item.builder);
+    if (item && item.fontLibrary) return buildFontLibrary(item.fontLibrary);
     if (item && item.heading != null) return buildHeading(item.heading);
 
     const { text, copyable, plain } = normalizeItem(item);
@@ -1031,6 +1032,315 @@
     wrap.appendChild(nav);
 
     // Set initial dot/arrow state once laid out.
+    requestAnimationFrame(syncDots);
+
+    return wrap;
+  }
+
+  // Font Library — swipeable deck of live-rendered type samples. Spacing and
+  // case are style preferences that persist across cards (wrapper-level CSS
+  // classes); weight and use-case are font-specific and rebuild per active
+  // card. Output assembles a natural-language style brief, not CSS.
+  function buildFontLibrary(cfg) {
+    const wrap = document.createElement("div");
+    wrap.className = "font-library";
+
+    const fonts = Array.isArray(cfg.fonts) ? cfg.fonts : [];
+    const spacingModes = Array.isArray(cfg.spacingModes) ? cfg.spacingModes : [];
+    const caseModes = Array.isArray(cfg.caseModes) ? cfg.caseModes : [];
+    const categoryTemplates = cfg.categoryTemplates || {};
+
+    const state = {
+      spacing: (spacingModes.find((m) => m.default) || spacingModes[0] || {}).key,
+      case: (caseModes.find((m) => m.default) || caseModes[0] || {}).key,
+      weightIdx: 0,
+      useCaseIdx: 0,
+      customUseCase: "",
+    };
+
+    function genericFamily(category) {
+      if (category === "serif") return "serif";
+      if (category === "script") return "cursive";
+      return "sans-serif";
+    }
+
+    function applyWrapperClasses() {
+      wrap.classList.toggle("fl-spacing-narrow", state.spacing === "narrow");
+      wrap.classList.toggle("fl-case-upper", state.case === "uppercase");
+    }
+
+    // A pill-button row, styled exactly like buildBuilder's choice controls.
+    function pillGroup(labelText, options, currentKey, onPick) {
+      const group = document.createElement("div");
+      group.className = "builder-control";
+      const label = document.createElement("span");
+      label.className = "builder-label";
+      label.textContent = labelText;
+      const choices = document.createElement("div");
+      choices.className = "builder-choices";
+      options.forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "choice-btn";
+        btn.textContent = opt.label;
+        btn.setAttribute("aria-pressed", opt.key === currentKey ? "true" : "false");
+        btn.addEventListener("click", () => {
+          choices.querySelectorAll(".choice-btn").forEach((b) => b.setAttribute("aria-pressed", "false"));
+          btn.setAttribute("aria-pressed", "true");
+          onPick(opt.key);
+        });
+        choices.appendChild(btn);
+      });
+      group.append(label, choices);
+      return group;
+    }
+
+    const globalControls = document.createElement("div");
+    globalControls.className = "builder fl-global-controls";
+    if (spacingModes.length) {
+      globalControls.appendChild(
+        pillGroup("Spacing", spacingModes, state.spacing, (key) => {
+          state.spacing = key;
+          applyWrapperClasses();
+        })
+      );
+    }
+    if (caseModes.length) {
+      globalControls.appendChild(
+        pillGroup("Case", caseModes, state.case, (key) => {
+          state.case = key;
+          applyWrapperClasses();
+          updateOutput();
+        })
+      );
+    }
+
+    // Deck — one live-rendered card per font. Built once; each card's own
+    // sample carries its real (or stand-in) font-family/weight permanently.
+    const deck = document.createElement("div");
+    deck.className = "persona-deck fl-deck";
+
+    const cardEls = fonts.map((font) => {
+      const card = document.createElement("article");
+      card.className = "fl-card";
+      if (font.paid) card.dataset.standin = "true";
+
+      const label = document.createElement("h3");
+      label.className = "fl-label";
+      label.textContent = font.label || "";
+
+      const sample = document.createElement("p");
+      sample.className = "fl-sample";
+      sample.textContent = font.sample || "";
+
+      const renderFamily = font.paid ? font.paid.standInFamily : font.family;
+      const defaultWeight = font.weights && (font.weights.find((w) => w.default) || font.weights[0]);
+      const renderWeight = font.paid ? font.paid.standInWeight : defaultWeight && defaultWeight.value;
+      if (renderFamily) sample.style.fontFamily = `'${renderFamily}', ${genericFamily(font.category)}`;
+      if (renderWeight) sample.style.fontWeight = String(renderWeight);
+
+      card.append(label, sample);
+
+      if (font.paid && font.paid.note) {
+        const note = document.createElement("p");
+        note.className = "fl-standin-note skill-note";
+        note.textContent = font.paid.note;
+        card.appendChild(note);
+      }
+
+      deck.appendChild(card);
+      return card;
+    });
+
+    // Nav — prev/next arrows plus a dot per card, identical mechanics to
+    // buildPersonaDeck's scroll-snap sync (cardStep/activeIndex/scrollToCard).
+    const nav = document.createElement("div");
+    nav.className = "persona-nav";
+
+    const prev = document.createElement("button");
+    prev.type = "button";
+    prev.className = "persona-arrow";
+    prev.setAttribute("aria-label", "Previous font");
+    prev.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>`;
+
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className = "persona-arrow";
+    next.setAttribute("aria-label", "Next font");
+    next.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>`;
+
+    const dots = document.createElement("div");
+    dots.className = "persona-dots";
+    const dotEls = fonts.map((font, idx) => {
+      const d = document.createElement("button");
+      d.type = "button";
+      d.className = "persona-dot";
+      d.setAttribute("aria-label", "Go to " + (font.label || "font " + (idx + 1)));
+      d.addEventListener("click", () => scrollToCard(idx));
+      dots.appendChild(d);
+      return d;
+    });
+
+    function cardStep() {
+      const first = deck.querySelector(".fl-card");
+      if (!first) return deck.clientWidth || 1;
+      const cs = getComputedStyle(deck);
+      const gap = parseFloat(cs.columnGap || cs.gap || "0") || 0;
+      return first.getBoundingClientRect().width + gap;
+    }
+
+    function activeIndex() {
+      return Math.round(deck.scrollLeft / cardStep());
+    }
+
+    function scrollToCard(i) {
+      const idx = Math.max(0, Math.min(fonts.length - 1, i));
+      deck.scrollTo({ left: idx * cardStep(), behavior: "smooth" });
+    }
+
+    nav.append(prev, dots, next);
+
+    // Per-card controls — weight and use-case rebuild for the active font.
+    const panel = document.createElement("div");
+    panel.className = "builder fl-panel";
+
+    let activeFont = fonts[0] || {};
+
+    function resolveWeight() {
+      if (!activeFont.weights || activeFont.weights.length <= 1) return null;
+      return activeFont.weights[state.weightIdx] || activeFont.weights[0];
+    }
+
+    function resolveUseCase() {
+      if (state.useCaseIdx === "custom") {
+        const v = state.customUseCase.trim();
+        if (v) return v;
+      }
+      const list = activeFont.useCases || [];
+      const choice =
+        (state.useCaseIdx !== "custom" && list[state.useCaseIdx]) ||
+        list.find((u) => u.default) ||
+        list[0];
+      return choice ? choice.label : "";
+    }
+
+    function assemble() {
+      const isPaid = !!activeFont.paid;
+      const template = isPaid
+        ? cfg.paidTemplate
+        : activeFont.template || categoryTemplates[activeFont.category] || categoryTemplates.default;
+      if (!template) return "";
+
+      const family = isPaid ? activeFont.paid.trueName : activeFont.family || activeFont.label;
+      const weight = resolveWeight();
+      const weightClause = weight ? ` in its ${weight.phrase} weight` : "";
+      const useCase = resolveUseCase();
+      const caseApplicable = activeFont.caseToggleApplicable !== false;
+      const caseClause = state.case === "uppercase" && caseApplicable ? ", set in all caps" : "";
+      const categoryDescriptor = isPaid ? activeFont.paid.categoryDescriptor || "" : "";
+
+      const tokens = { family, weightClause, useCase, caseClause, categoryDescriptor };
+      return template.replace(/\{(\w+)\}/g, (m, id) => (id in tokens ? tokens[id] : m));
+    }
+
+    const output = document.createElement("p");
+    output.className = "item-text";
+    const outBox = document.createElement("div");
+    outBox.className = "item builder-output";
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy-btn";
+    copyBtn.type = "button";
+    copyBtn.setAttribute("aria-label", "Copy font prompt");
+    copyBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+    copyBtn.addEventListener("click", () => copyText(assemble(), copyBtn));
+    outBox.append(output, copyBtn);
+
+    function updateOutput() {
+      output.textContent = assemble();
+      copyBtn.setAttribute("aria-label", "Copy prompt for " + (activeFont.label || "font"));
+    }
+
+    function buildPanel() {
+      panel.innerHTML = "";
+
+      const weightList = activeFont.weights || [];
+      if (weightList.length > 1) {
+        const defIdx = weightList.findIndex((w) => w.default);
+        state.weightIdx = defIdx >= 0 ? defIdx : 0;
+        panel.appendChild(
+          pillGroup(
+            "Weight",
+            weightList.map((w, idx) => ({ key: idx, label: w.label })),
+            state.weightIdx,
+            (idx) => {
+              state.weightIdx = idx;
+              updateOutput();
+            }
+          )
+        );
+      } else {
+        state.weightIdx = 0;
+      }
+
+      const useCaseList = activeFont.useCases || [];
+      const defUCIdx = useCaseList.findIndex((u) => u.default);
+      state.useCaseIdx = defUCIdx >= 0 ? defUCIdx : 0;
+      state.customUseCase = "";
+
+      const ucOptions = useCaseList.map((u, idx) => ({ key: idx, label: u.label }));
+      if (activeFont.allowCustomUseCase) ucOptions.push({ key: "custom", label: "Custom…" });
+
+      const customInput = document.createElement("input");
+      customInput.type = "text";
+      customInput.className = "builder-input";
+      customInput.placeholder = "Describe the use case…";
+      customInput.hidden = true;
+      customInput.addEventListener("input", () => {
+        state.customUseCase = customInput.value;
+        updateOutput();
+      });
+
+      const ucGroup = pillGroup("Use case", ucOptions, state.useCaseIdx, (key) => {
+        state.useCaseIdx = key;
+        customInput.hidden = key !== "custom";
+        updateOutput();
+      });
+      ucGroup.appendChild(customInput);
+      panel.appendChild(ucGroup);
+    }
+
+    let lastActive = -1;
+    function onCardChange(idx) {
+      activeFont = fonts[idx] || fonts[0] || {};
+      buildPanel();
+      updateOutput();
+    }
+
+    function syncDots() {
+      const a = Math.max(0, Math.min(fonts.length - 1, activeIndex()));
+      dotEls.forEach((d, i) => d.setAttribute("aria-current", i === a ? "true" : "false"));
+      prev.disabled = a <= 0;
+      next.disabled = a >= fonts.length - 1;
+      if (a !== lastActive) {
+        lastActive = a;
+        onCardChange(a);
+      }
+    }
+
+    prev.addEventListener("click", () => scrollToCard(activeIndex() - 1));
+    next.addEventListener("click", () => scrollToCard(activeIndex() + 1));
+
+    let raf;
+    deck.addEventListener("scroll", () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(syncDots);
+    });
+
+    wrap.append(globalControls, deck, nav, panel, outBox);
+
+    applyWrapperClasses();
+    lastActive = 0;
+    onCardChange(0);
     requestAnimationFrame(syncDots);
 
     return wrap;

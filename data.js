@@ -116,6 +116,493 @@ const journal = [
           { text: "The post is marketing, so it understates the manual cleanup. Step 4 usually takes longer than implied — expect to hand-fix text overflow, awkward line breaks, and contrast on busy backgrounds. The automation gets you to 80%; the last 20% is still you.", plain: true },
         ],
       },
+      {
+        "title": "Font Library — Carousel Type",
+        "items": [
+          {
+            "text": "Browse the 17 fonts most used in viral IG/LinkedIn carousels (15 free + 2 paid stand-ins). Pick weight, case, and use-case, then copy a ready-to-paste style brief.",
+            "plain": true
+          },
+          {
+            "fontLibrary": {
+              "spacingModes": [
+                {
+                  "key": "normal",
+                  "label": "Normal",
+                  "default": true
+                },
+                {
+                  "key": "narrow",
+                  "label": "Narrow"
+                }
+              ],
+              "caseModes": [
+                {
+                  "key": "asTyped",
+                  "label": "As typed",
+                  "default": true
+                },
+                {
+                  "key": "uppercase",
+                  "label": "Uppercase"
+                }
+              ],
+              "fonts": [
+                {
+                  "id": "montserrat-black",
+                  "label": "Montserrat Black",
+                  "family": "Montserrat",
+                  "category": "sans",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 700,
+                      "label": "Bold (700)",
+                      "phrase": "bold"
+                    },
+                    {
+                      "value": 900,
+                      "label": "Black (900)",
+                      "phrase": "black",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "quote-card",
+                      "label": "a quote-card carousel slide",
+                      "default": true
+                    },
+                    {
+                      "key": "hook-slide",
+                      "label": "a scroll-stopping hook slide"
+                    },
+                    {
+                      "key": "cta",
+                      "label": "a bold CTA slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "poppins-extrabold",
+                  "label": "Poppins ExtraBold",
+                  "family": "Poppins",
+                  "category": "sans",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 600,
+                      "label": "SemiBold (600)",
+                      "phrase": "semibold"
+                    },
+                    {
+                      "value": 800,
+                      "label": "ExtraBold (800)",
+                      "phrase": "extrabold",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "canva-template",
+                      "label": "a Canva-style carousel template",
+                      "default": true
+                    },
+                    {
+                      "key": "quote-card",
+                      "label": "a quote-card carousel slide"
+                    },
+                    {
+                      "key": "cta",
+                      "label": "a bold CTA slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "bebas-neue",
+                  "label": "Bebas Neue",
+                  "family": "Bebas Neue",
+                  "category": "condensed-caps",
+                  "sample": "THE BEST TIME TO PLANT A TREE",
+                  "caseToggleApplicable": false,
+                  "useCases": [
+                    {
+                      "key": "slide-header",
+                      "label": "a tall, bold slide header",
+                      "default": true
+                    },
+                    {
+                      "key": "hook-slide",
+                      "label": "a scroll-stopping hook slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "anton",
+                  "label": "Anton",
+                  "family": "Anton",
+                  "category": "condensed-caps",
+                  "sample": "STOP SCROLLING",
+                  "caseToggleApplicable": false,
+                  "useCases": [
+                    {
+                      "key": "hook-slide",
+                      "label": "an ultra-bold hook slide",
+                      "default": true
+                    },
+                    {
+                      "key": "slide-header",
+                      "label": "a tall, bold slide header"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "archivo-black",
+                  "label": "Archivo Black",
+                  "family": "Archivo Black",
+                  "category": "sans-heavy",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "useCases": [
+                    {
+                      "key": "thought-leadership",
+                      "label": "a LinkedIn thought-leadership carousel",
+                      "default": true
+                    },
+                    {
+                      "key": "quote-card",
+                      "label": "a quote-card carousel slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "playfair-display-black",
+                  "label": "Playfair Display Black",
+                  "family": "Playfair Display",
+                  "category": "serif",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 700,
+                      "label": "Bold (700)",
+                      "phrase": "bold"
+                    },
+                    {
+                      "value": 900,
+                      "label": "Black (900)",
+                      "phrase": "black",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "editorial",
+                      "label": "an editorial, aesthetic quote carousel",
+                      "default": true
+                    },
+                    {
+                      "key": "quote-card",
+                      "label": "a quote-card carousel slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "inter-black",
+                  "label": "Inter Black",
+                  "family": "Inter",
+                  "category": "sans",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 700,
+                      "label": "Bold (700)",
+                      "phrase": "bold"
+                    },
+                    {
+                      "value": 900,
+                      "label": "Black (900)",
+                      "phrase": "black",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "saas",
+                      "label": "a clean, minimalist SaaS/startup carousel",
+                      "default": true
+                    },
+                    {
+                      "key": "quote-card",
+                      "label": "a quote-card carousel slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "caveat",
+                  "label": "Caveat",
+                  "family": "Caveat",
+                  "category": "script",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 600,
+                      "label": "SemiBold (600)",
+                      "phrase": "semibold"
+                    },
+                    {
+                      "value": 700,
+                      "label": "Bold (700)",
+                      "phrase": "bold",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "annotation",
+                      "label": "a handwritten annotation or highlight on a slide",
+                      "default": true
+                    },
+                    {
+                      "key": "accent",
+                      "label": "a casual accent line"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "dancing-script",
+                  "label": "Dancing Script",
+                  "family": "Dancing Script",
+                  "category": "script",
+                  "sample": "The best time to plant a tree",
+                  "weights": [
+                    {
+                      "value": 600,
+                      "label": "SemiBold (600)",
+                      "phrase": "semibold"
+                    },
+                    {
+                      "value": 700,
+                      "label": "Bold (700)",
+                      "phrase": "bold",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "cursive-accent",
+                      "label": "a flowing cursive accent on a carousel slide",
+                      "default": true
+                    },
+                    {
+                      "key": "quote-card",
+                      "label": "a quote-card carousel slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "pacifico",
+                  "label": "Pacifico",
+                  "family": "Pacifico",
+                  "category": "script",
+                  "sample": "The best time to plant a tree",
+                  "useCases": [
+                    {
+                      "key": "retro-brand",
+                      "label": "a retro, friendly brand carousel",
+                      "default": true
+                    },
+                    {
+                      "key": "accent",
+                      "label": "a casual accent line"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "great-vibes",
+                  "label": "Great Vibes",
+                  "family": "Great Vibes",
+                  "category": "script",
+                  "sample": "The best time to plant a tree",
+                  "useCases": [
+                    {
+                      "key": "luxury",
+                      "label": "an elegant, luxury quote slide",
+                      "default": true
+                    },
+                    {
+                      "key": "editorial",
+                      "label": "an editorial, aesthetic quote carousel"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "sacramento",
+                  "label": "Sacramento",
+                  "family": "Sacramento",
+                  "category": "script",
+                  "sample": "The best time to plant a tree",
+                  "useCases": [
+                    {
+                      "key": "minimalist",
+                      "label": "a thin, delicate, minimalist-aesthetic carousel",
+                      "default": true
+                    },
+                    {
+                      "key": "accent",
+                      "label": "a casual accent line"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "satisfy",
+                  "label": "Satisfy",
+                  "family": "Satisfy",
+                  "category": "script",
+                  "sample": "The best time to plant a tree",
+                  "useCases": [
+                    {
+                      "key": "wellness",
+                      "label": "a casual, lifestyle/wellness carousel accent",
+                      "default": true
+                    },
+                    {
+                      "key": "accent",
+                      "label": "a casual accent line"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "alex-brush",
+                  "label": "Alex Brush",
+                  "family": "Alex Brush",
+                  "category": "script",
+                  "sample": "The best time to plant a tree",
+                  "useCases": [
+                    {
+                      "key": "signature",
+                      "label": "a bold, brush-pen, signature-style highlight",
+                      "default": true
+                    },
+                    {
+                      "key": "accent",
+                      "label": "a casual accent line"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "parisienne",
+                  "label": "Parisienne",
+                  "family": "Parisienne",
+                  "category": "script",
+                  "sample": "The best time to plant a tree",
+                  "useCases": [
+                    {
+                      "key": "fashion-editorial",
+                      "label": "a narrow, romantic, editorial/fashion carousel",
+                      "default": true
+                    },
+                    {
+                      "key": "luxury",
+                      "label": "an elegant, luxury quote slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "gotham-bold",
+                  "label": "Gotham Bold",
+                  "family": null,
+                  "category": "sans-heavy",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 800,
+                      "label": "Bold (800)",
+                      "phrase": "bold",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "quote-card",
+                      "label": "a quote-card carousel slide",
+                      "default": true
+                    },
+                    {
+                      "key": "thought-leadership",
+                      "label": "a LinkedIn thought-leadership carousel"
+                    }
+                  ],
+                  "allowCustomUseCase": true,
+                  "paid": {
+                    "trueName": "Gotham Bold",
+                    "categoryDescriptor": "heavy geometric sans-serif",
+                    "standInFamily": "Montserrat",
+                    "standInWeight": 800,
+                    "note": "Shown here in Montserrat as a stand-in for layout only — this is NOT Gotham. Real Gotham requires Adobe Fonts (Creative Cloud) or Hoefler&Co license."
+                  }
+                },
+                {
+                  "id": "futura-pt-bold",
+                  "label": "Futura PT Bold",
+                  "family": null,
+                  "category": "sans",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 700,
+                      "label": "Bold (700)",
+                      "phrase": "bold",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "quote-card",
+                      "label": "a quote-card carousel slide",
+                      "default": true
+                    },
+                    {
+                      "key": "cta",
+                      "label": "a bold CTA slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true,
+                  "paid": {
+                    "trueName": "Futura PT Bold",
+                    "categoryDescriptor": "clean geometric sans-serif",
+                    "standInFamily": "Poppins",
+                    "standInWeight": 700,
+                    "note": "Shown here in Poppins as a stand-in for layout only — this is NOT Futura PT. Real Futura PT requires Adobe Fonts or URW++ license."
+                  }
+                }
+              ],
+              "categoryTemplates": {
+                "default": "Use {family}{weightClause}, for {useCase}{caseClause}.",
+                "sans": "Use {family}{weightClause}, a clean sans-serif, for {useCase}{caseClause}.",
+                "sans-heavy": "Use {family}{weightClause}, a heavy geometric sans-serif, for {useCase}{caseClause}.",
+                "condensed-caps": "Use {family}, an ultra-bold condensed display caps font with tight letter-spacing, for {useCase}.",
+                "serif": "Use {family}{weightClause}, an editorial serif, for {useCase}{caseClause}.",
+                "script": "Use {family}, a flowing handwritten script, for {useCase}{caseClause}."
+              },
+              "paidTemplate": "Use {family} (or a similar {categoryDescriptor} if unavailable){weightClause}, for {useCase}."
+            }
+          }
+        ]
+      },
     ],
     footer:
       "Pick 2–3 per piece of content. That's enough to sharpen thinking, improve clarity, and increase performance.",
