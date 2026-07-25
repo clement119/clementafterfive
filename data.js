@@ -618,6 +618,16 @@ const journal = [
             plain: true,
           },
           {
+            gallery: {
+              caption: "These stickers in an actual story — Notes card, Reminder dialog + floating labels, and Banner + Notes card.",
+              images: [
+                { src: "assets/examples/sticker-example-notes.jpg", label: "Notes app card" },
+                { src: "assets/examples/sticker-example-reminder-labels.jpg", label: "Reminder dialog + floating labels" },
+                { src: "assets/examples/sticker-example-banner-notes.jpg", label: "Text banner + Notes card" },
+              ],
+            },
+          },
+          {
             stickerLibrary: {
               sharedStyle: `
                 :root{
