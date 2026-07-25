@@ -682,9 +682,13 @@ const journal = [
                   font-size:14px;
                   line-height:1.9;
                 }
-                .notes-card li::before{
-                  content:"♡ ";
-                  color:#c7c7cc;
+                .notes-card ul.bullet li::before{
+                  content:"• ";
+                  color:#8e8e93;
+                }
+                .notes-card ul.checklist li::before{
+                  content:"☐ ";
+                  color:#8e8e93;
                 }
 
                 /* ---------- 2. Flag / highlight text banner ---------- */
@@ -764,18 +768,22 @@ const journal = [
                   fields: [
                     { key: "headline", label: "Headline", type: "text", default: "I was and still am…" },
                     { key: "items", label: "Bullet lines (one per line)", type: "list", default: ["Introverted", "Very private", "Not natural at photos", "Shy on camera"] },
+                    { key: "bulletStyle", label: "Bullet style", type: "choice", choices: [{ value: "bullet", label: "Bullet" }, { value: "checkbox", label: "Checklist" }], default: "bullet" },
                   ],
                   buildHtml: function (v, esc) {
                     const items = (v.items || []).map((i) => `<li>${esc(i)}</li>`).join("");
-                    return `<div class="stage"><div class="notes-card"><div class="nav"><span>Notes</span><span>⋯</span></div><h4>${esc(v.headline)}</h4><ul>${items}</ul></div></div>`;
+                    const listClass = v.bulletStyle === "checkbox" ? "checklist" : "bullet";
+                    return `<div class="stage"><div class="notes-card"><div class="nav"><span>Notes</span><span>⋯</span></div><h4>${esc(v.headline)}</h4><ul class="${listClass}">${items}</ul></div></div>`;
                   },
                   buildPrompt: function (v) {
+                    const isChecklist = v.bulletStyle === "checkbox";
+                    const listWord = isChecklist ? "checklist" : "bulleted list";
                     const headlineClause = v.headline
                       ? `the bold headline "${v.headline}"`
                       : "a short personal headline that fits the photo's mood (invent fitting wording)";
                     const itemsClause = v.items && v.items.length
-                      ? `a bulleted list reading: ${v.items.join("; ")}`
-                      : "3-4 bullet points that fit the photo's story (invent fitting wording)";
+                      ? `a ${listWord} reading: ${v.items.join("; ")}`
+                      : `3-4 ${isChecklist ? "checklist items" : "bullet points"} that fit the photo's story (invent fitting wording)`;
                     return `Overlay a fake iOS Notes app screenshot sticker onto the photo — a white rounded card tilted slightly, with an orange "Notes" nav bar, ${headlineClause}, and ${itemsClause}.`;
                   },
                 },

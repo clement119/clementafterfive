@@ -1390,6 +1390,7 @@
 
     const fields = Array.isArray(sticker.fields) ? sticker.fields : [];
     const fieldEls = {};
+    const choiceState = {};
 
     const fieldsWrap = document.createElement("div");
     fieldsWrap.className = "builder sticker-fields";
@@ -1397,6 +1398,10 @@
     function readRaw() {
       const raw = {};
       fields.forEach((f) => {
+        if (f.type === "choice") {
+          raw[f.key] = choiceState[f.key];
+          return;
+        }
         const v = fieldEls[f.key].value;
         raw[f.key] = f.type === "list"
           ? v.split("\n").map((s) => s.trim()).filter(Boolean)
@@ -1408,6 +1413,10 @@
     function resolved(raw) {
       const out = {};
       fields.forEach((f) => {
+        if (f.type === "choice") {
+          out[f.key] = raw[f.key];
+          return;
+        }
         const v = raw[f.key];
         const empty = Array.isArray(v) ? v.length === 0 : !v;
         out[f.key] = empty ? f.default : v;
@@ -1429,8 +1438,31 @@
       group.className = "builder-control";
       const lab = document.createElement("span");
       lab.className = "builder-label";
-      lab.textContent = f.label + " (optional — leave blank to let the AI choose)";
+      lab.textContent = f.type === "choice" ? f.label : f.label + " (optional — leave blank to let the AI choose)";
       group.appendChild(lab);
+
+      if (f.type === "choice") {
+        choiceState[f.key] = f.default || (f.choices[0] && f.choices[0].value);
+        const choices = document.createElement("div");
+        choices.className = "builder-choices";
+        (f.choices || []).forEach((c) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "choice-btn";
+          btn.textContent = c.label;
+          btn.setAttribute("aria-pressed", c.value === choiceState[f.key] ? "true" : "false");
+          btn.addEventListener("click", () => {
+            choiceState[f.key] = c.value;
+            choices.querySelectorAll(".choice-btn").forEach((b) => b.setAttribute("aria-pressed", "false"));
+            btn.setAttribute("aria-pressed", "true");
+            update();
+          });
+          choices.appendChild(btn);
+        });
+        group.appendChild(choices);
+        fieldsWrap.appendChild(group);
+        return;
+      }
 
       let el;
       if (f.type === "text") {
