@@ -609,6 +609,240 @@ const journal = [
           }
         ]
       },
+      {
+        title: "Instagram Story Stickers",
+        pillar: "Media Creation & Edit",
+        items: [
+          {
+            text: "Fill in your own wording per sticker, or leave a field blank to let the AI invent something that fits your photo. The dark canvas below is just a preview aid — when you screenshot, crop tight to the sticker itself and drop it onto your real photo as a sticker layer in Instagram's story editor.",
+            plain: true,
+          },
+          {
+            stickerLibrary: {
+              sharedStyle: `
+                :root{
+                  --ink:#1c1c1e;
+                  --paper:#ffffff;
+                  --canvas:#0e0e10;
+                  --accent:#ffd60a;
+                }
+                *{box-sizing:border-box;}
+                body{
+                  margin:0;
+                  background:var(--canvas);
+                  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',Helvetica,Arial,sans-serif;
+                  color:#fff;
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                  min-height:100vh;
+                  padding:20px;
+                }
+                .stage{
+                  position:relative;
+                  width:280px;
+                  height:340px;
+                  border-radius:20px;
+                  background:linear-gradient(160deg,#3a3a3c,#111);
+                  overflow:hidden;
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                }
+                .stage.dark{background:linear-gradient(150deg,#2c2c2e,#050505);}
+
+                /* ---------- 1. Notes app card ---------- */
+                .notes-card{
+                  width:230px;
+                  background:var(--paper);
+                  color:var(--ink);
+                  border-radius:16px;
+                  padding:16px 16px 18px;
+                  box-shadow:0 18px 40px rgba(0,0,0,.45);
+                  transform:rotate(-1.5deg);
+                }
+                .notes-card .nav{
+                  display:flex;
+                  justify-content:space-between;
+                  align-items:center;
+                  font-size:13px;
+                  color:#ff9500;
+                  margin-bottom:10px;
+                }
+                .notes-card .nav span:first-child::before{content:"‹ ";}
+                .notes-card h4{
+                  margin:0 0 10px;
+                  font-size:17px;
+                  font-weight:700;
+                }
+                .notes-card ul{
+                  list-style:none;
+                  margin:0;
+                  padding:0;
+                  font-size:14px;
+                  line-height:1.9;
+                }
+                .notes-card li::before{
+                  content:"♡ ";
+                  color:#c7c7cc;
+                }
+
+                /* ---------- 2. Flag / highlight text banner ---------- */
+                .flag-banner{
+                  position:relative;
+                  display:inline-block;
+                  background:var(--accent);
+                  color:#1c1c1e;
+                  font-weight:600;
+                  font-size:15px;
+                  padding:6px 14px;
+                  border-radius:2px;
+                }
+                .flag-banner::before,.flag-banner::after{
+                  content:"";
+                  position:absolute;
+                  top:50%;
+                  transform:translateY(-50%);
+                  width:8px;
+                  height:8px;
+                  background:#1c1c1e;
+                  border-radius:50%;
+                }
+                .flag-banner::before{left:-4px;}
+                .flag-banner::after{right:-4px;}
+
+                /* ---------- 3. Reminder / system alert dialog ---------- */
+                .alert{
+                  width:240px;
+                  background:rgba(250,250,250,.92);
+                  backdrop-filter:blur(6px);
+                  color:var(--ink);
+                  border-radius:14px;
+                  overflow:hidden;
+                  box-shadow:0 20px 45px rgba(0,0,0,.5);
+                  text-align:center;
+                }
+                .alert .body{padding:18px 16px 14px;}
+                .alert .title{font-size:15px;font-weight:700;margin-bottom:6px;}
+                .alert .msg{font-size:12.5px;line-height:1.5;color:#333;}
+                .alert .actions{
+                  display:flex;
+                  border-top:1px solid rgba(0,0,0,.15);
+                }
+                .alert .actions button{
+                  flex:1;
+                  border:none;
+                  background:transparent;
+                  padding:11px 0;
+                  font-size:14px;
+                  color:#c0392b;
+                  font-weight:400;
+                }
+                .alert .actions button:first-child{
+                  border-right:1px solid rgba(0,0,0,.15);
+                }
+                .alert .actions button:last-child{font-weight:700;}
+
+                /* ---------- 4. Floating emoji labels ---------- */
+                .label-field{position:relative;width:100%;height:100%;}
+                .float-label{
+                  position:absolute;
+                  color:#fff;
+                  font-size:14px;
+                  font-weight:600;
+                  text-shadow:0 1px 6px rgba(0,0,0,.6);
+                }
+                .float-label.a{top:22%; left:12%;}
+                .float-label.b{top:38%; right:10%;}
+                .float-label.c{bottom:30%; left:16%;}
+                .float-label.d{bottom:14%; right:14%;}
+              `,
+              stickers: [
+                {
+                  id: "notes-card",
+                  label: "Notes app card",
+                  fields: [
+                    { key: "headline", label: "Headline", type: "text", default: "I was and still am…" },
+                    { key: "items", label: "Bullet lines (one per line)", type: "list", default: ["Introverted", "Very private", "Not natural at photos", "Shy on camera"] },
+                  ],
+                  buildHtml: function (v, esc) {
+                    const items = (v.items || []).map((i) => `<li>${esc(i)}</li>`).join("");
+                    return `<div class="stage"><div class="notes-card"><div class="nav"><span>Notes</span><span>⋯</span></div><h4>${esc(v.headline)}</h4><ul>${items}</ul></div></div>`;
+                  },
+                  buildPrompt: function (v) {
+                    const headlineClause = v.headline
+                      ? `the bold headline "${v.headline}"`
+                      : "a short personal headline that fits the photo's mood (invent fitting wording)";
+                    const itemsClause = v.items && v.items.length
+                      ? `a bulleted list reading: ${v.items.join("; ")}`
+                      : "3-4 bullet points that fit the photo's story (invent fitting wording)";
+                    return `Overlay a fake iOS Notes app screenshot sticker onto the photo — a white rounded card tilted slightly, with an orange "Notes" nav bar, ${headlineClause}, and ${itemsClause}.`;
+                  },
+                },
+                {
+                  id: "flag-banner",
+                  label: "Text highlight banner",
+                  fields: [
+                    { key: "text", label: "Banner text", type: "text", default: "But I was the total opposite…" },
+                  ],
+                  buildHtml: function (v, esc) {
+                    return `<div class="stage dark"><span class="flag-banner">${esc(v.text)}</span></div>`;
+                  },
+                  buildPrompt: function (v) {
+                    const textClause = v.text
+                      ? `reading "${v.text}"`
+                      : "with a short, punchy line that continues or contrasts the photo's story (invent fitting wording)";
+                    return `Overlay a solid-color flag/pennant-shaped text banner (a rounded pill with two small circular tag-ends) onto the photo, ${textClause}.`;
+                  },
+                },
+                {
+                  id: "reminder-dialog",
+                  label: "Reminder dialog",
+                  fields: [
+                    { key: "title", label: "Title", type: "text", default: "Reminder" },
+                    { key: "message", label: "Message", type: "paragraph", default: "I want to be confident in myself. I wanted to prove to others and myself that you can be strong and fit, even if you've always been told something else." },
+                  ],
+                  buildHtml: function (v, esc) {
+                    return `<div class="stage"><div class="alert"><div class="body"><div class="title">${esc(v.title)}</div><div class="msg">${esc(v.message)}</div></div><div class="actions"><button>Okay</button><button>Got It!</button></div></div></div>`;
+                  },
+                  buildPrompt: function (v) {
+                    const titleClause = v.title
+                      ? `titled "${v.title}"`
+                      : 'titled "Reminder" (or a similarly short system-alert title)';
+                    const msgClause = v.message
+                      ? `with the message "${v.message}"`
+                      : "with a short first-person reminder message that fits the photo's context (invent fitting wording)";
+                    return `Overlay a fake iOS system-alert "reminder" dialog onto the photo — a rounded white popup ${titleClause} ${msgClause}, and a two-button footer reading "Okay" / "Got It!".`;
+                  },
+                },
+                {
+                  id: "floating-labels",
+                  label: "Floating emoji labels",
+                  fields: [
+                    { key: "labels", label: "Labels (one per line, up to 4)", type: "list", default: ["I am STRONG 💪", "I am BEAUTIFUL 🌷", "I am FIT 🏃", "I am HEALTHY ⭐"] },
+                  ],
+                  buildHtml: function (v, esc) {
+                    const labels = v.labels || [];
+                    const classes = ["a", "b", "c", "d"];
+                    const spans = classes.map((c, i) => `<span class="float-label ${c}">${esc(labels[i] || "")}</span>`).join("");
+                    return `<div class="stage dark"><div class="label-field">${spans}</div></div>`;
+                  },
+                  buildPrompt: function (v) {
+                    const labelsClause = v.labels && v.labels.length
+                      ? `reading: ${v.labels.join("; ")}`
+                      : "with 4 short affirming label+emoji pairs scattered around the photo (invent fitting wording and matching emoji)";
+                    return `Overlay small floating text+emoji labels scattered around the photo (drop-shadow text only, no background), ${labelsClause}.`;
+                  },
+                },
+              ],
+            },
+          },
+          {
+            text: "Star stickers + outlined \"Neon\" script text aren't rebuildable HTML — that's Instagram's own native sticker tray and text-style tool. Just use IG's own text tool and sticker tray for those.",
+            plain: true,
+          },
+        ],
+      },
     ],
     footer:
       "Pick 2–3 per piece of content. That's enough to sharpen thinking, improve clarity, and increase performance.",

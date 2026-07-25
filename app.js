@@ -747,6 +747,7 @@
     if (item && item.promptI18n) return buildI18nPrompt(item.promptI18n);
     if (item && item.builder) return buildBuilder(item.builder);
     if (item && item.fontLibrary) return buildFontLibrary(item.fontLibrary);
+    if (item && item.stickerLibrary) return buildStickerLibrary(item.stickerLibrary);
     if (item && item.heading != null) return buildHeading(item.heading);
 
     const { text, copyable, plain } = normalizeItem(item);
@@ -1354,6 +1355,133 @@
     requestAnimationFrame(syncDots);
 
     return wrap;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    }[c]));
+  }
+
+  function wrapStickerDoc(sharedStyle, bodyHtml) {
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${sharedStyle}</style></head><body>${bodyHtml}</body></html>`;
+  }
+
+  // Instagram Story sticker mockups: fill in per-sticker fields (or leave
+  // blank), see a live iframe-isolated preview update instantly, and get a
+  // natural-language "overlay this onto my photo" prompt for an AI image
+  // tool. Each sticker owns its own buildHtml/buildPrompt in the data.
+  function buildStickerLibrary(cfg) {
+    const wrap = document.createElement("div");
+    wrap.className = "sticker-library";
+    const stickers = Array.isArray(cfg.stickers) ? cfg.stickers : [];
+    stickers.forEach((sticker) => wrap.appendChild(buildStickerCard(sticker, cfg.sharedStyle)));
+    return wrap;
+  }
+
+  function buildStickerCard(sticker, sharedStyle) {
+    const card = document.createElement("div");
+    card.className = "sticker-card";
+
+    const label = document.createElement("h3");
+    label.className = "fl-label";
+    label.textContent = sticker.label || "";
+    card.appendChild(label);
+
+    const fields = Array.isArray(sticker.fields) ? sticker.fields : [];
+    const fieldEls = {};
+
+    const fieldsWrap = document.createElement("div");
+    fieldsWrap.className = "builder sticker-fields";
+
+    function readRaw() {
+      const raw = {};
+      fields.forEach((f) => {
+        const v = fieldEls[f.key].value;
+        raw[f.key] = f.type === "list"
+          ? v.split("\n").map((s) => s.trim()).filter(Boolean)
+          : v.trim();
+      });
+      return raw;
+    }
+
+    function resolved(raw) {
+      const out = {};
+      fields.forEach((f) => {
+        const v = raw[f.key];
+        const empty = Array.isArray(v) ? v.length === 0 : !v;
+        out[f.key] = empty ? f.default : v;
+      });
+      return out;
+    }
+
+    let currentDoc = "";
+    function update() {
+      const raw = readRaw();
+      const res = resolved(raw);
+      currentDoc = wrapStickerDoc(sharedStyle, sticker.buildHtml(res, escapeHtml));
+      iframe.srcdoc = currentDoc;
+      output.textContent = sticker.buildPrompt(raw);
+    }
+
+    fields.forEach((f) => {
+      const group = document.createElement("div");
+      group.className = "builder-control";
+      const lab = document.createElement("span");
+      lab.className = "builder-label";
+      lab.textContent = f.label + " (optional — leave blank to let the AI choose)";
+      group.appendChild(lab);
+
+      let el;
+      if (f.type === "text") {
+        el = document.createElement("input");
+        el.type = "text";
+        el.className = "builder-input";
+      } else {
+        el = document.createElement("textarea");
+        el.className = "builder-input builder-textarea";
+        el.rows = f.type === "list" ? Math.max(2, (f.default || []).length) : 3;
+      }
+      el.placeholder = Array.isArray(f.default) ? f.default.join("\n") : f.default || "";
+      el.addEventListener("input", update);
+      fieldEls[f.key] = el;
+      group.appendChild(el);
+      fieldsWrap.appendChild(group);
+    });
+    card.appendChild(fieldsWrap);
+
+    const previewWrap = document.createElement("div");
+    previewWrap.className = "sticker-preview";
+    const iframe = document.createElement("iframe");
+    iframe.className = "sticker-preview-frame";
+    iframe.setAttribute("sandbox", "");
+    iframe.setAttribute("title", (sticker.label || "Sticker") + " preview");
+    previewWrap.appendChild(iframe);
+    card.appendChild(previewWrap);
+
+    const htmlCopyBtn = document.createElement("button");
+    htmlCopyBtn.className = "copy-btn sticker-html-copy";
+    htmlCopyBtn.type = "button";
+    htmlCopyBtn.setAttribute("aria-label", "Copy " + (sticker.label || "sticker") + " HTML");
+    htmlCopyBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy sticker HTML</span>`;
+    htmlCopyBtn.addEventListener("click", () => copyText(currentDoc, htmlCopyBtn));
+    card.appendChild(htmlCopyBtn);
+
+    const output = document.createElement("p");
+    output.className = "item-text";
+    const outBox = document.createElement("div");
+    outBox.className = "item builder-output";
+    const promptCopyBtn = document.createElement("button");
+    promptCopyBtn.className = "copy-btn";
+    promptCopyBtn.type = "button";
+    promptCopyBtn.setAttribute("aria-label", "Copy prompt for " + (sticker.label || "sticker"));
+    promptCopyBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+    promptCopyBtn.addEventListener("click", () => copyText(output.textContent, promptCopyBtn));
+    outBox.append(output, promptCopyBtn);
+    card.appendChild(outBox);
+
+    update();
+    return card;
   }
 
   function buildSection(section, openByDefault) {

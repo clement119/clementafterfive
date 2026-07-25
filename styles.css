@@ -918,6 +918,47 @@ body {
   margin-top: 3px;
 }
 
+/* ---------- Sticker Library ---------- */
+.sticker-library {
+  display: grid;
+  gap: 28px;
+}
+
+.sticker-card {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.builder-input.builder-textarea {
+  resize: vertical;
+  min-height: 56px;
+  font-family: inherit;
+  line-height: 1.45;
+}
+
+.sticker-preview {
+  display: flex;
+  justify-content: center;
+}
+
+.sticker-preview-frame {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: 380px;
+  border: 0;
+  border-radius: var(--radius);
+}
+
+.sticker-html-copy {
+  justify-self: start;
+}
+
 /* ---------- Link button (CTA to an external page) ---------- */
 .item-link {
   display: inline-flex;
