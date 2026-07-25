@@ -619,11 +619,12 @@ const journal = [
           },
           {
             gallery: {
-              caption: "These stickers in an actual story — Notes card, Reminder dialog + floating labels, and Banner + Notes card.",
+              caption: "These stickers in an actual story — Notes card, Reminder dialog + floating labels, Banner + Notes card, and Chat bubbles.",
               images: [
                 { src: "assets/examples/sticker-example-notes.jpg", label: "Notes app card" },
                 { src: "assets/examples/sticker-example-reminder-labels.jpg", label: "Reminder dialog + floating labels" },
                 { src: "assets/examples/sticker-example-banner-notes.jpg", label: "Text banner + Notes card" },
+                { src: "assets/examples/sticker-example-chat-bubble.jpg", label: "Chat bubbles" },
               ],
             },
           },
@@ -770,6 +771,34 @@ const journal = [
                 .float-label.b{top:38%; right:10%;}
                 .float-label.c{bottom:30%; left:16%;}
                 .float-label.d{bottom:14%; right:14%;}
+
+                /* ---------- 5. Chat / message bubble ---------- */
+                .chat-bubble{
+                  position:relative;
+                  display:inline-block;
+                  max-width:210px;
+                  background:var(--paper);
+                  color:var(--ink);
+                  font-size:14px;
+                  line-height:1.4;
+                  padding:10px 14px;
+                  border-radius:18px;
+                  box-shadow:0 10px 24px rgba(0,0,0,.4);
+                  word-wrap:break-word;
+                  overflow-wrap:break-word;
+                  white-space:pre-wrap;
+                }
+                .chat-bubble::after{
+                  content:"";
+                  position:absolute;
+                  bottom:-6px;
+                  left:18px;
+                  width:14px;
+                  height:14px;
+                  background:var(--paper);
+                  clip-path:polygon(0 0, 100% 0, 0 100%);
+                  border-radius:0 0 0 5px;
+                }
               `,
               stickers: [
                 {
@@ -850,6 +879,22 @@ const journal = [
                       ? `reading: ${v.labels.join("; ")}`
                       : "with 4 short affirming label+emoji pairs scattered around the photo (invent fitting wording and matching emoji)";
                     return `Overlay small floating text+emoji labels scattered around the photo (drop-shadow text only, no background), ${labelsClause}.`;
+                  },
+                },
+                {
+                  id: "chat-bubble",
+                  label: "Chat bubble",
+                  fields: [
+                    { key: "text", label: "Bubble text", type: "paragraph", default: "Here, I used to get comments about how skinny I looked all the time." },
+                  ],
+                  buildHtml: function (v, esc) {
+                    return `<div class="stage"><span class="chat-bubble">${esc(v.text)}</span></div>`;
+                  },
+                  buildPrompt: function (v) {
+                    const textClause = v.text
+                      ? `reading "${v.text}"`
+                      : "with a short caption line that fits the photo's story (invent fitting wording)";
+                    return `Overlay a white rounded message/chat-bubble text sticker (with a small speech-bubble tail at the bottom-left) onto the photo — sized to fit its text and wrapping onto multiple lines rather than stretching wide, ${textClause}.`;
                   },
                 },
               ],
