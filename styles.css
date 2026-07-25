@@ -832,7 +832,9 @@ body {
 .fl-card {
   flex: 0 0 82%;
   max-width: 340px;
-  min-height: 220px;
+  height: 250px;
+  overflow-y: auto;
+  scrollbar-width: none;
   scroll-snap-align: center;
   display: flex;
   flex-direction: column;
@@ -842,6 +844,9 @@ body {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+}
+.fl-card::-webkit-scrollbar {
+  display: none;
 }
 @media (min-width: 620px) {
   .fl-card {
