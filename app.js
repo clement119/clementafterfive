@@ -1147,15 +1147,17 @@
       const renderFamily = font.paid ? font.paid.standInFamily : font.family;
       const defaultWeight = font.weights && (font.weights.find((w) => w.default) || font.weights[0]);
       const renderWeight = font.paid ? font.paid.standInWeight : defaultWeight && defaultWeight.value;
-      if (renderFamily) sample.style.fontFamily = `'${renderFamily}', ${genericFamily(font.category)}`;
+      if (font.familyCSS) sample.style.fontFamily = font.familyCSS;
+      else if (renderFamily) sample.style.fontFamily = `'${renderFamily}', ${genericFamily(font.category)}`;
       if (renderWeight) sample.style.fontWeight = String(renderWeight);
 
       card.append(label, sample);
 
-      if (font.paid && font.paid.note) {
+      const noteText = font.paid ? font.paid.note : font.note;
+      if (noteText) {
         const note = document.createElement("p");
         note.className = "fl-standin-note skill-note";
-        note.textContent = font.paid.note;
+        note.textContent = noteText;
         card.appendChild(note);
       }
 
@@ -1200,13 +1202,24 @@
       return first.getBoundingClientRect().width + gap;
     }
 
+    // Near the deck's scroll boundaries, idx*cardStep() can overshoot the
+    // real max scrollLeft (scroll-snap-align:center leaves no room to fully
+    // "left-align" the first/last card) — clamp against the true max so the
+    // last card is reachable and correctly reported as active.
+    function maxScrollLeft() {
+      return Math.max(0, deck.scrollWidth - deck.clientWidth);
+    }
+
     function activeIndex() {
+      const max = maxScrollLeft();
+      if (max > 0 && deck.scrollLeft >= max - 1) return fonts.length - 1;
       return Math.round(deck.scrollLeft / cardStep());
     }
 
     function scrollToCard(i) {
       const idx = Math.max(0, Math.min(fonts.length - 1, i));
-      deck.scrollTo({ left: idx * cardStep(), behavior: "smooth" });
+      const target = idx === fonts.length - 1 ? maxScrollLeft() : idx * cardStep();
+      deck.scrollTo({ left: target, behavior: "smooth" });
     }
 
     nav.append(prev, dots, next);

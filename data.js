@@ -126,7 +126,7 @@ const journal = [
         "pillar": "Media Creation & Edit",
         "items": [
           {
-            "text": "Browse the 17 fonts most used in viral IG/LinkedIn carousels (15 free + 2 paid stand-ins). Pick weight, case, and use-case, then copy a ready-to-paste style brief.",
+            "text": "Browse the 23 fonts most used in viral IG/LinkedIn carousels and Chinese short-video captions (21 free + 2 paid stand-ins). Pick weight, case, and use-case, then copy a ready-to-paste style brief.",
             "plain": true
           },
           {
@@ -594,6 +594,139 @@ const journal = [
                     "standInWeight": 700,
                     "note": "Shown here in Poppins as a stand-in for layout only — this is NOT Futura PT. Real Futura PT requires Adobe Fonts or URW++ license."
                   }
+                },
+                {
+                  "id": "permanent-marker",
+                  "label": "Permanent Marker",
+                  "family": "Permanent Marker",
+                  "category": "marker",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "useCases": [
+                    {
+                      "key": "hook-slide",
+                      "label": "a bold, attention-grabbing hook slide",
+                      "default": true
+                    },
+                    {
+                      "key": "cta",
+                      "label": "a punchy CTA callout"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "short-stack",
+                  "label": "Short Stack",
+                  "family": "Short Stack",
+                  "category": "script",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "useCases": [
+                    {
+                      "key": "annotation",
+                      "label": "a casual handwritten annotation on a slide",
+                      "default": true
+                    },
+                    {
+                      "key": "accent",
+                      "label": "a friendly accent line"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "kalam",
+                  "label": "Kalam",
+                  "family": "Kalam",
+                  "category": "script",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 300,
+                      "label": "Light (300)",
+                      "phrase": "light",
+                      "default": true
+                    },
+                    {
+                      "value": 700,
+                      "label": "Bold (700)",
+                      "phrase": "bold"
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "annotation",
+                      "label": "a light, personal-feeling annotation",
+                      "default": true
+                    },
+                    {
+                      "key": "quote-card",
+                      "label": "a quote-card carousel slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "patrick-hand",
+                  "label": "Patrick Hand",
+                  "family": "Patrick Hand",
+                  "category": "script",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "useCases": [
+                    {
+                      "key": "annotation",
+                      "label": "a clean handwritten note or label",
+                      "default": true
+                    },
+                    {
+                      "key": "accent",
+                      "label": "a friendly accent line"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "zcool-kuaile",
+                  "label": "ZCOOL KuaiLe (站酷快乐体)",
+                  "family": "ZCOOL KuaiLe",
+                  "category": "script",
+                  "sample": "种树最好的时间是十年前，其次是现在。",
+                  "caseToggleApplicable": false,
+                  "useCases": [
+                    {
+                      "key": "social-title",
+                      "label": "a playful Chinese social video title card",
+                      "default": true
+                    },
+                    {
+                      "key": "caption",
+                      "label": "a lighthearted caption for a lifestyle post"
+                    }
+                  ],
+                  "allowCustomUseCase": true,
+                  "template": "Use {family} (站酷快乐体), a playful, rounded Chinese brush-style font, for {useCase}."
+                },
+                {
+                  "id": "stxingkai",
+                  "label": "STXingkai (华文行楷)",
+                  "family": "STXingkai",
+                  "familyCSS": "'STXingkai', 华文行楷, cursive",
+                  "category": "script",
+                  "sample": "种树最好的时间是十年前，其次是现在。",
+                  "caseToggleApplicable": false,
+                  "useCases": [
+                    {
+                      "key": "brush-title",
+                      "label": "a classic brush-calligraphy title",
+                      "default": true
+                    },
+                    {
+                      "key": "quote-card",
+                      "label": "an elegant Chinese quote card"
+                    }
+                  ],
+                  "allowCustomUseCase": true,
+                  "template": "Use {family} (华文行楷), a classic Chinese brush cursive font, for {useCase}.",
+                  "note": "System font — renders as the real thing on Mac/iOS if installed; other devices will show a fallback font here, but the prompt above still names the real font for your AI tool."
                 }
               ],
               "categoryTemplates": {
@@ -602,7 +735,8 @@ const journal = [
                 "sans-heavy": "Use {family}{weightClause}, a heavy geometric sans-serif, for {useCase}{caseClause}.",
                 "condensed-caps": "Use {family}, an ultra-bold condensed display caps font with tight letter-spacing, for {useCase}.",
                 "serif": "Use {family}{weightClause}, an editorial serif, for {useCase}{caseClause}.",
-                "script": "Use {family}, a flowing handwritten script, for {useCase}{caseClause}."
+                "script": "Use {family}, a flowing handwritten script, for {useCase}{caseClause}.",
+                "marker": "Use {family}, a bold, hand-drawn marker-style font, for {useCase}{caseClause}."
               },
               "paidTemplate": "Use {family} (or a similar {categoryDescriptor} if unavailable){weightClause}, for {useCase}."
             }
