@@ -126,7 +126,7 @@ const journal = [
         "pillar": "Media Creation & Edit",
         "items": [
           {
-            "text": "Browse the 23 fonts most used in viral IG/LinkedIn carousels and Chinese short-video captions (21 free + 2 paid stand-ins). Pick weight, case, and use-case, then copy a ready-to-paste style brief.",
+            "text": "Browse the 25 fonts most used in viral IG/LinkedIn carousels and Chinese short-video captions (23 free + 2 paid stand-ins). Pick weight, case, and use-case, then copy a ready-to-paste style brief.",
             "plain": true
           },
           {
@@ -727,6 +727,62 @@ const journal = [
                   "allowCustomUseCase": true,
                   "template": "Use {family} (华文行楷), a classic Chinese brush cursive font, for {useCase}.",
                   "note": "System font — renders as the real thing on Mac/iOS if installed; other devices will show a fallback font here, but the prompt above still names the real font for your AI tool."
+                },
+                {
+                  "id": "unbounded",
+                  "label": "Unbounded",
+                  "family": "Unbounded",
+                  "category": "sans-heavy",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 900,
+                      "label": "Black (900)",
+                      "phrase": "black",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "brand-headline",
+                      "label": "a bold display headline for a modern brand carousel",
+                      "default": true
+                    },
+                    {
+                      "key": "title-card",
+                      "label": "a heavy geometric title card"
+                    }
+                  ],
+                  "allowCustomUseCase": true
+                },
+                {
+                  "id": "bodoni-moda-italic",
+                  "label": "Bodoni Moda Italic",
+                  "family": "Bodoni Moda",
+                  "fontStyle": "italic",
+                  "category": "serif",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 700,
+                      "label": "Bold (700)",
+                      "phrase": "bold",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "editorial-quote",
+                      "label": "an elegant Didone-style editorial quote card",
+                      "default": true
+                    },
+                    {
+                      "key": "fashion-headline",
+                      "label": "a high-fashion magazine-style headline"
+                    }
+                  ],
+                  "allowCustomUseCase": true,
+                  "template": "Use {family} italic, a high-contrast Didone serif, for {useCase}."
                 }
               ],
               "categoryTemplates": {

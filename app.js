@@ -1150,6 +1150,7 @@
       if (font.familyCSS) sample.style.fontFamily = font.familyCSS;
       else if (renderFamily) sample.style.fontFamily = `'${renderFamily}', ${genericFamily(font.category)}`;
       if (renderWeight) sample.style.fontWeight = String(renderWeight);
+      if (font.fontStyle) sample.style.fontStyle = font.fontStyle;
 
       card.append(label, sample);
 
@@ -1202,24 +1203,33 @@
       return first.getBoundingClientRect().width + gap;
     }
 
-    // Near the deck's scroll boundaries, idx*cardStep() can overshoot the
-    // real max scrollLeft (scroll-snap-align:center leaves no room to fully
-    // "left-align" the first/last card) — clamp against the true max so the
-    // last card is reachable and correctly reported as active.
+    // With scroll-snap-align:center, a card's true snap position isn't
+    // idx*cardStep() — it's offset by half the gap between the deck's
+    // visible width and a single card's width (deck.clientWidth is wide
+    // enough to show more than one card, so centering card i pulls the
+    // deck left by that gap). Ignoring this offset was fine for a short
+    // deck but compounds into real drift over many cards, causing the last
+    // few cards near either end to collide onto the same clamped scroll
+    // position and become unreachable/misreported via dot or arrow nav.
+    function centerOffset() {
+      const first = deck.querySelector(".fl-card");
+      if (!first) return 0;
+      return (deck.clientWidth - first.getBoundingClientRect().width) / 2;
+    }
+
     function maxScrollLeft() {
       return Math.max(0, deck.scrollWidth - deck.clientWidth);
     }
 
     function activeIndex() {
-      const max = maxScrollLeft();
-      if (max > 0 && deck.scrollLeft >= max - 1) return fonts.length - 1;
-      return Math.round(deck.scrollLeft / cardStep());
+      const idx = Math.round((deck.scrollLeft + centerOffset()) / cardStep());
+      return Math.max(0, Math.min(fonts.length - 1, idx));
     }
 
     function scrollToCard(i) {
       const idx = Math.max(0, Math.min(fonts.length - 1, i));
-      const target = idx === fonts.length - 1 ? maxScrollLeft() : idx * cardStep();
-      deck.scrollTo({ left: target, behavior: "smooth" });
+      const target = idx * cardStep() - centerOffset();
+      deck.scrollTo({ left: Math.max(0, Math.min(maxScrollLeft(), target)), behavior: "smooth" });
     }
 
     nav.append(prev, dots, next);
