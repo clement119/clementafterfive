@@ -73,6 +73,7 @@
   const chevronSVG = `<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>`;
   const copyIconSVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>`;
   const checkIconSVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>`;
+  const downloadIconSVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>`;
 
   /* ---------------- Helpers ---------------- */
   function formatDate(iso) {
@@ -748,6 +749,7 @@
     if (item && item.builder) return buildBuilder(item.builder);
     if (item && item.fontLibrary) return buildFontLibrary(item.fontLibrary);
     if (item && item.stickerLibrary) return buildStickerLibrary(item.stickerLibrary);
+    if (item && item.iconPreview) return buildIconPreview(item.iconPreview);
     if (item && item.heading != null) return buildHeading(item.heading);
 
     const { text, copyable, plain } = normalizeItem(item);
@@ -1600,6 +1602,85 @@
     card.appendChild(outBox);
 
     update();
+    return card;
+  }
+
+  function buildIconPreview(cfg) {
+    const modes = Array.isArray(cfg.modes) ? cfg.modes : [];
+    const formats = Array.isArray(cfg.formats) ? cfg.formats : [];
+    if (!modes.length) return document.createElement("div");
+
+    const card = document.createElement("div");
+    card.className = "icon-preview-card";
+
+    const label = document.createElement("h3");
+    label.className = "fl-label";
+    label.textContent = (cfg.brand || "") + " logo";
+    card.appendChild(label);
+
+    let activeMode = modes.find((m) => m.default) || modes[0];
+
+    const modeGroup = document.createElement("div");
+    modeGroup.className = "builder-control";
+    const modeLabel = document.createElement("span");
+    modeLabel.className = "builder-label";
+    modeLabel.textContent = "Style";
+    modeGroup.appendChild(modeLabel);
+    const modeChoices = document.createElement("div");
+    modeChoices.className = "builder-choices";
+    modeGroup.appendChild(modeChoices);
+    card.appendChild(modeGroup);
+
+    const swatch = document.createElement("div");
+    swatch.className = "icon-preview-swatch";
+    card.appendChild(swatch);
+
+    const formatsRow = document.createElement("div");
+    formatsRow.className = "icon-preview-formats";
+    const formatLinks = formats.map((format) => {
+      const a = document.createElement("a");
+      a.className = "copy-btn icon-download-btn";
+      a.innerHTML = `<span class="copy-icon">${downloadIconSVG}</span><span class="copy-label">${format.label}</span>`;
+      formatsRow.appendChild(a);
+      return { format, el: a };
+    });
+    card.appendChild(formatsRow);
+
+    if (cfg.credit) {
+      const credit = document.createElement("p");
+      credit.className = "skill-note icon-preview-credit";
+      credit.textContent = cfg.credit;
+      card.appendChild(credit);
+    }
+
+    function render() {
+      swatch.innerHTML = activeMode.markup || "";
+      swatch.style.fontSize = activeMode.previewSize || "72px";
+      modeChoices.querySelectorAll(".choice-btn").forEach((b) => {
+        b.setAttribute("aria-pressed", b.dataset.modeKey === activeMode.key ? "true" : "false");
+      });
+      formatLinks.forEach(({ format, el }) => {
+        const href = (cfg.basePath || "") + format.dir + "/" + activeMode.slug + "." + format.ext;
+        el.href = href;
+        el.download = activeMode.slug + "-" + format.key + "." + format.ext;
+        el.setAttribute("aria-label", "Download " + activeMode.label + " " + (cfg.brand || "") + " logo as " + format.label);
+      });
+    }
+
+    modes.forEach((mode) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice-btn";
+      btn.textContent = mode.label;
+      btn.dataset.modeKey = mode.key;
+      btn.addEventListener("click", () => {
+        activeMode = mode;
+        render();
+      });
+      modeChoices.appendChild(btn);
+    });
+
+    render();
     return card;
   }
 

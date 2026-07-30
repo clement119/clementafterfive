@@ -967,6 +967,49 @@ body {
   justify-self: start;
 }
 
+/* ---------- Icon preview (logo download cards) ---------- */
+.icon-preview-card {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.icon-preview-swatch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 132px;
+  padding: 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) - 4px);
+  color: var(--ink);
+}
+
+.icon-preview-swatch svg {
+  height: 1em;
+  width: auto;
+  display: block;
+}
+
+.icon-preview-formats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.icon-download-btn {
+  text-decoration: none;
+}
+
+.icon-preview-credit {
+  margin: 0;
+}
+
 /* ---------- Link button (CTA to an external page) ---------- */
 .item-link {
   display: inline-flex;
