@@ -950,7 +950,7 @@ body {
   display: block;
   width: 100%;
   max-width: 320px;
-  height: 380px;
+  min-height: 380px;
   border: 0;
   border-radius: var(--radius);
 }

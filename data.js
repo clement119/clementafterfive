@@ -842,7 +842,8 @@ const journal = [
                 .stage{
                   position:relative;
                   width:280px;
-                  height:340px;
+                  min-height:340px;
+                  height:auto;
                   border-radius:20px;
                   background:linear-gradient(160deg,#3a3a3c,#111);
                   overflow:hidden;
@@ -937,7 +938,7 @@ const journal = [
                 }
                 .alert .body{padding:18px 16px 14px;}
                 .alert .title{font-size:15px;font-weight:700;margin-bottom:6px;}
-                .alert .msg{font-size:12.5px;line-height:1.5;color:#333;}
+                .alert .msg{font-size:12.5px;line-height:1.5;color:#333;white-space:pre-wrap;overflow-wrap:break-word;}
                 .alert .actions{
                   display:flex;
                   border-top:1px solid rgba(0,0,0,.15);
@@ -996,6 +997,45 @@ const journal = [
                   background:var(--paper);
                   clip-path:polygon(0 0, 100% 0, 0 100%);
                   border-radius:0 0 0 5px;
+                }
+
+                /* ---------- 6. Coding window panel ---------- */
+                .term-panel{
+                  width:240px;
+                  border-radius:12px;
+                  overflow:hidden;
+                  font-family:'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;
+                }
+                .term-panel.term-dark{ background:#161b22; color:#c9d1d9; box-shadow:0 18px 40px rgba(0,0,0,.45); }
+                .term-panel.term-light{ background:#ffffff; color:#1c1c1e; box-shadow:0 18px 40px rgba(0,0,0,.25); }
+                .term-header{
+                  display:flex;
+                  align-items:center;
+                  gap:8px;
+                  padding:10px 12px;
+                  border-bottom:1px solid rgba(127,127,127,.25);
+                }
+                .term-dot{width:11px;height:11px;border-radius:50%;flex:none;}
+                .term-dot--red{background:#ff5f56;}
+                .term-dot--yellow{background:#ffbd2e;}
+                .term-dot--green{background:#27c93f;}
+                .term-title{
+                  flex:1;
+                  text-align:center;
+                  font-size:12px;
+                  font-weight:600;
+                  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',Helvetica,Arial,sans-serif;
+                  opacity:.7;
+                  overflow:hidden;
+                  text-overflow:ellipsis;
+                  white-space:nowrap;
+                }
+                .term-body{
+                  padding:16px 14px;
+                  font-size:13px;
+                  line-height:1.6;
+                  white-space:pre-wrap;
+                  overflow-wrap:break-word;
                 }
               `,
               stickers: [
@@ -1093,6 +1133,29 @@ const journal = [
                       ? `reading "${v.text}"`
                       : "with a short caption line that fits the photo's story (invent fitting wording)";
                     return `Overlay a white rounded message/chat-bubble text sticker (with a small speech-bubble tail at the bottom-left) onto the photo — sized to fit its text and wrapping onto multiple lines rather than stretching wide, ${textClause}.`;
+                  },
+                },
+                {
+                  id: "coding-window",
+                  label: "Coding window panel",
+                  fields: [
+                    { key: "header", label: "Panel header", type: "text", default: "claude code flags setup" },
+                    { key: "body", label: "Code / message", type: "paragraph", default: "$ claude --chrome --dangerously-skip-permissions" },
+                    { key: "bg", label: "Panel background", type: "choice", choices: [{ value: "dark", label: "Black" }, { value: "light", label: "White" }], default: "dark" },
+                  ],
+                  buildHtml: function (v, esc) {
+                    const bgClass = v.bg === "light" ? "term-light" : "term-dark";
+                    return `<div class="stage"><div class="sticker-capture"><div class="term-panel ${bgClass}"><div class="term-header"><span class="term-dot term-dot--red"></span><span class="term-dot term-dot--yellow"></span><span class="term-dot term-dot--green"></span><span class="term-title">${esc(v.header)}</span></div><div class="term-body">${esc(v.body)}</div></div></div></div>`;
+                  },
+                  buildPrompt: function (v) {
+                    const headerClause = v.header
+                      ? `titled "${v.header}"`
+                      : "titled with a short descriptive label that fits the photo's context (invent fitting wording)";
+                    const bodyClause = v.body
+                      ? `showing the code/command text: ${v.body}`
+                      : "showing a short code snippet or terminal command that fits the photo's context (invent fitting content)";
+                    const bgClause = v.bg === "light" ? "a white background" : "a black background";
+                    return `Overlay a fake code-editor/terminal window sticker onto the photo — a rounded panel with three macOS-style traffic-light dots in the header, ${bgClause}, ${headerClause}, ${bodyClause}.`;
                   },
                 },
               ],

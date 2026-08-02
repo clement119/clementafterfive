@@ -1430,6 +1430,11 @@
     const fieldsWrap = document.createElement("div");
     fieldsWrap.className = "builder sticker-fields";
 
+    // Kept verbatim (no trim/split-filter) so typed blank lines and
+    // leading/trailing spaces survive — that's how a sticker's rendered
+    // panel height can be padded out with plain whitespace. Only
+    // `resolved()`'s emptiness check trims, purely to decide fallback to
+    // the field's default; the stored value itself is never altered.
     function readRaw() {
       const raw = {};
       fields.forEach((f) => {
@@ -1438,9 +1443,7 @@
           return;
         }
         const v = fieldEls[f.key].value;
-        raw[f.key] = f.type === "list"
-          ? v.split("\n").map((s) => s.trim()).filter(Boolean)
-          : v.trim();
+        raw[f.key] = f.type === "list" ? v.split("\n") : v;
       });
       return raw;
     }
@@ -1453,7 +1456,9 @@
           return;
         }
         const v = raw[f.key];
-        const empty = Array.isArray(v) ? v.length === 0 : !v;
+        const empty = Array.isArray(v)
+          ? v.every((line) => line.trim() === "")
+          : v.trim() === "";
         out[f.key] = empty ? f.default : v;
       });
       return out;
@@ -1523,6 +1528,15 @@
     iframe.className = "sticker-preview-frame";
     iframe.setAttribute("sandbox", "allow-same-origin");
     iframe.setAttribute("title", (sticker.label || "Sticker") + " preview");
+    // .stage grows past its 340px min-height when blank lines/long text
+    // push a panel taller — resize the iframe itself to match on every
+    // srcdoc reload, so that growth is visible in the preview, not just
+    // in the exported PNG (which already sizes to content).
+    iframe.addEventListener("load", () => {
+      const doc = iframe.contentDocument;
+      if (!doc) return;
+      iframe.style.height = Math.max(380, doc.documentElement.scrollHeight) + "px";
+    });
     previewWrap.appendChild(iframe);
     card.appendChild(previewWrap);
 
