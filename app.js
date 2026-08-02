@@ -1433,8 +1433,8 @@
     // Kept verbatim (no trim/split-filter) so typed blank lines and
     // leading/trailing spaces survive — that's how a sticker's rendered
     // panel height can be padded out with plain whitespace. Only
-    // `resolved()`'s emptiness check trims, purely to decide fallback to
-    // the field's default; the stored value itself is never altered.
+    // `resolved()`'s emptiness check decides fallback to the field's
+    // default; the stored value itself is never altered.
     function readRaw() {
       const raw = {};
       fields.forEach((f) => {
@@ -1456,9 +1456,11 @@
           return;
         }
         const v = raw[f.key];
-        const empty = Array.isArray(v)
-          ? v.every((line) => line.trim() === "")
-          : v.trim() === "";
+        // Only a field with literally nothing typed falls back to its
+        // default — pure whitespace/blank lines count as real content
+        // (that's how "just blank lines, no text" pads a panel's height),
+        // so this checks length/shape, not .trim().
+        const empty = Array.isArray(v) ? v.length === 1 && v[0] === "" : v.length === 0;
         out[f.key] = empty ? f.default : v;
       });
       return out;
