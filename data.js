@@ -905,12 +905,15 @@ const journal = [
                 .flag-banner{
                   position:relative;
                   display:inline-block;
+                  max-width:220px;
                   background:var(--accent);
                   color:#1c1c1e;
                   font-weight:600;
                   font-size:15px;
                   padding:6px 14px;
                   border-radius:2px;
+                  white-space:pre-wrap;
+                  overflow-wrap:break-word;
                 }
                 .flag-banner::before,.flag-banner::after{
                   content:"";
@@ -1068,7 +1071,7 @@ const journal = [
                   id: "flag-banner",
                   label: "Text highlight banner",
                   fields: [
-                    { key: "text", label: "Banner text", type: "text", default: "But I was the total opposite…" },
+                    { key: "text", label: "Banner text", type: "paragraph", default: "But I was the total opposite…" },
                   ],
                   buildHtml: function (v, esc) {
                     return `<div class="stage dark"><div class="sticker-capture"><span class="flag-banner">${esc(v.text)}</span></div></div>`;
