@@ -2492,4 +2492,56 @@ const journal = [
     ],
     "footer": "Describe the brand asset you want — copy, visuals, motion and interaction included — and hand the finished file to a client."
   },
+
+  {
+    dimension: "M365 Copilot",
+    title: "M365 Copilot",
+    subtitle:
+      "Agentic workflows across Microsoft 365 — starting with Power BI and Fabric.",
+    date: "2026-08-02",
+    sections: [
+      {
+        title: "AI report authoring with Fabric Skills",
+        pillar: "Power BI and Fabric",
+        items: [
+          { text: "Microsoft's Skills for Fabric let an AI agent build and restyle Power BI reports from plain English. It isn't clicking around Power BI Desktop for you — it edits the report's underlying PBIR definition files directly, so the changes are precise, reviewable, and land in git like any other code change. Still in preview.", plain: true },
+          { link: { href: "https://youtu.be/pDRSXOK6fq0", label: "Guy in a Cube — We tested the new Power BI Report Skills", compact: true } },
+
+          { heading: "What you need first" },
+          { text: "Node.js (the CLI installs as an npm package), PowerShell 7 — check with pwsh --version, since the CLI won't install plug-ins properly on Windows PowerShell 5 — Git, the Azure CLI signed in with az login, Power BI Desktop for opening and eyeballing the result, and a Power BI tenant where you're allowed to create and publish semantic models and reports.", plain: true },
+
+          { heading: "1 · Save the report as a Power BI Project (.PBIP)" },
+          { text: "This is the step everything else depends on. The skill only reads and writes PBIP projects — the folder-of-JSON format — because that's what it edits. A plain .pbix is a sealed binary and the agent simply can't see inside it. In Power BI Desktop: File → Save as → Power BI project file (.pbip). Commit that folder to git before you let an agent near it, so you can always diff and revert.", plain: true },
+
+          { heading: "2 · Install the CLI, then the skills" },
+          { text: "First install GitHub Copilot CLI in your terminal:", plain: true },
+          { prompt: "npm install -g @github/copilot", plain: true },
+          { text: "Then start the CLI with copilot, cd'd into your report folder, and run these inside the session — they're slash commands typed at the Copilot prompt, not shell commands. Note that fabric-skills and powerbi-authoring are two separate bundles: the Fabric collection does NOT include the Power BI one, which is the easy way to end up thinking you installed report authoring when you didn't.", plain: true },
+          { prompt: "/plugin marketplace add microsoft/skills-for-fabric\n/plugin install powerbi-authoring@fabric-collection\n/plugin install fabric-skills@fabric-collection\n/quit\n/skills", plain: true },
+          { text: "You have to quit and restart before the skills load. /skills then lists what's active — you should see the report planning, design, authoring, and management skills.", plain: true },
+
+          { heading: "3 · Ask for pages in plain English" },
+          { text: "With the CLI running in your PBIP folder, just describe the pages you want. Name the semantic model and be specific about visuals — vague asks get vague reports.", plain: true },
+          { prompt: "Using the existing semantic model in this project, create two report pages: an overview page for sales analytics with KPI cards for the headline measures, a bar chart by category, and a trend line by month; and a store details page with a table of stores, a map, and a date slicer.", plain: true },
+
+          { heading: "4 · Point it at an inspiration file" },
+          { text: "This is the trick that lifts the output from functional to presentable. Drop an image into the project folder — a rough sketch of the layout you want, a screenshot of a report you like, or your team's style guide — then reference that file in your prompt. The agent pulls colors, spacing, and layout from it instead of falling back on defaults.", plain: true },
+          { prompt: "Restyle this report to match the design inspo image in this folder — use its colors, spacing, and overall layout, and keep every existing field binding intact.", plain: true },
+
+          { heading: "Which skill does what" },
+          { text: "The powerbi-authoring bundle is four skills that hand off to each other. Report Planner runs the whole thing end to end — gathers requirements, inspects the model, proposes a brief, waits for your approval, then builds. Report Design is the taste layer: it turns a vague “make it look professional” into a concrete brief of page archetypes, chart choices, and a color map. Report Authoring does the actual PBIR file mechanics — pages, visuals, filters, formatting, themes. Report Management publishes to Fabric. Blank slate → start at Planner or Design. Specific edit you can already describe → go straight to Authoring.", plain: true },
+
+          { heading: "Watch-outs" },
+          { text: "The PBIR files on disk are the source of truth, not your open Desktop window — save in Desktop before asking the agent to iterate, or it'll work from the old version and quietly throw away your unsaved changes.", plain: true },
+          { text: "Commit a baseline before every agent run. It edits JSON in place, and a bad pass is much easier to revert than to unpick by hand.", plain: true },
+          { text: "Don't ask for Q&A, Bing maps, or filled map visuals — they're being deprecated, and you'd be building on something scheduled to break.", plain: true },
+          { text: "Plan before executing. Shift+Tab drops the CLI into planning mode; read the plan, then let it run. It measurably beats letting it improvise, and it's a lot cheaper than reviewing a finished mess.", plain: true },
+          { link: { href: "https://learn.microsoft.com/en-us/fabric/fundamentals/skills-for-fabric-install", label: "Microsoft Learn — Install Skills for Fabric", compact: true } },
+          { link: { href: "https://learn.microsoft.com/en-us/power-bi/developer/agentic/power-bi-report-authoring-skill-overview", label: "Microsoft Learn — Power BI Report Authoring skill", compact: true } },
+        ],
+      },
+    ],
+    footer:
+      "Save as .pbip, install the powerbi-authoring bundle, describe the pages you want, and give it something to look at. The agent writes the report files — you keep the review and the git history.",
+  },
 ];
