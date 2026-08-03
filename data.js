@@ -1040,6 +1040,49 @@ const journal = [
                   white-space:pre-wrap;
                   overflow-wrap:break-word;
                 }
+
+                /* ---------- 7. Windows 95 right-click menu ---------- */
+                /* Classic double bevel: an outer ring (white top-left,
+                   black bottom-right) over an inner ring (#dfdfdf / #808080)
+                   is what gives the panel its raised 3D edge. */
+                .w95-menu{
+                  width:212px;
+                  background:#c0c0c0;
+                  color:#000;
+                  padding:2px;
+                  border:2px solid;
+                  border-color:#ffffff #000000 #000000 #ffffff;
+                  box-shadow:inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080, 0 14px 34px rgba(0,0,0,.5);
+                  font-family:Tahoma,'MS Sans Serif','Microsoft Sans Serif',Geneva,Verdana,sans-serif;
+                  font-size:15px;
+                  line-height:1.25;
+                  text-align:left;
+                }
+                .w95-row{
+                  position:relative;
+                  padding:5px 26px 5px 18px;
+                  white-space:pre-wrap;
+                  overflow-wrap:break-word;
+                  min-height:1.25em;
+                }
+                .w95-row--sel{ background:#000080; color:#ffffff; }
+                .w95-sep{
+                  height:0;
+                  margin:4px 2px;
+                  border-top:1px solid #808080;
+                  border-bottom:1px solid #ffffff;
+                }
+                /* Sits inside the selected row, tip up-left, kept within the
+                   menu's own bounds so nothing clips at the capture edge. */
+                .w95-cursor{
+                  position:absolute;
+                  right:11px;
+                  top:46%;
+                  width:15px;
+                  height:22px;
+                  display:block;
+                  pointer-events:none;
+                }
               `,
               stickers: [
                 {
@@ -1159,6 +1202,38 @@ const journal = [
                       : "showing a short code snippet or terminal command that fits the photo's context (invent fitting content)";
                     const bgClause = v.bg === "light" ? "a white background" : "a black background";
                     return `Overlay a fake code-editor/terminal window sticker onto the photo — a rounded panel with three macOS-style traffic-light dots in the header, ${bgClause}, ${headerClause}, ${bodyClause}.`;
+                  },
+                },
+                {
+                  id: "win95-menu",
+                  label: "Windows 95 right-click menu",
+                  fields: [
+                    { key: "rows", label: "Menu rows — one per line, --- for a divider", type: "list", default: ["Open...", "Step Backward", "Copy", "Claude Fable 5", "---", "File Info", "Print...", "---", "Exit"] },
+                    { key: "selected", label: "Selected row", type: "rowChoice", from: "rows", default: 3 },
+                  ],
+                  buildHtml: function (v, esc) {
+                    const rows = v.rows || [];
+                    // White arrow with a black outline — inline SVG rather than a
+                    // background image so it stays crisp at the exporter's 3x
+                    // pixelRatio and rasterizes reliably into the PNG.
+                    const cursor = '<svg class="w95-cursor" viewBox="0 0 15 22" xmlns="http://www.w3.org/2000/svg"><path d="M1 1v17.5l4.2-4.2 2.6 6.1 3-1.3-2.6-6h5.6z" fill="#fff" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+                    const body = rows.map(function (label, i) {
+                      if (String(label).trim() === "---") return '<div class="w95-sep"></div>';
+                      const sel = i === v.selected;
+                      return `<div class="w95-row${sel ? " w95-row--sel" : ""}">${esc(label)}${sel ? cursor : ""}</div>`;
+                    }).join("");
+                    return `<div class="stage"><div class="sticker-capture"><div class="w95-menu">${body}</div></div></div>`;
+                  },
+                  buildPrompt: function (v) {
+                    const rows = (v.rows || []).map(function (r) { return String(r).trim(); }).filter(function (r) { return r && r !== "---"; });
+                    const rowsClause = rows.length
+                      ? `with the menu items: ${rows.join("; ")}`
+                      : "with 6-8 short menu items that fit the photo's story (invent fitting wording)";
+                    const picked = v.selected == null ? "" : String((v.rows || [])[v.selected] || "").trim();
+                    const selClause = v.selected == null
+                      ? ""
+                      : ` ${picked ? `The row "${picked}" is` : "One of the middle rows is"} highlighted with a solid navy-blue bar and white text, as if the mouse is hovering it, with a classic white arrow cursor sitting on that row.`;
+                    return `Overlay a retro Windows 95 right-click context menu onto the photo — a grey panel with a raised 3D beveled border and pixel-era UI text, ${rowsClause}.${selClause}`;
                   },
                 },
               ],

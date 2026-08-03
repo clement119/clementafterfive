@@ -1426,6 +1426,7 @@
     const fields = Array.isArray(sticker.fields) ? sticker.fields : [];
     const fieldEls = {};
     const choiceState = {};
+    const choiceEls = {}; // rowChoice key -> its .builder-choices holder
 
     const fieldsWrap = document.createElement("div");
     fieldsWrap.className = "builder sticker-fields";
@@ -1438,7 +1439,7 @@
     function readRaw() {
       const raw = {};
       fields.forEach((f) => {
-        if (f.type === "choice") {
+        if (f.type === "choice" || f.type === "rowChoice") {
           raw[f.key] = choiceState[f.key];
           return;
         }
@@ -1451,7 +1452,7 @@
     function resolved(raw) {
       const out = {};
       fields.forEach((f) => {
-        if (f.type === "choice") {
+        if (f.type === "choice" || f.type === "rowChoice") {
           out[f.key] = raw[f.key];
           return;
         }
@@ -1466,10 +1467,67 @@
       return out;
     }
 
+    // A `rowChoice` field is a pill picker whose options come from another
+    // field's list, so they have to be re-derived whenever that list is
+    // edited — same shape as buildBuilder's refreshVisibility(), which
+    // re-derives a control from another control's value on every update.
+    // Pills are labelled with each row's own text; separator and blank
+    // rows aren't offered (you'd never select those), and a leading "None"
+    // pill clears the selection. Rebuilding only touches the DOM and never
+    // dispatches input events, so this can't loop back into update().
+    function selectableRows(f, raw) {
+      const src = Array.isArray(raw[f.from]) ? raw[f.from] : [];
+      const out = [];
+      src.forEach((label, i) => {
+        const t = String(label).trim();
+        if (t === "" || t === "---") return;
+        out.push({ index: i, label: t });
+      });
+      return out;
+    }
+
+    function refreshRowChoices(raw) {
+      fields.forEach((f) => {
+        if (f.type !== "rowChoice") return;
+        const rows = selectableRows(f, raw);
+        // The selection is positional, so it survives renaming a row —
+        // the common case, since you're typing your own labels. It clears
+        // only when that position stops being selectable at all (the list
+        // got shorter, or that line became a divider or blank).
+        if (!rows.some((r) => r.index === choiceState[f.key])) choiceState[f.key] = null;
+
+        const holder = choiceEls[f.key];
+        holder.innerHTML = "";
+        const opts = [{ index: null, label: "None" }].concat(rows);
+        opts.forEach((o) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "choice-btn";
+          btn.textContent = o.label.length > 18 ? o.label.slice(0, 17) + "…" : o.label;
+          btn.setAttribute("aria-pressed", o.index === choiceState[f.key] ? "true" : "false");
+          btn.addEventListener("click", () => {
+            choiceState[f.key] = o.index;
+            update();
+          });
+          holder.appendChild(btn);
+        });
+      });
+    }
+
     let currentDoc = "";
     function update() {
       const raw = readRaw();
       const res = resolved(raw);
+      // Derive the pills from the RESOLVED rows — an untouched field holds
+      // its default as a placeholder, not a value, so `raw` would be blank
+      // and offer no rows to pick. Clamping happens here, before render, so
+      // the preview never draws a selection that just went stale.
+      refreshRowChoices(res);
+      fields.forEach((f) => {
+        if (f.type !== "rowChoice") return;
+        raw[f.key] = choiceState[f.key];
+        res[f.key] = choiceState[f.key];
+      });
       currentDoc = wrapStickerDoc(sharedStyle, sticker.buildHtml(res, escapeHtml));
       iframe.srcdoc = currentDoc;
       output.textContent = sticker.buildPrompt(raw);
@@ -1480,8 +1538,19 @@
       group.className = "builder-control";
       const lab = document.createElement("span");
       lab.className = "builder-label";
-      lab.textContent = f.type === "choice" ? f.label : f.label + " (optional — leave blank to let the AI choose)";
+      const isPicker = f.type === "choice" || f.type === "rowChoice";
+      lab.textContent = isPicker ? f.label : f.label + " (optional — leave blank to let the AI choose)";
       group.appendChild(lab);
+
+      if (f.type === "rowChoice") {
+        choiceState[f.key] = f.default == null ? null : f.default;
+        const choices = document.createElement("div");
+        choices.className = "builder-choices";
+        choiceEls[f.key] = choices; // pills are filled in by refreshRowChoices
+        group.appendChild(choices);
+        fieldsWrap.appendChild(group);
+        return;
+      }
 
       if (f.type === "choice") {
         choiceState[f.key] = f.default || (f.choices[0] && f.choices[0].value);
