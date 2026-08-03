@@ -1292,6 +1292,33 @@ const journal = [
           },
         ],
       },
+      {
+        title: "Segmented Progress Bar",
+        pillar: "Media Creation & Edit",
+        items: [
+          {
+            text: "A segmented progress bar / topic navigation bar for carousels — it shows readers exactly where they are in your sequence while previewing everything else the post covers. Edit the labels, pick the active section, adjust colors and sizes, then copy the SVG straight into your carousel file.",
+            plain: true,
+          },
+          {
+            progressBarBuilder: {
+              title: "Segmented Progress Bar",
+              defaults: {
+                labels: ["Brand Design", "Photography", "Illustration", "Motion Design", "3D Modelling"],
+                activeIndex: 1,
+                width: 600,
+                height: 60,
+                barThickness: 6,
+                fontSize: 11,
+                accentColor: "#2B1E1A",
+                trackColor: "#E2E2E2",
+                bracketColor: "#CCCCCC",
+                inactiveColor: "#777777",
+              },
+            },
+          },
+        ],
+      },
     ],
     footer:
       "Pick 2–3 per piece of content. That's enough to sharpen thinking, improve clarity, and increase performance.",

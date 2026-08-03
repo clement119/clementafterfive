@@ -968,7 +968,8 @@ body {
 }
 
 /* ---------- Icon preview (logo download cards) ---------- */
-.icon-preview-card {
+.icon-preview-card,
+.progress-bar-card {
   display: grid;
   gap: 16px;
   padding: 22px;
@@ -1008,6 +1009,40 @@ body {
 
 .icon-preview-credit {
   margin: 0;
+}
+
+/* ---------- Progress bar builder ---------- */
+/* Always white, never a --surface token — this represents the carousel
+   slide the SVG gets pasted onto, not the site's own chrome, so it must
+   look the same regardless of the site's dark/light mode. */
+.svg-preview {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) - 4px);
+  overflow-x: auto;
+}
+
+.pbb-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.pbb-size-input {
+  width: 84px;
+}
+
+.pbb-color-input {
+  width: 44px;
+  height: 34px;
+  padding: 2px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  cursor: pointer;
 }
 
 /* ---------- Link button (CTA to an external page) ---------- */

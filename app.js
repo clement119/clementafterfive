@@ -750,6 +750,7 @@
     if (item && item.fontLibrary) return buildFontLibrary(item.fontLibrary);
     if (item && item.stickerLibrary) return buildStickerLibrary(item.stickerLibrary);
     if (item && item.iconPreview) return buildIconPreview(item.iconPreview);
+    if (item && item.progressBarBuilder) return buildProgressBarBuilder(item.progressBarBuilder);
     if (item && item.heading != null) return buildHeading(item.heading);
 
     const { text, copyable, plain } = normalizeItem(item);
@@ -1765,6 +1766,220 @@
       modeChoices.appendChild(btn);
     });
 
+    render();
+    return card;
+  }
+
+  function buildProgressBarBuilder(cfg) {
+    const d = cfg.defaults || {};
+    const state = {
+      labels: (d.labels || []).slice(),
+      activeIndex: d.activeIndex != null ? d.activeIndex : 0,
+      width: d.width || 600,
+      height: d.height || 60,
+      barThickness: d.barThickness || 6,
+      fontSize: d.fontSize || 11,
+      accentColor: d.accentColor || "#2B1E1A",
+      trackColor: d.trackColor || "#E2E2E2",
+      bracketColor: d.bracketColor || "#CCCCCC",
+      inactiveColor: d.inactiveColor || "#777777",
+    };
+
+    const card = document.createElement("div");
+    card.className = "progress-bar-card";
+
+    const label = document.createElement("h3");
+    label.className = "fl-label";
+    label.textContent = cfg.title || "Segmented Progress Bar";
+    card.appendChild(label);
+
+    // Labels
+    const labelsGroup = document.createElement("div");
+    labelsGroup.className = "builder-control";
+    const labelsLabel = document.createElement("span");
+    labelsLabel.className = "builder-label";
+    labelsLabel.textContent = "Section labels (one per line)";
+    labelsGroup.appendChild(labelsLabel);
+    const labelsTextarea = document.createElement("textarea");
+    labelsTextarea.className = "builder-input builder-textarea";
+    labelsTextarea.rows = Math.max(3, state.labels.length);
+    labelsTextarea.value = state.labels.join("\n");
+    labelsGroup.appendChild(labelsTextarea);
+    card.appendChild(labelsGroup);
+
+    // Active section — pills derived from the labels field above, same
+    // "options come from a sibling field" idea as the Windows 95 sticker's
+    // rowChoice, rebuilt here since this builder has no shared field engine
+    // to hook into. Selection is positional: renaming a label keeps it
+    // selected, and it only clamps when that position stops existing.
+    const activeGroup = document.createElement("div");
+    activeGroup.className = "builder-control";
+    const activeLabel = document.createElement("span");
+    activeLabel.className = "builder-label";
+    activeLabel.textContent = "Active section";
+    activeGroup.appendChild(activeLabel);
+    const activeChoices = document.createElement("div");
+    activeChoices.className = "builder-choices";
+    activeGroup.appendChild(activeChoices);
+    card.appendChild(activeGroup);
+
+    function renderActivePills() {
+      activeChoices.innerHTML = "";
+      state.labels.forEach((lab, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "choice-btn";
+        btn.textContent = String(lab).trim() || `(blank ${i + 1})`;
+        btn.setAttribute("aria-pressed", i === state.activeIndex ? "true" : "false");
+        btn.addEventListener("click", () => {
+          state.activeIndex = i;
+          renderActivePills();
+          render();
+        });
+        activeChoices.appendChild(btn);
+      });
+    }
+
+    labelsTextarea.addEventListener("input", () => {
+      state.labels = labelsTextarea.value === "" ? (d.labels || []).slice() : labelsTextarea.value.split("\n");
+      state.activeIndex = Math.max(0, Math.min(state.activeIndex, state.labels.length - 1));
+      renderActivePills();
+      render();
+    });
+
+    // Colors
+    const colorRow = document.createElement("div");
+    colorRow.className = "pbb-row";
+    function colorControl(text, key) {
+      const group = document.createElement("div");
+      group.className = "builder-control";
+      const lab = document.createElement("span");
+      lab.className = "builder-label";
+      lab.textContent = text;
+      group.appendChild(lab);
+      const input = document.createElement("input");
+      input.type = "color";
+      input.className = "pbb-color-input";
+      input.value = state[key];
+      input.addEventListener("input", () => {
+        state[key] = input.value;
+        render();
+      });
+      group.appendChild(input);
+      return group;
+    }
+    colorRow.append(
+      colorControl("Accent", "accentColor"),
+      colorControl("Track", "trackColor"),
+      colorControl("Brackets", "bracketColor"),
+      colorControl("Inactive text", "inactiveColor")
+    );
+    card.appendChild(colorRow);
+
+    // Sizes
+    const sizeRow = document.createElement("div");
+    sizeRow.className = "pbb-row";
+    function sizeControl(text, key, min, max, step) {
+      const group = document.createElement("div");
+      group.className = "builder-control";
+      const lab = document.createElement("span");
+      lab.className = "builder-label";
+      lab.textContent = text;
+      group.appendChild(lab);
+      const input = document.createElement("input");
+      input.type = "number";
+      input.className = "builder-input pbb-size-input";
+      input.min = min;
+      input.max = max;
+      input.step = step;
+      input.value = state[key];
+      input.addEventListener("input", () => {
+        const v = parseFloat(input.value);
+        if (!Number.isNaN(v)) state[key] = v;
+        render();
+      });
+      group.appendChild(input);
+      return group;
+    }
+    sizeRow.append(
+      sizeControl("Width", "width", 300, 900, 10),
+      sizeControl("Height", "height", 40, 120, 5),
+      sizeControl("Bar thickness", "barThickness", 3, 14, 1),
+      sizeControl("Font size", "fontSize", 8, 18, 1)
+    );
+    card.appendChild(sizeRow);
+
+    const preview = document.createElement("div");
+    preview.className = "svg-preview";
+    card.appendChild(preview);
+
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy-btn";
+    copyBtn.type = "button";
+    copyBtn.setAttribute("aria-label", "Copy the progress bar as SVG");
+    copyBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy SVG</span>`;
+    card.appendChild(copyBtn);
+
+    let currentSvg = "";
+
+    function generateSvg() {
+      const n = state.labels.length || 1;
+      const pad = 20;
+      const gap = 8;
+      const w = state.width;
+      const h = state.height;
+      const trackY = Math.round(h * 0.25);
+      const tick = Math.round(h * 0.1) || 6;
+      const labelY = trackY + tick + 6 + state.fontSize;
+      const usable = Math.max(0, w - pad * 2 - gap * (n - 1));
+      const segW = usable / n;
+
+      const segs = [];
+      for (let i = 0; i < n; i++) {
+        const x0 = pad + i * (segW + gap);
+        segs.push({ x0, x1: x0 + segW, cx: x0 + segW / 2 });
+      }
+      const active = segs[state.activeIndex] || segs[0];
+
+      const track = `<line x1="${pad}" y1="${trackY}" x2="${w - pad}" y2="${trackY}" stroke="${state.trackColor}" stroke-width="2"/>`;
+      const bar = active
+        ? `<rect x="${active.x0.toFixed(1)}" y="${(trackY - state.barThickness / 2).toFixed(1)}" width="${(active.x1 - active.x0).toFixed(1)}" height="${state.barThickness}" rx="${(state.barThickness / 2).toFixed(1)}" fill="${state.accentColor}"/>`
+        : "";
+      const brackets = segs
+        .map((s) => `<path d="M ${s.x0.toFixed(1)} ${trackY} v ${tick} M ${s.x1.toFixed(1)} ${trackY} v ${tick}" stroke="${state.bracketColor}" stroke-width="1.5"/>`)
+        .join("\n  ");
+      const texts = segs
+        .map((s, i) => {
+          const isActive = i === state.activeIndex;
+          const fill = isActive ? state.accentColor : state.inactiveColor;
+          const weight = isActive ? 700 : 500;
+          return `<text x="${s.cx.toFixed(1)}" y="${labelY}" text-anchor="middle" font-family="system-ui, sans-serif" font-size="${state.fontSize}" font-weight="${weight}" fill="${fill}">${escapeHtml(state.labels[i] || "")}</text>`;
+        })
+        .join("\n  ");
+
+      return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Base grey track -->
+  ${track}
+
+  <!-- Active indicator bar -->
+  ${bar}
+
+  <!-- Section brackets -->
+  ${brackets}
+
+  <!-- Text labels -->
+  ${texts}
+</svg>`;
+    }
+
+    function render() {
+      currentSvg = generateSvg();
+      preview.innerHTML = currentSvg;
+    }
+
+    copyBtn.addEventListener("click", () => copyText(currentSvg, copyBtn));
+
+    renderActivePills();
     render();
     return card;
   }
