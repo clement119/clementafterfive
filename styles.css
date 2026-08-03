@@ -1045,6 +1045,59 @@ body {
   cursor: pointer;
 }
 
+/* ---------- Poster prompt carousel ---------- */
+/* min-width:0 matters here — this wrapper is a grid item of .section-body,
+   and without it the deck's non-wrapping cards blow out the grid track
+   with their combined content width instead of scrolling within it (the
+   same fix .font-library already needed for the identical reason). */
+.poster-library {
+  display: grid;
+  gap: 16px;
+  padding: 4px 0 2px;
+  min-width: 0;
+}
+
+.poster-card {
+  flex: 0 0 88%;
+  max-width: 320px;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+@media (min-width: 620px) {
+  .poster-card {
+    flex-basis: 320px;
+  }
+}
+
+.poster-category {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.poster-image-wrap {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) - 4px);
+  overflow: hidden;
+}
+
+.poster-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 /* ---------- Link button (CTA to an external page) ---------- */
 .item-link {
   display: inline-flex;

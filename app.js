@@ -751,6 +751,7 @@
     if (item && item.stickerLibrary) return buildStickerLibrary(item.stickerLibrary);
     if (item && item.iconPreview) return buildIconPreview(item.iconPreview);
     if (item && item.progressBarBuilder) return buildProgressBarBuilder(item.progressBarBuilder);
+    if (item && item.posterLibrary) return buildPosterLibrary(item.posterLibrary);
     if (item && item.heading != null) return buildHeading(item.heading);
 
     const { text, copyable, plain } = normalizeItem(item);
@@ -1378,6 +1379,188 @@
     applyWrapperClasses();
     lastActive = 0;
     onCardChange(0);
+    requestAnimationFrame(syncDots);
+
+    return wrap;
+  }
+
+  // Poster prompt carousel — each card is fully self-contained (own image,
+  // own subject input, own live output/copy button), unlike the Font
+  // Library's shared per-active-card panel: a typed subject must survive
+  // swiping away and back, so nothing resets on card change here.
+  function buildPosterLibrary(cfg) {
+    const wrap = document.createElement("div");
+    wrap.className = "poster-library";
+
+    const posters = Array.isArray(cfg.posters) ? cfg.posters : [];
+
+    const deck = document.createElement("div");
+    deck.className = "persona-deck poster-deck";
+
+    posters.forEach((poster) => {
+      const card = document.createElement("article");
+      card.className = "poster-card";
+
+      const name = document.createElement("h3");
+      name.className = "persona-name";
+      name.textContent = poster.label || "";
+      card.appendChild(name);
+
+      if (poster.category) {
+        const category = document.createElement("p");
+        category.className = "poster-category";
+        category.textContent = poster.category;
+        card.appendChild(category);
+      }
+
+      if (poster.image) {
+        const imgWrap = document.createElement("div");
+        imgWrap.className = "poster-image-wrap";
+        const img = document.createElement("img");
+        img.className = "poster-image";
+        img.src = poster.image;
+        img.loading = "lazy";
+        img.alt = poster.label || "Example poster";
+        imgWrap.appendChild(img);
+        card.appendChild(imgWrap);
+      }
+
+      if (poster.bestFor) {
+        const bestFor = document.createElement("p");
+        bestFor.className = "persona-tag";
+        bestFor.textContent = poster.bestFor;
+        card.appendChild(bestFor);
+      }
+
+      const inputGroup = document.createElement("div");
+      inputGroup.className = "builder-control";
+      const inputLabel = document.createElement("span");
+      inputLabel.className = "builder-label";
+      inputLabel.textContent = "Subject / context";
+      const input = document.createElement("input");
+      input.type = "text";
+      input.className = "builder-input";
+      input.placeholder = poster.fallback || "";
+      inputGroup.append(inputLabel, input);
+      card.appendChild(inputGroup);
+
+      const output = document.createElement("p");
+      output.className = "item-text";
+      const outBox = document.createElement("div");
+      outBox.className = "item builder-output";
+      const copyBtn = document.createElement("button");
+      copyBtn.className = "copy-btn";
+      copyBtn.type = "button";
+      copyBtn.setAttribute("aria-label", "Copy prompt for " + (poster.label || "poster"));
+      copyBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+
+      // Mirrors buildBuilder's resolve() for a type:"input" control: trim
+      // the typed value, substitute it into {subject}, or fall back to the
+      // poster's own bracketed example when the field is empty.
+      function assemble() {
+        const subject = input.value.trim() || poster.fallback || "";
+        return String(poster.template || "").replace(/\{subject\}/g, subject);
+      }
+      function update() {
+        output.textContent = assemble();
+      }
+      input.addEventListener("input", update);
+      copyBtn.addEventListener("click", () => copyText(assemble(), copyBtn));
+
+      outBox.append(output, copyBtn);
+      card.appendChild(outBox);
+
+      if (poster.tip) {
+        const tip = document.createElement("p");
+        tip.className = "skill-note";
+        tip.textContent = poster.tip;
+        card.appendChild(tip);
+      }
+
+      update();
+      deck.appendChild(card);
+    });
+
+    wrap.appendChild(deck);
+
+    // Nav — identical scroll-snap-center-aware mechanics to the Font
+    // Library's deck (cardStep/centerOffset/activeIndex/scrollToCard),
+    // minus onCardChange since no per-card panel needs rebuilding here.
+    const nav = document.createElement("div");
+    nav.className = "persona-nav";
+
+    const prev = document.createElement("button");
+    prev.type = "button";
+    prev.className = "persona-arrow";
+    prev.setAttribute("aria-label", "Previous poster");
+    prev.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>`;
+
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className = "persona-arrow";
+    next.setAttribute("aria-label", "Next poster");
+    next.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>`;
+
+    const dots = document.createElement("div");
+    dots.className = "persona-dots";
+    const dotEls = posters.map((poster, idx) => {
+      const d = document.createElement("button");
+      d.type = "button";
+      d.className = "persona-dot";
+      d.setAttribute("aria-label", "Go to " + (poster.label || "poster " + (idx + 1)));
+      d.addEventListener("click", () => scrollToCard(idx));
+      dots.appendChild(d);
+      return d;
+    });
+
+    function cardStep() {
+      const first = deck.querySelector(".poster-card");
+      if (!first) return deck.clientWidth || 1;
+      const cs = getComputedStyle(deck);
+      const gap = parseFloat(cs.columnGap || cs.gap || "0") || 0;
+      return first.getBoundingClientRect().width + gap;
+    }
+
+    function centerOffset() {
+      const first = deck.querySelector(".poster-card");
+      if (!first) return 0;
+      return (deck.clientWidth - first.getBoundingClientRect().width) / 2;
+    }
+
+    function maxScrollLeft() {
+      return Math.max(0, deck.scrollWidth - deck.clientWidth);
+    }
+
+    function activeIndex() {
+      const idx = Math.round((deck.scrollLeft + centerOffset()) / cardStep());
+      return Math.max(0, Math.min(posters.length - 1, idx));
+    }
+
+    function scrollToCard(i) {
+      const idx = Math.max(0, Math.min(posters.length - 1, i));
+      const target = idx * cardStep() - centerOffset();
+      deck.scrollTo({ left: Math.max(0, Math.min(maxScrollLeft(), target)), behavior: "smooth" });
+    }
+
+    function syncDots() {
+      const a = activeIndex();
+      dotEls.forEach((d, i) => d.setAttribute("aria-current", i === a ? "true" : "false"));
+      prev.disabled = a <= 0;
+      next.disabled = a >= posters.length - 1;
+    }
+
+    prev.addEventListener("click", () => scrollToCard(activeIndex() - 1));
+    next.addEventListener("click", () => scrollToCard(activeIndex() + 1));
+
+    let raf;
+    deck.addEventListener("scroll", () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(syncDots);
+    });
+
+    nav.append(prev, dots, next);
+    wrap.appendChild(nav);
+
     requestAnimationFrame(syncDots);
 
     return wrap;
