@@ -1942,8 +1942,15 @@
       const active = segs[state.activeIndex] || segs[0];
 
       const track = `<line x1="${pad}" y1="${trackY}" x2="${w - pad}" y2="${trackY}" stroke="${state.trackColor}" stroke-width="2"/>`;
+      // Inset the bar from its segment's own edges — its rounded ends sit
+      // in the same y-range as the bracket ticks (both straddle trackY),
+      // so a bar spanning the full segment width visually collides with
+      // the tick marks on both sides instead of leaving a clean gap.
+      const barInset = Math.min(gap / 2, segW / 4);
+      const barX = active ? active.x0 + barInset : 0;
+      const barW = active ? Math.max(0, active.x1 - active.x0 - barInset * 2) : 0;
       const bar = active
-        ? `<rect x="${active.x0.toFixed(1)}" y="${(trackY - state.barThickness / 2).toFixed(1)}" width="${(active.x1 - active.x0).toFixed(1)}" height="${state.barThickness}" rx="${(state.barThickness / 2).toFixed(1)}" fill="${state.accentColor}"/>`
+        ? `<rect x="${barX.toFixed(1)}" y="${(trackY - state.barThickness / 2).toFixed(1)}" width="${barW.toFixed(1)}" height="${state.barThickness}" rx="${(state.barThickness / 2).toFixed(1)}" fill="${state.accentColor}"/>`
         : "";
       const brackets = segs
         .map((s) => `<path d="M ${s.x0.toFixed(1)} ${trackY} v ${tick} M ${s.x1.toFixed(1)} ${trackY} v ${tick}" stroke="${state.bracketColor}" stroke-width="1.5"/>`)
