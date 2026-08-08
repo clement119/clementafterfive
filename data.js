@@ -1574,6 +1574,81 @@ const journal = [
               { text: "Drop the generated grid into Canva or Figma to fine-tune spacing, gaps, and the name labels — that's where you get pixel-perfect control.", plain: true },
             ],
           },
+          {
+            title: "Anthropomorphic Cartoon Characters",
+            items: [
+              { text: "Retro 1930s rubber-hose cartoon characters — the style where everyday objects get faces, gloves, and bendy limbs. Pick your ink and paper colors, then either use an uploaded image or list the objects yourself." },
+              {
+                builder: {
+                  template:
+                    "A retro 1930s rubber hose cartoon illustration of happy anthropomorphic characters {action}. {subject} Monochromatic duotone color palette using only {ink} ink on a solid {paper} background. The characters have simple, cute smiling faces, thin flexible limbs, and wear white gloves and classic cartoon shoes. Shading is done entirely with vintage halftone dot patterns. Clean composition, flat vector style, minimalistic background with {backdrop}.",
+                  controls: [
+                    {
+                      id: "subject",
+                      label: "Source",
+                      choices: [
+                        { label: "From uploaded image", value: "Base the characters on the objects in the uploaded image." },
+                        { label: "Describe the objects", value: "The characters include {objects}." },
+                      ],
+                    },
+                    {
+                      id: "objects",
+                      label: "Objects to turn into characters",
+                      type: "input",
+                      placeholder: "e.g. a carton of french fries, an ice cream cone, a bowl of noodles",
+                      fallback: "[list your objects]",
+                      showWhen: { subject: 1 },
+                    },
+                    {
+                      id: "ink",
+                      label: "Ink color",
+                      choices: [
+                        { label: "Navy blue", value: "dark navy blue", swatch: "#1B3A6B" },
+                        { label: "Charcoal", value: "deep charcoal black", swatch: "#22201E" },
+                        { label: "Brick red", value: "brick red", swatch: "#B0402F" },
+                        { label: "Forest green", value: "deep forest green", swatch: "#2C5545" },
+                        { label: "Purple", value: "royal purple", swatch: "#4A3A78" },
+                        { label: "Burnt orange", value: "burnt orange", swatch: "#C05621" },
+                      ],
+                    },
+                    {
+                      id: "paper",
+                      label: "Background color",
+                      choices: [
+                        { label: "Cream", value: "cream-colored", swatch: "#F4EDDD" },
+                        { label: "Off-white", value: "off-white", swatch: "#FAF8F3" },
+                        { label: "Warm beige", value: "warm beige", swatch: "#EDE0CC" },
+                        { label: "Pale mint", value: "pale mint green", swatch: "#E2EDE4" },
+                        { label: "Dusty pink", value: "dusty pink", swatch: "#F5E4E2" },
+                        { label: "Pale sky", value: "pale sky blue", swatch: "#E3EAF2" },
+                      ],
+                    },
+                    {
+                      id: "action",
+                      label: "What they're doing",
+                      choices: [
+                        { label: "Marching", value: "marching together in a row" },
+                        { label: "Group pose", value: "posing together for a group portrait" },
+                        { label: "Dancing", value: "dancing joyfully together" },
+                        { label: "Running", value: "running excitedly together" },
+                      ],
+                    },
+                    {
+                      id: "backdrop",
+                      label: "Background elements",
+                      choices: [
+                        { label: "Starburst sparkles", value: "a few simple starburst sparkles" },
+                        { label: "Confetti dots", value: "small scattered confetti dots and circles" },
+                        { label: "Motion lines", value: "a few simple speed and motion lines" },
+                        { label: "Stars & swirls", value: "tiny floating stars and light swirls" },
+                        { label: "Nothing", value: "no extra elements at all" },
+                      ],
+                    },
+                  ],
+                },
+              },
+            ],
+          },
         ],
       },
       {

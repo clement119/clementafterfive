@@ -430,6 +430,24 @@ body {
   color: var(--bg);
 }
 
+/* Scoped to pills that actually carry a swatch, so the other pill call
+   sites keep their default inline-block layout untouched. */
+.choice-btn--swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* The double ring keeps a dark swatch readable once the pill itself goes
+   dark at aria-pressed="true", and a pale one readable against --surface. */
+.choice-swatch {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7), 0 0 0 2px rgba(0, 0, 0, 0.18);
+}
+
 .builder-input {
   appearance: none;
   width: 100%;

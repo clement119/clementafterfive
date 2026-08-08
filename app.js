@@ -865,7 +865,19 @@
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "choice-btn";
-          btn.textContent = choice.label;
+          // A choice may carry `swatch: "#hex"` to preview the colour it
+          // names. The label goes in its own span because assigning
+          // textContent would wipe the swatch back out.
+          if (choice.swatch) {
+            btn.classList.add("choice-btn--swatch");
+            const sw = document.createElement("span");
+            sw.className = "choice-swatch";
+            sw.style.background = choice.swatch;
+            btn.appendChild(sw);
+          }
+          const lab = document.createElement("span");
+          lab.textContent = choice.label;
+          btn.appendChild(lab);
           btn.setAttribute("aria-pressed", idx === 0 ? "true" : "false");
           btn.addEventListener("click", () => {
             state[ctrl.id] = idx;
