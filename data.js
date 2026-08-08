@@ -1579,6 +1579,14 @@ const journal = [
             items: [
               { text: "Retro 1930s rubber-hose cartoon characters — the style where everyday objects get faces, gloves, and bendy limbs. Pick your ink and paper colors, then either use an uploaded image or list the objects yourself." },
               {
+                gallery: {
+                  caption: "Made with this prompt — navy ink on cream, marching, starburst sparkles.",
+                  images: [
+                    { src: "assets/examples/cartoon-characters-example.jpg" },
+                  ],
+                },
+              },
+              {
                 builder: {
                   template:
                     "A retro 1930s rubber hose cartoon illustration of happy anthropomorphic characters {action}. {subject} Monochromatic duotone color palette using only {ink} ink on a solid {paper} background. The characters have simple, cute smiling faces, thin flexible limbs, and wear white gloves and classic cartoon shoes. Shading is done entirely with vintage halftone dot patterns. Clean composition, flat vector style, minimalistic background with {backdrop}.",

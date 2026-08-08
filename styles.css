@@ -1260,6 +1260,17 @@ body {
   gap: 10px;
 }
 
+/* A single-image gallery is a lone example, not a grid — let it sit at its
+   own intrinsic width (centred) instead of being stretched edge to edge and
+   upscaled soft, while still shrinking to fit on narrow screens. */
+.gallery-grid .ba-cell:only-child {
+  justify-self: center;
+}
+.gallery-grid .ba-cell:only-child .ba-img {
+  width: auto;
+  max-width: 100%;
+}
+
 /* ---------- Skills list ---------- */
 .skill-filter {
   display: inline-flex;
