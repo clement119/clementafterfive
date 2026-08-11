@@ -2870,6 +2870,40 @@ const journal = [
           { link: { href: "https://learn.microsoft.com/en-us/power-bi/developer/agentic/power-bi-report-authoring-skill-overview", label: "Microsoft Learn — Power BI Report Authoring skill", compact: true } },
         ],
       },
+      {
+        title: "Power BI Agentic AI Architecture",
+        pillar: "Power BI and Fabric",
+        items: [
+          { text: "How the pieces from the section above actually fit together — an AI agent's request travels through the Power BI Modeling MCP server, out to Fabric, and can round-trip through Desktop for a live check, all inside the same RBAC and audit boundary as everything else in your tenant.", plain: true },
+          {
+            gallery: {
+              caption: "AI Agents + Microsoft Fabric + Power BI Ecosystem.",
+              images: [
+                { src: "assets/examples/m365-powerbi-agentic-architecture.jpg" },
+              ],
+            },
+          },
+
+          { heading: "1 · AI agents & interfaces" },
+          { text: "The request can come from anywhere — VS Code with Copilot, GitHub Copilot Chat, Copilot in Power BI itself, or just plain natural language (\"create a sales dashboard,\" \"generate DAX for YoY sales,\" \"optimize the semantic model,\" \"publish report to Fabric\"). Whichever surface you're in, it speaks MCP Protocol to the same server underneath.", plain: true },
+
+          { heading: "2 · Power BI Modeling MCP server" },
+          { text: "The core: five tool groups the agent calls in sequence. Semantic Models (create/read/update models, tables, relationships, hierarchies, star-schema design) feeds the DAX Engine (generate, validate, and execute DAX, plus performance analysis), which feeds Report Authoring (create/update PBIR reports, add visuals and layouts, apply best practices). Validation checks the model, the DAX, and the report, then runs performance and quality checks before Publish & Share pushes it to a Fabric workspace, manages permissions, and versions it.", plain: true },
+          { text: "Data Sources feed the Semantic Models step directly — Azure SQL, Dataverse, OneLake, files/APIs, and third-party sources.", plain: true },
+
+          { heading: "3 · Power BI Desktop bridge" },
+          { text: "The MCP server can reach into a locally open Desktop session — open/save PBIX or PBIR, create and edit visuals, refresh models, apply formatting, and validate reports — so the agent's changes can be checked against a live render instead of just the file on disk.", plain: true },
+
+          { heading: "4 · Microsoft Fabric" },
+          { text: "Where Publish & Share actually lands: workspaces, datasets, reports, dashboards, dataflows, and the lakehouse — the same governed environment your human-built content already lives in.", plain: true },
+
+          { heading: "5 · Foundation & security" },
+          { text: "Every layer above sits on the same tenant guardrails: Microsoft Entra ID for authentication, role-based access control, row-level data security, end-to-end audit and lineage, and monitoring/telemetry. The agent doesn't get a side door — it operates inside the same permission boundary a person would.", plain: true },
+
+          { heading: "Why it's worth the setup" },
+          { text: "Faster development with AI assistance, a consistent and optimized semantic model instead of ad hoc ones, higher-quality reports and dashboards, collaboration and governance that actually scales, and insights published and delivered faster.", plain: true },
+        ],
+      },
     ],
     footer:
       "Save as .pbip, install the powerbi-authoring bundle, describe the pages you want, and give it something to look at. The agent writes the report files — you keep the review and the git history.",
