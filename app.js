@@ -1756,7 +1756,19 @@
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "choice-btn";
-          btn.textContent = c.label;
+          // Same optional `swatch: "#hex"` preview buildBuilder's pills
+          // support — label goes in its own span so setting textContent
+          // can't wipe the swatch back out.
+          if (c.swatch) {
+            btn.classList.add("choice-btn--swatch");
+            const sw = document.createElement("span");
+            sw.className = "choice-swatch";
+            sw.style.background = c.swatch;
+            btn.appendChild(sw);
+          }
+          const lab = document.createElement("span");
+          lab.textContent = c.label;
+          btn.appendChild(lab);
           btn.setAttribute("aria-pressed", c.value === choiceState[f.key] ? "true" : "false");
           btn.addEventListener("click", () => {
             choiceState[f.key] = c.value;

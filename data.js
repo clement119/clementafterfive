@@ -1083,6 +1083,46 @@ const journal = [
                   display:block;
                   pointer-events:none;
                 }
+
+                /* ---------- 8. Collaborator cursor ---------- */
+                .cursor-sticker{
+                  display:inline-flex;
+                  flex-direction:column;
+                  align-items:flex-start;
+                }
+                .cursor-arrow{
+                  width:38px;
+                  height:auto;
+                  display:block;
+                  filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
+                }
+                /* Mirror rather than rotate — the arrow keeps its crisp
+                   vertical/horizontal edges in every direction. */
+                .cursor-arrow.dir-ur{ transform:scaleX(-1); }
+                .cursor-arrow.dir-dl{ transform:scaleY(-1); }
+                .cursor-arrow.dir-dr{ transform:scale(-1,-1); }
+                .cursor-label{
+                  margin:-4px 0 0 28px;
+                  padding:6px 14px;
+                  border-radius:7px;
+                  color:#fff;
+                  font-size:19px;
+                  font-weight:700;
+                  letter-spacing:.01em;
+                  line-height:1.25;
+                  white-space:pre-wrap;
+                  overflow-wrap:break-word;
+                  max-width:230px;
+                  box-shadow:0 3px 10px rgba(0,0,0,.28);
+                }
+                /* The label tucks under the arrow's tail, so it swaps to the
+                   other side when the arrow mirrors horizontally. */
+                .cursor-sticker.dir-ur, .cursor-sticker.dir-dr{ align-items:flex-end; }
+                .cursor-sticker.dir-ur .cursor-label,
+                .cursor-sticker.dir-dr .cursor-label{ margin:-4px 28px 0 0; }
+                .cursor-sticker.dir-dl, .cursor-sticker.dir-dr{ flex-direction:column-reverse; }
+                .cursor-sticker.dir-dl .cursor-label{ margin:0 0 -4px 28px; }
+                .cursor-sticker.dir-dr .cursor-label{ margin:0 28px -4px 0; }
               `,
               stickers: [
                 {
@@ -1234,6 +1274,45 @@ const journal = [
                       ? ""
                       : ` ${picked ? `The row "${picked}" is` : "One of the middle rows is"} highlighted with a solid navy-blue bar and white text, as if the mouse is hovering it, with a classic white arrow cursor sitting on that row.`;
                     return `Overlay a retro Windows 95 right-click context menu onto the photo — a grey panel with a raised 3D beveled border and pixel-era UI text, ${rowsClause}.${selClause}`;
+                  },
+                },
+                {
+                  id: "collab-cursor",
+                  label: "Collaborator cursor",
+                  fields: [
+                    { key: "text", label: "Label", type: "paragraph", default: "Strategy" },
+                    { key: "color", label: "Color", type: "choice", default: "#F5A524", choices: [
+                      { label: "Amber", value: "#F5A524", swatch: "#F5A524" },
+                      { label: "Pink", value: "#E0219B", swatch: "#E0219B" },
+                      { label: "Blue", value: "#3B9EF5", swatch: "#3B9EF5" },
+                      { label: "Green", value: "#16A34A", swatch: "#16A34A" },
+                      { label: "Purple", value: "#8B5CF6", swatch: "#8B5CF6" },
+                      { label: "Red", value: "#EF4444", swatch: "#EF4444" },
+                      { label: "Black", value: "#1C1C1E", swatch: "#1C1C1E" },
+                    ] },
+                    { key: "dir", label: "Arrow direction", type: "choice", default: "ul", choices: [
+                      { label: "Up-left", value: "ul" },
+                      { label: "Up-right", value: "ur" },
+                      { label: "Down-left", value: "dl" },
+                      { label: "Down-right", value: "dr" },
+                    ] },
+                  ],
+                  buildHtml: function (v, esc) {
+                    const dir = ["ul", "ur", "dl", "dr"].indexOf(v.dir) >= 0 ? v.dir : "ul";
+                    const color = v.color || "#F5A524";
+                    const arrow = `<svg class="cursor-arrow dir-${dir}" viewBox="0 0 17 24" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 1.2v19.4l4.9-4.7 3 6.8 3.5-1.5-3-6.7h6.4z" fill="${esc(color)}" stroke="#ffffff" stroke-width="1.05" stroke-linejoin="round"/></svg>`;
+                    const label = `<span class="cursor-label" style="background:${esc(color)}">${esc(v.text)}</span>`;
+                    return `<div class="stage"><div class="sticker-capture"><div class="cursor-sticker dir-${dir}">${arrow}${label}</div></div></div>`;
+                  },
+                  buildPrompt: function (v) {
+                    const names = { "#F5A524": "amber orange", "#E0219B": "hot pink", "#3B9EF5": "bright blue", "#16A34A": "green", "#8B5CF6": "purple", "#EF4444": "red", "#1C1C1E": "black" };
+                    const color = names[v.color] || "amber orange";
+                    const dirs = { ul: "up and to the left", ur: "up and to the right", dl: "down and to the left", dr: "down and to the right" };
+                    const dir = dirs[v.dir] || dirs.ul;
+                    const textClause = v.text
+                      ? `reading "${v.text}"`
+                      : "with a short role or name label that fits the photo (invent fitting wording)";
+                    return `Overlay a Figma-style multiplayer collaboration cursor onto the photo — a solid ${color} mouse arrow with a thin white outline pointing ${dir}, with a matching ${color} rounded name-tag pill in white bold text tucked just beneath its tail, ${textClause}.`;
                   },
                 },
               ],
