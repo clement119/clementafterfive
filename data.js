@@ -809,12 +809,13 @@ const journal = [
           },
           {
             gallery: {
-              caption: "These stickers in an actual story — Notes card, Reminder dialog + floating labels, Banner + Notes card, and Chat bubbles.",
+              caption: "These stickers in an actual story — Notes card, Reminder dialog + floating labels, Banner + Notes card, Chat bubbles, and Collaborator cursors.",
               images: [
                 { src: "assets/examples/sticker-example-notes.jpg", label: "Notes app card" },
                 { src: "assets/examples/sticker-example-reminder-labels.jpg", label: "Reminder dialog + floating labels" },
                 { src: "assets/examples/sticker-example-banner-notes.jpg", label: "Text banner + Notes card" },
                 { src: "assets/examples/sticker-example-chat-bubble.jpg", label: "Chat bubbles" },
+                { src: "assets/examples/sticker-example-collab-cursor.jpg", label: "Collaborator cursors" },
               ],
             },
           },
@@ -1300,7 +1301,7 @@ const journal = [
                   buildHtml: function (v, esc) {
                     const dir = ["ul", "ur", "dl", "dr"].indexOf(v.dir) >= 0 ? v.dir : "ul";
                     const color = v.color || "#F5A524";
-                    const arrow = `<svg class="cursor-arrow dir-${dir}" viewBox="0 0 17 24" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 1.2v19.4l4.9-4.7 3 6.8 3.5-1.5-3-6.7h6.4z" fill="${esc(color)}" stroke="#ffffff" stroke-width="1.05" stroke-linejoin="round"/></svg>`;
+                    const arrow = `<svg class="cursor-arrow dir-${dir}" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg"><path d="M1.2 1.2 22.8 9.3 13.9 13.9 10.2 23.6Z" fill="${esc(color)}" stroke="#ffffff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" paint-order="stroke"/></svg>`;
                     const label = `<span class="cursor-label" style="background:${esc(color)}">${esc(v.text)}</span>`;
                     return `<div class="stage"><div class="sticker-capture"><div class="cursor-sticker dir-${dir}">${arrow}${label}</div></div></div>`;
                   },
