@@ -769,6 +769,7 @@
     if (item && item.iconPreview) return buildIconPreview(item.iconPreview);
     if (item && item.progressBarBuilder) return buildProgressBarBuilder(item.progressBarBuilder);
     if (item && item.posterLibrary) return buildPosterLibrary(item.posterLibrary);
+    if (item && item.uiStyleLibrary) return buildUIStyleLibrary(item.uiStyleLibrary);
     if (item && item.heading != null) return buildHeading(item.heading);
 
     const { text, copyable, plain } = normalizeItem(item);
@@ -1591,6 +1592,202 @@
     wrap.appendChild(nav);
 
     requestAnimationFrame(syncDots);
+
+    return wrap;
+  }
+
+  // Shared arrows + dots for a scroll-snap deck. Same mechanics the Font
+  // Library and Poster decks each spell out inline (they predate this
+  // helper and are left alone); new decks call this instead of copying it
+  // a third time. `noun` only labels the controls for screen readers.
+  function buildDeckNav(deck, cardSelector, count, noun) {
+    const nav = document.createElement("div");
+    nav.className = "persona-nav";
+
+    const prev = document.createElement("button");
+    prev.type = "button";
+    prev.className = "persona-arrow";
+    prev.setAttribute("aria-label", "Previous " + noun);
+    prev.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>`;
+
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className = "persona-arrow";
+    next.setAttribute("aria-label", "Next " + noun);
+    next.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>`;
+
+    const dots = document.createElement("div");
+    dots.className = "persona-dots";
+    const dotEls = [];
+    for (let i = 0; i < count; i++) {
+      const d = document.createElement("button");
+      d.type = "button";
+      d.className = "persona-dot";
+      d.setAttribute("aria-label", "Go to " + noun + " " + (i + 1));
+      d.addEventListener("click", () => scrollToCard(i));
+      dots.appendChild(d);
+      dotEls.push(d);
+    }
+
+    function cardStep() {
+      const first = deck.querySelector(cardSelector);
+      if (!first) return deck.clientWidth || 1;
+      const cs = getComputedStyle(deck);
+      const gap = parseFloat(cs.columnGap || cs.gap || "0") || 0;
+      return first.getBoundingClientRect().width + gap;
+    }
+    function centerOffset() {
+      const first = deck.querySelector(cardSelector);
+      if (!first) return 0;
+      return (deck.clientWidth - first.getBoundingClientRect().width) / 2;
+    }
+    function maxScrollLeft() {
+      return Math.max(0, deck.scrollWidth - deck.clientWidth);
+    }
+    function activeIndex() {
+      const idx = Math.round((deck.scrollLeft + centerOffset()) / cardStep());
+      return Math.max(0, Math.min(count - 1, idx));
+    }
+    function scrollToCard(i) {
+      const idx = Math.max(0, Math.min(count - 1, i));
+      const target = idx * cardStep() - centerOffset();
+      deck.scrollTo({ left: Math.max(0, Math.min(maxScrollLeft(), target)), behavior: "smooth" });
+    }
+    function syncDots() {
+      const a = activeIndex();
+      dotEls.forEach((d, i) => d.setAttribute("aria-current", i === a ? "true" : "false"));
+      prev.disabled = a <= 0;
+      next.disabled = a >= count - 1;
+    }
+
+    prev.addEventListener("click", () => scrollToCard(activeIndex() - 1));
+    next.addEventListener("click", () => scrollToCard(activeIndex() + 1));
+
+    let raf;
+    deck.addEventListener("scroll", () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(syncDots);
+    });
+
+    nav.append(prev, dots, next);
+    requestAnimationFrame(syncDots);
+    return nav;
+  }
+
+  // UI style library — swipe through design directions, each showing the
+  // same mock component rendered in that style (sandboxed iframe, same
+  // isolation trick the stickers use) above the prompt that produces it.
+  // The prompt takes a {subject} the way poster prompts do, so it drops
+  // straight into a real brief instead of needing an edit first.
+  function buildUIStyleLibrary(cfg) {
+    const wrap = document.createElement("div");
+    wrap.className = "uistyle-library";
+
+    const styles = Array.isArray(cfg.styles) ? cfg.styles : [];
+    const reset = cfg.previewReset || "";
+
+    const deck = document.createElement("div");
+    deck.className = "persona-deck uistyle-deck";
+
+    styles.forEach((style) => {
+      const card = document.createElement("article");
+      card.className = "uistyle-card";
+
+      const name = document.createElement("h3");
+      name.className = "persona-name";
+      name.textContent = style.label || "";
+      card.appendChild(name);
+
+      if (style.category) {
+        const category = document.createElement("p");
+        category.className = "poster-category";
+        category.textContent = style.category;
+        card.appendChild(category);
+      }
+
+      if (style.preview) {
+        const previewWrap = document.createElement("div");
+        previewWrap.className = "uistyle-preview";
+        const iframe = document.createElement("iframe");
+        iframe.className = "uistyle-preview-frame";
+        iframe.setAttribute("sandbox", "");
+        iframe.setAttribute("loading", "lazy");
+        iframe.setAttribute("title", (style.label || "Style") + " preview");
+        iframe.srcdoc = wrapStickerDoc(reset, style.preview);
+        previewWrap.appendChild(iframe);
+        card.appendChild(previewWrap);
+      }
+
+      if (style.bestFor) {
+        const bestFor = document.createElement("p");
+        bestFor.className = "persona-tag";
+        bestFor.textContent = style.bestFor;
+        card.appendChild(bestFor);
+      }
+
+      // The decomposed spec — what actually makes the look, named so you
+      // can lift one row into a prompt without taking the whole style.
+      if (Array.isArray(style.elements) && style.elements.length) {
+        const specs = document.createElement("dl");
+        specs.className = "uistyle-specs";
+        style.elements.forEach((row) => {
+          const dt = document.createElement("dt");
+          dt.textContent = row.name;
+          const dd = document.createElement("dd");
+          dd.textContent = row.value;
+          specs.append(dt, dd);
+        });
+        card.appendChild(specs);
+      }
+
+      const inputGroup = document.createElement("div");
+      inputGroup.className = "builder-control";
+      const inputLabel = document.createElement("span");
+      inputLabel.className = "builder-label";
+      inputLabel.textContent = "What are you building?";
+      const input = document.createElement("input");
+      input.type = "text";
+      input.className = "builder-input";
+      input.placeholder = style.fallback || "";
+      inputGroup.append(inputLabel, input);
+      card.appendChild(inputGroup);
+
+      const output = document.createElement("p");
+      output.className = "item-text";
+      const outBox = document.createElement("div");
+      outBox.className = "item builder-output";
+      const copyBtn = document.createElement("button");
+      copyBtn.className = "copy-btn";
+      copyBtn.type = "button";
+      copyBtn.setAttribute("aria-label", "Copy prompt for " + (style.label || "style"));
+      copyBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+
+      function assemble() {
+        const subject = input.value.trim() || style.fallback || "";
+        return String(style.template || "").replace(/\{subject\}/g, subject);
+      }
+      function update() {
+        output.textContent = assemble();
+      }
+      input.addEventListener("input", update);
+      copyBtn.addEventListener("click", () => copyText(assemble(), copyBtn));
+
+      outBox.append(output, copyBtn);
+      card.appendChild(outBox);
+
+      if (style.tip) {
+        const tip = document.createElement("p");
+        tip.className = "skill-note";
+        tip.textContent = style.tip;
+        card.appendChild(tip);
+      }
+
+      update();
+      deck.appendChild(card);
+    });
+
+    wrap.appendChild(deck);
+    wrap.appendChild(buildDeckNav(deck, ".uistyle-card", styles.length, "style"));
 
     return wrap;
   }

@@ -1116,6 +1116,76 @@ body {
   height: auto;
 }
 
+/* ---------- UI style library (swipeable design directions) ---------- */
+/* min-width:0 is load-bearing: without it the deck grows to its content
+   width instead of scrolling, which breaks the nav's index math. */
+.uistyle-library {
+  display: grid;
+  gap: 16px;
+  padding: 4px 0 2px;
+  min-width: 0;
+}
+
+.uistyle-card {
+  flex: 0 0 88%;
+  max-width: 340px;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+@media (min-width: 620px) {
+  .uistyle-card {
+    flex-basis: 340px;
+  }
+}
+
+.uistyle-preview {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) - 4px);
+  overflow: hidden;
+}
+
+.uistyle-preview-frame {
+  display: block;
+  width: 100%;
+  height: 260px;
+  border: 0;
+}
+
+/* Decomposed spec rows — label left, value right, so the eye can scan the
+   dimension names down one column. */
+.uistyle-specs {
+  display: grid;
+  grid-template-columns: minmax(72px, auto) 1fr;
+  gap: 6px 12px;
+  margin: 0;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.uistyle-specs dt {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-top: 1px;
+}
+
+.uistyle-specs dd {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
 /* ---------- Link button (CTA to an external page) ---------- */
 .item-link {
   display: inline-flex;

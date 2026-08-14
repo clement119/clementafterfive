@@ -2660,6 +2660,245 @@ const journal = [
           { link: { href: "https://index.how", label: "index.how — name what you see, articulate like a designer", compact: true } },
         ],
       },
+      {
+        title: "Style library — swipe, copy, build",
+        items: [
+          {
+            text: "Five design directions, each broken down into the elements that actually make the look — canvas, borders, shadows, type, accent, motion. Every card shows the same component rendered in that style, so you can compare them like-for-like. Type what you're building, then copy the finished prompt.",
+            plain: true,
+          },
+          {
+            uiStyleLibrary: {
+              previewReset: `
+                *{box-sizing:border-box;}
+                html,body{margin:0;height:100%;}
+                body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+                .wrap{height:100%;padding:16px;display:flex;align-items:center;justify-content:center;}
+                .card{width:100%;}
+              `,
+              styles: [
+                {
+                  id: "cream-brutalism",
+                  label: "Cream Brutalism",
+                  category: "Warm neo-brutalist — data & dashboards",
+                  bestFor: "Dev tools, analytics, indie SaaS, anything with numbers to show off.",
+                  preview: `
+                    <style>
+                      body{background:#FBEBD2;color:#101828;}
+                      .card{background:#fff;border:3px solid #101828;border-radius:16px;box-shadow:5px 5px 0 #101828;padding:15px;}
+                      .eyebrow{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:#7a7f8a;margin:0 0 6px;}
+                      .title{font-size:21px;font-weight:800;letter-spacing:-.02em;margin:0 0 9px;}
+                      .chips{display:flex;gap:5px;margin:0 0 12px;}
+                      .chip{border:1.5px solid #d98750;border-radius:999px;padding:2px 9px;font-size:9.5px;font-weight:700;color:#b8501f;}
+                      .btn{display:inline-block;background:#F26B21;color:#fff;border:3px solid #101828;border-radius:11px;box-shadow:4px 4px 0 #101828;padding:8px 14px;font-size:11.5px;font-weight:800;margin:0 0 14px;}
+                      .stats{display:flex;gap:20px;border-top:3px solid #101828;padding-top:10px;}
+                      .num{font-size:19px;font-weight:800;line-height:1.1;}
+                      .lab{font-family:ui-monospace,Menlo,monospace;font-size:7.5px;letter-spacing:.13em;text-transform:uppercase;color:#7a7f8a;margin-top:2px;}
+                    </style>
+                    <div class="wrap"><div class="card">
+                      <p class="eyebrow">Design System</p>
+                      <h1 class="title">diagram-design</h1>
+                      <div class="chips"><span class="chip">HTML</span><span class="chip">MIT</span></div>
+                      <div class="btn">View on GitHub</div>
+                      <div class="stats">
+                        <div><div class="num">14.7k</div><div class="lab">Stars</div></div>
+                        <div><div class="num">885</div><div class="lab">Forks</div></div>
+                      </div>
+                    </div></div>
+                  `,
+                  elements: [
+                    { name: "Canvas", value: "Warm cream paper (#FBEBD2) — never white. White is reserved for cards so they lift off the page." },
+                    { name: "Border", value: "3px solid near-black (#101828) on every surface, button and input. Uniform weight, no hairlines." },
+                    { name: "Shadow", value: "Hard offset, zero blur — 5px 5px 0 black on cards, 4px 4px 0 on buttons. Never a soft blur." },
+                    { name: "Radius", value: "12–16px. Chunky-soft, not sharp — this is what keeps it friendly instead of aggressive." },
+                    { name: "Accent", value: "One hot orange (#F26B21) for primary actions; a burnt rust (#B8501F) for chip text and inline emphasis." },
+                    { name: "Type", value: "Extra-bold geometric sans (800) for headings, tight tracking. Body in regular sans, dark slate." },
+                    { name: "Micro-labels", value: "Uppercase monospace, ~8px, 0.13em letter-spacing, muted grey — for STARS, FORKS, PER DAY." },
+                    { name: "Data", value: "Huge bold numerals over tiny mono captions. Tables use a 3px black header rule and hairline row dividers, no vertical lines." },
+                    { name: "Motion", value: "On hover, translate 2px toward the shadow and shrink it — the surface presses into the page." },
+                  ],
+                  template: "Design {subject}. STYLE: warm neo-brutalism — chunky, confident, and built around data.\n\nCANVAS & SURFACES\n- Page background is warm cream paper (#FBEBD2). Never use white for the page.\n- Cards and panels are pure white so they lift off the cream.\n- Every surface, button, chip and input gets a uniform 3px solid near-black border (#101828). No hairlines, no 1px borders anywhere.\n\nSHADOWS & SHAPE\n- Hard offset shadows with zero blur: 5px 5px 0 #101828 on cards, 4px 4px 0 on buttons. Never use a soft/blurred shadow.\n- Border radius 12–16px — chunky and rounded, not sharp. This is what keeps it friendly rather than aggressive.\n\nCOLOR\n- One hot orange (#F26B21) for primary buttons and the logo mark.\n- A burnt rust (#B8501F) for chip text and bold inline emphasis inside body copy.\n- Everything else is near-black (#101828) on cream/white, with muted grey (#7A7F8A) for secondary text.\n\nTYPE\n- Headings in an extra-bold geometric sans (weight 800), tight letter-spacing (-0.02em), large and unapologetic.\n- Body copy regular weight, dark slate, generous line-height (1.6).\n- Micro-labels in UPPERCASE MONOSPACE at ~10px with 0.13em letter-spacing and muted grey — use these for every stat caption and table header.\n\nCOMPONENTS\n- Primary button: orange fill, 3px black border, hard black offset shadow, bold label.\n- Secondary button: white fill, same border and shadow.\n- Tags/chips: pill-shaped, white fill, thin rust border, small bold rust text.\n- Stats: huge bold numeral stacked over a tiny mono caption; group them in a row divided by thin rules.\n- Tables: 3px black rule under the header row, hairline dividers between rows, numbers right-aligned, no vertical lines at all.\n\nMOTION\n- On hover, translate the element 2px toward its shadow and shrink the shadow to match, so it presses into the page. Keep it snappy (120ms).\n\nAVOID\n- Soft blurred shadows, gradients, glassmorphism, thin 1px borders, pure-white page backgrounds, and more than one accent color.",
+                  fallback: "[a repo analytics dashboard]",
+                  tip: "The two rules doing the most work here: hard shadows with zero blur, and a cream page so white cards can lift. Drop either and it stops reading as brutalist.",
+                },
+                {
+                  id: "quiet-precision",
+                  label: "Quiet Precision",
+                  category: "Dark minimal — the Linear/Vercel register",
+                  bestFor: "Developer tools, B2B SaaS, anything that should feel fast and serious.",
+                  preview: `
+                    <style>
+                      body{background:#08090A;color:#F7F8F8;}
+                      .card{background:#0F1011;border:1px solid #1F2023;border-radius:10px;padding:15px;}
+                      .eyebrow{font-size:9.5px;letter-spacing:.04em;color:#8A8F98;margin:0 0 7px;}
+                      .title{font-size:16px;font-weight:590;letter-spacing:-.01em;margin:0 0 10px;}
+                      .chips{display:flex;gap:5px;margin:0 0 13px;}
+                      .chip{background:#1A1B1E;border:1px solid #26272B;border-radius:5px;padding:2px 7px;font-size:9.5px;color:#B6BAC1;}
+                      .btn{display:inline-block;background:#5E6AD2;color:#fff;border-radius:6px;padding:7px 13px;font-size:11.5px;font-weight:520;margin:0 0 14px;}
+                      .stats{display:flex;gap:22px;border-top:1px solid #1F2023;padding-top:11px;}
+                      .num{font-size:17px;font-weight:590;letter-spacing:-.02em;line-height:1.1;}
+                      .lab{font-size:9.5px;color:#8A8F98;margin-top:3px;}
+                    </style>
+                    <div class="wrap"><div class="card">
+                      <p class="eyebrow">Design System</p>
+                      <h1 class="title">diagram-design</h1>
+                      <div class="chips"><span class="chip">HTML</span><span class="chip">MIT</span></div>
+                      <div class="btn">View on GitHub</div>
+                      <div class="stats">
+                        <div><div class="num">14.7k</div><div class="lab">Stars</div></div>
+                        <div><div class="num">885</div><div class="lab">Forks</div></div>
+                      </div>
+                    </div></div>
+                  `,
+                  elements: [
+                    { name: "Canvas", value: "Near-black with a blue undertone (#08090A), panels one step lighter (#0F1011)." },
+                    { name: "Border", value: "1px hairline at low contrast (#1F2023). Borders separate; they never decorate." },
+                    { name: "Shadow", value: "Almost none. Depth comes from background steps, not shadows." },
+                    { name: "Radius", value: "6–10px. Small and consistent — restraint reads as precision." },
+                    { name: "Accent", value: "A single indigo (#5E6AD2), used only on the primary action. Everything else is greyscale." },
+                    { name: "Type", value: "Inter at 590 weight for headings (not 700 — heavy reads cheap here), -0.01em tracking, 14–16px." },
+                    { name: "Contrast", value: "Three text tiers only: #F7F8F8, #B6BAC1, #8A8F98. Never invent a fourth." },
+                    { name: "Motion", value: "Fast and small — 100ms opacity/background transitions. No scale, no bounce." },
+                  ],
+                  template: "Design {subject}. STYLE: dark minimal precision — fast, serious, engineered.\n\nCANVAS & SURFACES\n- Page background is near-black with a cool blue undertone (#08090A), not pure black and not grey.\n- Panels and cards sit one step lighter (#0F1011). Depth comes from these background steps, never from shadows.\n- Borders are 1px hairlines at low contrast (#1F2023). A border exists to separate, never to decorate.\n\nSHAPE\n- Border radius 6–10px, applied consistently. Small radii read as precise; large ones read as consumer.\n- Effectively no shadows. If you need separation, change the background one step instead.\n\nCOLOR\n- Strictly greyscale plus ONE accent: indigo (#5E6AD2), used only on the primary action and active states.\n- Exactly three text tiers: primary #F7F8F8, secondary #B6BAC1, tertiary #8A8F98. Never introduce a fourth.\n\nTYPE\n- Inter (or system sans) at weight 590 for headings — not 700; heavy weights read cheap in this register.\n- Headings 14–16px with -0.01em tracking. This style stays small and dense rather than large and loud.\n- Body 13–14px, line-height 1.55, secondary grey.\n\nCOMPONENTS\n- Primary button: indigo fill, 6px radius, medium weight, no border, no shadow.\n- Secondary button: transparent fill with a hairline border.\n- Chips: subtle raised grey fill (#1A1B1E) with a hairline border, 5px radius, small grey text.\n- Stats: medium-weight numerals with tight tracking over small grey captions.\n- Dense layouts with tight, deliberate spacing — 8px base grid.\n\nMOTION\n- Fast and small: 100ms transitions on opacity and background only. No scale, no bounce, no easing theatrics.\n\nAVOID\n- Pure black, heavy 700-weight type, glows, gradients, drop shadows, large radii, and any second accent color.",
+                  fallback: "[a deployment dashboard]",
+                  tip: "The discipline is the style: three text tiers, one accent, tiny radii. Every extra color you add moves it away from this look.",
+                },
+                {
+                  id: "swiss-editorial",
+                  label: "Swiss Editorial",
+                  category: "Grid-led — typographic and stark",
+                  bestFor: "Portfolios, agencies, publications, and content-first marketing sites.",
+                  preview: `
+                    <style>
+                      body{background:#FFFFFF;color:#0A0A0A;}
+                      .card{border-top:2px solid #0A0A0A;padding:13px 0 0;}
+                      .eyebrow{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#0A0A0A;margin:0 0 10px;}
+                      .title{font-size:27px;font-weight:700;letter-spacing:-.035em;line-height:1;margin:0 0 10px;}
+                      .rule{height:1px;background:#D4D4D4;margin:0 0 10px;}
+                      .meta{display:flex;gap:6px;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:#737373;margin:0 0 13px;}
+                      .meta b{color:#E5261F;font-weight:700;}
+                      .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px solid #D4D4D4;padding-top:10px;}
+                      .num{font-size:20px;font-weight:700;letter-spacing:-.03em;line-height:1;}
+                      .lab{font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:#737373;margin-top:4px;}
+                    </style>
+                    <div class="wrap"><div class="card">
+                      <p class="eyebrow">Design System / 01</p>
+                      <h1 class="title">diagram—design</h1>
+                      <div class="rule"></div>
+                      <div class="meta"><span>HTML</span><span>—</span><span>MIT</span><span>—</span><b>Featured</b></div>
+                      <div class="stats">
+                        <div><div class="num">14.7k</div><div class="lab">Stars</div></div>
+                        <div><div class="num">885</div><div class="lab">Forks</div></div>
+                      </div>
+                    </div></div>
+                  `,
+                  elements: [
+                    { name: "Canvas", value: "Pure white. The page is paper and the grid is the design." },
+                    { name: "Structure", value: "A visible 12-column grid. Rules divide content: 2px above sections, 1px between rows." },
+                    { name: "Radius", value: "Zero. Every corner is square — no exceptions." },
+                    { name: "Accent", value: "One signal red (#E5261F), used sparingly for a single emphasized word or marker." },
+                    { name: "Type", value: "Helvetica/Inter bold at large sizes with very tight tracking (-0.035em). Type is the hero." },
+                    { name: "Labels", value: "Uppercase, 0.16em letter-spacing, small and bold — set like a printed caption." },
+                    { name: "Space", value: "Asymmetric and generous. Leave a column empty rather than filling it." },
+                    { name: "Motion", value: "Almost none. Text reveals on scroll, nothing else moves." },
+                  ],
+                  template: "Design {subject}. STYLE: Swiss editorial — grid-led, typographic, stark.\n\nCANVAS & STRUCTURE\n- Pure white background. The page is paper; the grid is the design.\n- Build on a visible 12-column grid and let content align to it obviously.\n- Use rules to divide, not boxes: a 2px black rule above each major section, 1px light-grey rules between rows. Avoid cards and containers entirely.\n\nSHAPE\n- Border radius is ZERO everywhere. Every corner square, no exceptions.\n- No shadows and no fills — separation comes from rules and whitespace only.\n\nCOLOR\n- Black (#0A0A0A) on white, with mid-grey (#737373) for secondary text.\n- ONE signal red (#E5261F), used sparingly — a single emphasized word, a marker, one number. It should appear at most twice per screen.\n\nTYPE\n- Helvetica or Inter, bold (700), at large display sizes with very tight tracking (-0.035em) and line-height 1.0. Type is the hero element, not an afterthought.\n- Labels and captions in UPPERCASE at 0.16em letter-spacing, small and bold, set like printed captions.\n- Body copy at a comfortable reading measure — never full-width.\n\nLAYOUT\n- Asymmetric composition with generous, deliberate whitespace. Leave a column empty rather than filling it.\n- Numbers and stats set large and bold with tight tracking, over uppercase captions.\n- Align everything to the grid; nothing floats.\n\nMOTION\n- Almost none. A simple fade or slide as text enters on scroll. Nothing else moves.\n\nAVOID\n- Rounded corners, shadows, gradients, cards, icons-as-decoration, centered body text, and any second accent color.",
+                  fallback: "[a design studio portfolio]",
+                  tip: "If it looks too empty, you're close. This style fails when you fill the space — resist adding a card around things.",
+                },
+                {
+                  id: "soft-depth",
+                  label: "Soft Depth",
+                  category: "Light & tactile — consumer product",
+                  bestFor: "Mobile apps, onboarding, wellness, fintech, and anything friendly.",
+                  preview: `
+                    <style>
+                      body{background:#F4F5F7;color:#1A1D26;}
+                      .card{background:#fff;border-radius:20px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 12px 28px -8px rgba(16,24,40,.14);padding:16px;}
+                      .eyebrow{font-size:10px;font-weight:600;color:#8B90A0;margin:0 0 7px;}
+                      .title{font-size:18px;font-weight:650;letter-spacing:-.015em;margin:0 0 10px;}
+                      .chips{display:flex;gap:6px;margin:0 0 13px;}
+                      .chip{background:#EEF1FF;border-radius:999px;padding:4px 10px;font-size:10px;font-weight:600;color:#4F5BD5;}
+                      .btn{display:inline-block;background:#4F5BD5;color:#fff;border-radius:12px;padding:9px 16px;font-size:11.5px;font-weight:600;box-shadow:0 6px 14px -4px rgba(79,91,213,.5);margin:0 0 14px;}
+                      .stats{display:flex;gap:10px;}
+                      .stat{flex:1;background:#F7F8FA;border-radius:13px;padding:10px;}
+                      .num{font-size:17px;font-weight:650;line-height:1.1;}
+                      .lab{font-size:9.5px;color:#8B90A0;margin-top:2px;}
+                    </style>
+                    <div class="wrap"><div class="card">
+                      <p class="eyebrow">Design System</p>
+                      <h1 class="title">diagram-design</h1>
+                      <div class="chips"><span class="chip">HTML</span><span class="chip">MIT</span></div>
+                      <div class="btn">View on GitHub</div>
+                      <div class="stats">
+                        <div class="stat"><div class="num">14.7k</div><div class="lab">Stars</div></div>
+                        <div class="stat"><div class="num">885</div><div class="lab">Forks</div></div>
+                      </div>
+                    </div></div>
+                  `,
+                  elements: [
+                    { name: "Canvas", value: "Cool light grey (#F4F5F7) so white cards read as raised, not flush." },
+                    { name: "Shadow", value: "Two layers — a 1px contact shadow plus a wide soft lift. Long, low-opacity, generous blur." },
+                    { name: "Radius", value: "Large and nested: 20px cards, 13px inner tiles, 12px buttons, 999px pills." },
+                    { name: "Accent", value: "Friendly indigo (#4F5BD5) with a 10% tint (#EEF1FF) for chips and selected states." },
+                    { name: "Type", value: "Weight 650 for headings (softer than 700), -0.015em tracking, comfortable sizes." },
+                    { name: "Nesting", value: "Tinted sub-tiles inside white cards create hierarchy without adding borders." },
+                    { name: "Glow", value: "Primary buttons carry a colored shadow in the accent hue at ~50% opacity." },
+                    { name: "Motion", value: "Spring easing, 200–260ms. Lift on hover, gentle scale on press." },
+                  ],
+                  template: "Design {subject}. STYLE: soft depth — light, tactile, friendly consumer product.\n\nCANVAS & SURFACES\n- Page background is a cool light grey (#F4F5F7), never white — white is for cards, so they read as raised.\n- Cards are white with NO border. Separation comes entirely from shadow.\n- Inside cards, use tinted sub-tiles (#F7F8FA) to group content instead of adding dividers or borders.\n\nSHADOWS & SHAPE\n- Two-layer shadows: a tight contact shadow (0 1px 2px rgba(16,24,40,.05)) plus a wide soft lift (0 12px 28px -8px rgba(16,24,40,.14)). Long, low-opacity, generous blur.\n- Large nested radii: 20px on cards, 13px on inner tiles, 12px on buttons, 999px on pills. Inner radii are always smaller than their container's.\n\nCOLOR\n- A friendly indigo accent (#4F5BD5) with a 10% tint (#EEF1FF) for chips, badges and selected states.\n- Text in soft near-black (#1A1D26) with a warm grey secondary (#8B90A0).\n\nTYPE\n- Headings at weight 650 — softer than 700, which reads harsh in this style — with -0.015em tracking.\n- Comfortable sizes and line-height 1.5. Nothing dense or cramped.\n\nCOMPONENTS\n- Primary button: indigo fill, 12px radius, and a COLORED shadow in the accent hue at ~50% opacity (0 6px 14px -4px) so it glows softly.\n- Chips: pill-shaped, accent-tinted background, accent-colored bold text, no border.\n- Stats: equal-width tinted tiles in a row, bold numeral over small grey caption.\n\nMOTION\n- Spring easing over 200–260ms. Cards lift on hover (translateY -2px, deeper shadow); buttons scale down slightly (0.97) on press.\n\nAVOID\n- Hard shadows, visible borders on cards, sharp corners, pure black text, pure white page backgrounds, and dense/cramped spacing.",
+                  fallback: "[a habit tracking mobile app]",
+                  tip: "The colored button shadow is the trick most people miss — a neutral grey shadow under a colored button instantly looks generic.",
+                },
+                {
+                  id: "glass-console",
+                  label: "Glass Console",
+                  category: "Dark translucent — AI & realtime",
+                  bestFor: "AI products, monitoring dashboards, and anything with live data.",
+                  preview: `
+                    <style>
+                      body{background:radial-gradient(120% 100% at 15% 0%,#1B2A4A 0%,#0A0F1C 55%,#070A12 100%);color:#EAF0FF;}
+                      .card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.11);border-radius:15px;padding:15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.13);}
+                      .eyebrow{font-family:ui-monospace,Menlo,monospace;font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:#7C8BAE;margin:0 0 7px;}
+                      .title{font-size:17px;font-weight:600;letter-spacing:-.01em;margin:0 0 10px;}
+                      .chips{display:flex;gap:5px;margin:0 0 13px;}
+                      .chip{background:rgba(90,200,245,.11);border:1px solid rgba(90,200,245,.28);border-radius:6px;padding:2px 8px;font-size:9.5px;font-weight:600;color:#7FD9F5;}
+                      .btn{display:inline-block;background:linear-gradient(180deg,#3BA9E0,#2C7FC4);color:#fff;border-radius:9px;padding:8px 14px;font-size:11.5px;font-weight:600;box-shadow:0 0 18px rgba(59,169,224,.42);margin:0 0 14px;}
+                      .stats{display:flex;gap:20px;border-top:1px solid rgba(255,255,255,.1);padding-top:11px;}
+                      .num{font-size:18px;font-weight:600;line-height:1.1;}
+                      .lab{font-family:ui-monospace,Menlo,monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#7C8BAE;margin-top:3px;}
+                    </style>
+                    <div class="wrap"><div class="card">
+                      <p class="eyebrow">Design System</p>
+                      <h1 class="title">diagram-design</h1>
+                      <div class="chips"><span class="chip">HTML</span><span class="chip">MIT</span></div>
+                      <div class="btn">View on GitHub</div>
+                      <div class="stats">
+                        <div><div class="num">14.7k</div><div class="lab">Stars</div></div>
+                        <div><div class="num">885</div><div class="lab">Forks</div></div>
+                      </div>
+                    </div></div>
+                  `,
+                  elements: [
+                    { name: "Canvas", value: "A deep radial gradient — lit navy in one corner falling to near-black. Never a flat dark fill." },
+                    { name: "Surfaces", value: "Translucent white at 5–6% with backdrop-blur, over the gradient so the light shows through." },
+                    { name: "Border", value: "1px rgba(255,255,255,.11), plus an inset top highlight to fake a lit glass edge." },
+                    { name: "Accent", value: "Electric cyan (#3BA9E0 → #7FD9F5), always emitting light rather than sitting flat." },
+                    { name: "Glow", value: "Primary actions carry an outer glow (0 0 18px) in the accent hue." },
+                    { name: "Type", value: "Weight 600 sans for headings; monospace for all technical labels and readouts." },
+                    { name: "Radius", value: "9–15px, moderate — enough to feel like a panel, not a bubble." },
+                    { name: "Motion", value: "Slow ambient drift on the background; pulses and shimmers on live values." },
+                  ],
+                  template: "Design {subject}. STYLE: dark glass console — translucent, luminous, realtime.\n\nCANVAS\n- Background is a deep RADIAL GRADIENT, not a flat fill: a lit navy (#1B2A4A) in the top-left falling through #0A0F1C to near-black (#070A12). The light source must be visible.\n\nSURFACES\n- Panels are translucent white at 5–6% opacity with backdrop-blur(20px), sitting over the gradient so the light behind shows through.\n- Borders are 1px rgba(255,255,255,0.11), plus an INSET top highlight (inset 0 1px 0 rgba(255,255,255,0.13)) to fake a lit glass edge. This inset is what sells the material.\n- Border radius 9–15px — enough to feel like a panel, not a bubble.\n\nCOLOR\n- Electric cyan accent (#3BA9E0 into #7FD9F5). Accent elements should emit light, never sit flat.\n- Text in cool off-white (#EAF0FF) with a desaturated blue-grey secondary (#7C8BAE).\n\nTYPE\n- Headings in sans at weight 600 with -0.01em tracking.\n- ALL technical labels, units, timestamps and readouts in monospace, uppercase, ~0.12em letter-spacing, in the blue-grey secondary.\n\nCOMPONENTS\n- Primary button: subtle vertical gradient in the accent, plus an outer glow (0 0 18px rgba(59,169,224,0.42)).\n- Chips/badges: accent at ~11% fill with a ~28% accent border and bright accent text.\n- Stats: medium-weight numerals over monospace uppercase captions, divided by translucent hairlines.\n- Charts drawn in the accent with a soft gradient fade to transparent beneath the line.\n\nMOTION\n- Slow ambient drift on the background gradient (15s+, barely perceptible).\n- Live values pulse or shimmer briefly when they update. Transitions 200ms ease-out.\n\nAVOID\n- Flat dark backgrounds, opaque panels, pure black, hard shadows, warm colors, and heavy 700+ type weights.",
+                  fallback: "[a realtime model monitoring dashboard]",
+                  tip: "Glass only works over a gradient — on a flat dark background the translucency has nothing to reveal and the whole style collapses.",
+                },
+              ],
+            },
+          },
+        ],
+      },
     ],
     footer:
       "Foundation, rules, examples, words — run the loop and the AI ships UI that looks good. No magic prompt required.",
