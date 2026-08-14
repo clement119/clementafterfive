@@ -2388,6 +2388,19 @@ const journal = [
                   "repo": "https://github.com/pbakaus/impeccable"
                 },
                 {
+                  "name": "diagram-design",
+                  "type": "skill",
+                  "domain": "Design",
+                  "tag": "Diagram generator",
+                  "desc": "Turns plain descriptions into 27+ editorial diagram types — architecture, flowcharts, sequence, ER, timelines, Gantt — as clean, dependency-free HTML+SVG that can match your own site's colors and fonts.",
+                  "install": [
+                    "/plugin marketplace add cathrynlavery/diagram-design",
+                    "/plugin install diagram-design@diagram-design"
+                  ],
+                  "repo": "https://github.com/cathrynlavery/diagram-design",
+                  "note": "Can also import and redraw existing draw.io or Mermaid files. PNG export needs Python 3 + Playwright (pip install playwright && playwright install chromium)."
+                },
+                {
                   "name": "humanizer",
                   "type": "skill",
                   "domain": "Marketing & Content",
