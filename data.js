@@ -2446,6 +2446,17 @@ const journal = [
                   "repo": "https://github.com/heygen-com/hyperframes"
                 },
                 {
+                  "name": "oil-motion",
+                  "type": "skill",
+                  "domain": "Media & Creative",
+                  "tag": "Scroll-driven animation",
+                  "desc": "Turns a product or character image into one continuous AI-generated motion sequence, then wires it to scroll, mouse, drag, touch, or device tilt — the Apple-style 'scroll to unfold the product' effect.",
+                  "install": "Tell the agent: help me install this Skill from https://github.com/oil-oil/oil-motion",
+                  "demo": "https://github.com/user-attachments/assets/08e26ad6-ca23-4f31-ac53-44c7692ba99d",
+                  "repo": "https://github.com/oil-oil/oil-motion",
+                  "note": "Needs Python 3, Pillow, ffmpeg and a MiniMax API key (one-time setup) — the agent generates keyframes, then AI video between them, then packs the result into a web-ready sprite sheet or chroma-keyed MP4."
+                },
+                {
                   "name": "doc skills",
                   "type": "skill",
                   "domain": "Marketing & Content",

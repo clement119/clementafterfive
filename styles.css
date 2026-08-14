@@ -1495,6 +1495,13 @@ body {
   color: #93b1e6;
 }
 
+.skill-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+}
+
 .skill-link {
   align-self: flex-start;
   font-size: 13px;
@@ -1504,6 +1511,10 @@ body {
 }
 .skill-link:hover {
   text-decoration: underline;
+}
+
+.skill-link--demo {
+  color: var(--ink);
 }
 
 /* Action bar — select all / clear, live count, and combined copy */

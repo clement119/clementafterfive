@@ -701,14 +701,31 @@
         card.appendChild(note);
       }
 
-      if (s.repo) {
-        const link = document.createElement("a");
-        link.className = "skill-link";
-        link.href = s.repo;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        link.textContent = s.linkLabel || (s.repo.indexOf("github.com") > -1 ? "View on GitHub →" : "Open →");
-        card.appendChild(link);
+      if (s.demo || s.repo) {
+        const links = document.createElement("div");
+        links.className = "skill-links";
+
+        if (s.demo) {
+          const demo = document.createElement("a");
+          demo.className = "skill-link skill-link--demo";
+          demo.href = s.demo;
+          demo.target = "_blank";
+          demo.rel = "noopener noreferrer";
+          demo.textContent = "▶ Watch demo";
+          links.appendChild(demo);
+        }
+
+        if (s.repo) {
+          const link = document.createElement("a");
+          link.className = "skill-link";
+          link.href = s.repo;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = s.linkLabel || (s.repo.indexOf("github.com") > -1 ? "View on GitHub →" : "Open →");
+          links.appendChild(link);
+        }
+
+        card.appendChild(links);
       }
 
       cards.push({ el: card, type: s.type || "", domain: s.domain || "" });
