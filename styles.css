@@ -1116,6 +1116,42 @@ body {
   height: auto;
 }
 
+/* ---------- Sketch library (swipeable illustration styles) ---------- */
+/* min-width:0 is load-bearing: without it the deck grows to its content
+   width instead of scrolling, which breaks the nav's index math. */
+.sketch-library {
+  display: grid;
+  gap: 16px;
+  padding: 4px 0 2px;
+  min-width: 0;
+}
+
+/* Cards size to their own content rather than stretching to the tallest —
+   a card without a reference image would otherwise carry a tall block of
+   dead space, which is the only thing you'd see on a phone. */
+.sketch-deck {
+  align-items: flex-start;
+}
+
+.sketch-card {
+  flex: 0 0 88%;
+  max-width: 360px;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+@media (min-width: 620px) {
+  .sketch-card {
+    flex-basis: 360px;
+  }
+}
+
 /* ---------- UI style library (swipeable design directions) ---------- */
 /* min-width:0 is load-bearing: without it the deck grows to its content
    width instead of scrolling, which breaks the nav's index math. */

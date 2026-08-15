@@ -1399,6 +1399,435 @@ const journal = [
           },
         ],
       },
+      {
+        title: "Sketch",
+        pillar: "Media Creation & Edit",
+        items: [
+          {
+            text: "The hand-drawn, slightly-wrong look — wobbly outlines, uneven fills, colour that sits a hair off register, paper grain over everything. The imperfection is the point: it reads as made by a person, which is exactly why it cuts through in a feed full of clean AI gloss.",
+            plain: true,
+          },
+          {
+            text: "Six styles pulled apart below, each with its own builder. Set the subject and colours, then copy the prompt into any image model. (For single-colour icon sheets see Doodle Icon Sheet, and for 1930s rubber-hose characters see Anthropomorphic Cartoon Characters — both in the Digital Asset Generation tab.)",
+            plain: true,
+          },
+          {
+            sketchLibrary: {
+              styles: [
+                {
+                  id: "line-art-mascot",
+                  label: "Bold Line-Art Mascot",
+                  category: "Thick outline · flat ground · retro cartoon",
+                  image: "assets/examples/sketch-mascot.jpg",
+                  bestFor: "Coffee shops, merch, stickers, café signage — the workhorse of this whole look.",
+                  builder: {
+                    template:
+                      "A retro cartoon mascot illustration of {subject}, drawn in {ink} bold hand-inked outlines on a flat {ground} background. Thick uniform line weight with a visible hand-drawn wobble — lines are confident but never perfectly straight. Simple friendly face, {mood}. Flat fills only, no shading or gradients. {lettering} {finish} Slightly off-register colour, subtle paper grain, generous margin around the subject. Vintage 1950s-60s advertising mascot feel. No 3D, no gloss, no photorealism.",
+                    controls: [
+                      {
+                        id: "subject",
+                        label: "Character / subject",
+                        type: "input",
+                        placeholder: "e.g. a smiling man holding an espresso cup",
+                        fallback: "[your character]",
+                      },
+                      {
+                        id: "ink",
+                        label: "Ink colour",
+                        choices: [
+                          { label: "Black", value: "black", swatch: "#151515" },
+                          { label: "Espresso", value: "dark espresso brown", swatch: "#4A3121" },
+                          { label: "Navy", value: "deep navy", swatch: "#1B2F5E" },
+                          { label: "Forest", value: "dark forest green", swatch: "#22503C" },
+                          { label: "Oxblood", value: "deep oxblood red", swatch: "#7B2B24" },
+                        ],
+                      },
+                      {
+                        id: "ground",
+                        label: "Background colour",
+                        choices: [
+                          { label: "Cream", value: "warm cream", swatch: "#F2EBDC" },
+                          { label: "Periwinkle", value: "soft periwinkle blue", swatch: "#B9BEE8" },
+                          { label: "Butter", value: "butter yellow", swatch: "#F5CE4B" },
+                          { label: "Sage", value: "muted sage green", swatch: "#B7C8AC" },
+                          { label: "Dusty pink", value: "dusty pink", swatch: "#EBBFB6" },
+                          { label: "Sky", value: "pale sky blue", swatch: "#C3D8E8" },
+                        ],
+                      },
+                      {
+                        id: "mood",
+                        label: "Mood",
+                        choices: [
+                          { label: "Content", value: "eyes closed and blissfully content" },
+                          { label: "Cheerful", value: "grinning wide and cheerful" },
+                          { label: "Thumbs up", value: "giving an enthusiastic thumbs up" },
+                          { label: "Sleepy", value: "half-asleep and bleary" },
+                          { label: "Cool", value: "calm and effortlessly cool" },
+                        ],
+                      },
+                      {
+                        id: "lettering",
+                        label: "Lettering",
+                        choices: [
+                          { label: "Arched above", value: "A short bold word arched across the top in heavy condensed hand-drawn caps." },
+                          { label: "Stacked below", value: "A short bold tagline stacked in heavy hand-drawn caps beneath the character." },
+                          { label: "Both", value: "A bold word arched across the top and a short tagline stacked beneath the character, all in heavy hand-drawn caps." },
+                          { label: "None", value: "No text at all — character only." },
+                        ],
+                      },
+                      {
+                        id: "finish",
+                        label: "Finish",
+                        choices: [
+                          { label: "Screenprint", value: "Printed like a two-colour screenprint with slightly rough, ink-starved edges." },
+                          { label: "Risograph", value: "Risograph printed, with visible grain and a soft colour misregistration." },
+                          { label: "Clean vector", value: "Clean flat vector finish with crisp edges." },
+                          { label: "Worn sticker", value: "Printed as a worn vinyl sticker with faint scuffs and softened corners." },
+                        ],
+                      },
+                    ],
+                  },
+                  tip: "The wobble is what sells it — if the output looks too clean, add \"drawn by hand, imperfect line weight, no ruler-straight edges\".",
+                },
+                {
+                  id: "ballpoint-doodle",
+                  label: "Ballpoint Doodle",
+                  category: "Biro on paper · loose · annotated",
+                  image: "assets/examples/sketch-ballpoint.jpg",
+                  bestFor: "Idea posts, notebook aesthetics, personal brand, 'thinking out loud' content.",
+                  builder: {
+                    template:
+                      "A loose ballpoint pen doodle of {subject}, drawn in {pen} biro on {paper}. Sketchy searching linework with visible overdrawn strokes, uneven pressure, and small mistakes left in — the kind of thing doodled in the margin of a notebook while thinking. {density} {annotations} Slight ink pooling at stroke ends, faint indentation in the paper, no colour fills beyond the pen itself. Casual, energetic, unpolished. No clean vector lines, no shading, no digital smoothness.",
+                    controls: [
+                      {
+                        id: "subject",
+                        label: "What to doodle",
+                        type: "input",
+                        placeholder: "e.g. a person running, a hand holding a mug",
+                        fallback: "[your subject]",
+                      },
+                      {
+                        id: "pen",
+                        label: "Pen colour",
+                        choices: [
+                          { label: "Blue", value: "standard blue", swatch: "#2C4BC4" },
+                          { label: "Black", value: "black", swatch: "#1A1A1A" },
+                          { label: "Red", value: "red", swatch: "#C0342B" },
+                          { label: "Green", value: "green", swatch: "#2E7A4F" },
+                        ],
+                      },
+                      {
+                        id: "paper",
+                        label: "Paper",
+                        choices: [
+                          { label: "Cream", value: "slightly aged cream paper" },
+                          { label: "White", value: "plain white paper" },
+                          { label: "Grid", value: "faint grid paper" },
+                          { label: "Lined", value: "faint blue-lined notebook paper" },
+                          { label: "Graph", value: "pale orange graph paper" },
+                        ],
+                      },
+                      {
+                        id: "density",
+                        label: "How much on the page",
+                        choices: [
+                          { label: "One sketch", value: "A single drawing centred with plenty of empty paper around it." },
+                          { label: "A few around", value: "The main drawing plus two or three smaller related doodles scattered nearby." },
+                          { label: "Full page", value: "A full page of overlapping doodles and half-finished sketches." },
+                        ],
+                      },
+                      {
+                        id: "annotations",
+                        label: "Handwriting",
+                        choices: [
+                          { label: "Scrawled notes", value: "Messy handwritten notes and arrows scrawled around the drawing in the same pen." },
+                          { label: "One label", value: "A single scrawled handwritten label beside the drawing." },
+                          { label: "Underlines", value: "A few emphatic hand-drawn underlines and squiggles beneath the drawing." },
+                          { label: "None", value: "No handwriting anywhere." },
+                        ],
+                      },
+                    ],
+                  },
+                  tip: "Ask for \"visible overdrawn strokes and mistakes left in\" — models default to one clean confident line, which reads as vector art, not biro.",
+                },
+                {
+                  id: "flat-character-set",
+                  label: "Flat Character Set",
+                  category: "No outline · bold silhouette · faces",
+                  image: "assets/examples/sketch-character-set.jpg",
+                  bestFor: "Packaging, menu art, product ranges — a family of characters that work as a set.",
+                  builder: {
+                    template:
+                      "A set of {count} anthropomorphic {objects} arranged in a grid on a flat {ground} background. Each character is a bold simple silhouette in {body}, with {outline}, and a tiny expressive face made of simple black shapes — {expression}. Cut-paper feel: strong flat shapes, no gradients, no highlights, no 3D rendering. Heavy printed grain and texture across the whole image, colours slightly off-register like a screenprint. Characters sized consistently and evenly spaced with generous margins. Mid-century printed illustration.",
+                    controls: [
+                      {
+                        id: "objects",
+                        label: "Objects to personify",
+                        type: "input",
+                        placeholder: "e.g. root vegetables, coffee cups, sushi pieces",
+                        fallback: "[your objects]",
+                      },
+                      {
+                        id: "count",
+                        label: "How many",
+                        choices: [
+                          { label: "4", value: "four" },
+                          { label: "6", value: "six" },
+                          { label: "9", value: "nine" },
+                        ],
+                      },
+                      {
+                        id: "ground",
+                        label: "Background colour",
+                        choices: [
+                          { label: "Brick red", value: "deep brick red", swatch: "#A8432F" },
+                          { label: "Ink", value: "near-black ink", swatch: "#151515" },
+                          { label: "Mustard", value: "warm mustard", swatch: "#D9A227" },
+                          { label: "Teal", value: "deep teal", swatch: "#1F5F63" },
+                          { label: "Cream", value: "warm cream", swatch: "#F2EBDC" },
+                        ],
+                      },
+                      {
+                        id: "body",
+                        label: "Body colour",
+                        choices: [
+                          { label: "Bone", value: "off-white bone", swatch: "#E8E2D3" },
+                          { label: "Cream", value: "pale cream", swatch: "#F4EEDF" },
+                          { label: "Butter", value: "soft butter yellow", swatch: "#EBCB6B" },
+                          { label: "Sage", value: "muted sage", swatch: "#A9BCA0" },
+                          { label: "Blush", value: "dusty blush", swatch: "#E0AFA4" },
+                        ],
+                      },
+                      {
+                        id: "expression",
+                        label: "Expressions",
+                        choices: [
+                          { label: "Grumpy", value: "furrowed angry brows and small frowns, comically grumpy" },
+                          { label: "Cute", value: "wide happy eyes and little smiles, sweet and cute" },
+                          { label: "Mixed", value: "a different expression on each one — grumpy, delighted, suspicious, sleepy" },
+                          { label: "Sleepy", value: "heavy-lidded sleepy eyes and small content smiles" },
+                          { label: "Mischievous", value: "sly narrowed eyes and crooked little grins" },
+                        ],
+                      },
+                      {
+                        id: "outline",
+                        label: "Outline",
+                        choices: [
+                          { label: "None", value: "no outline at all — the shape reads purely as a flat silhouette" },
+                          { label: "Thin dark", value: "a thin darker outline hugging the silhouette" },
+                        ],
+                      },
+                    ],
+                  },
+                  tip: "\"Cut-paper feel\" plus \"heavy printed grain\" is the combination that stops these coming out as glossy 3D icons.",
+                },
+                {
+                  id: "hand-lettered",
+                  label: "Hand-Lettered Display",
+                  category: "Chunky outlined type · drawn, not typed",
+                  image: "assets/examples/sketch-lettering.jpg",
+                  bestFor: "Merch, headers, packaging fronts, sticker packs, café boards.",
+                  builder: {
+                    template:
+                      "A hand-lettered display design of the word \"{word}\" on a flat {ground} background. The lettering is {letterstyle}, drawn by hand in {ink} — every letter slightly irregular in width and spacing, clearly drawn rather than typeset, with a soft wobble to the contours. Letters fill most of the composition and sit slightly unevenly on the baseline. {extras} Flat colour only, no gradients, no bevels, no 3D extrusion, no drop shadows. Printed texture with light grain and a faint colour misregistration.",
+                    controls: [
+                      {
+                        id: "word",
+                        label: "Word or phrase",
+                        type: "input",
+                        placeholder: "e.g. MORNING FUEL",
+                        fallback: "[YOUR WORD]",
+                      },
+                      {
+                        id: "letterstyle",
+                        label: "Letter style",
+                        choices: [
+                          { label: "Chunky rounded", value: "chunky rounded bold caps with thick soft-cornered strokes" },
+                          { label: "Outlined bubble", value: "fat bubble letters with a heavy outline and a hollow centre" },
+                          { label: "Groovy 70s", value: "groovy 1970s letterforms with swollen curves and tight interlocking spacing" },
+                          { label: "Western slab", value: "heavy western slab-serif caps with thick wedge serifs" },
+                          { label: "Condensed", value: "tall tightly-packed condensed caps" },
+                        ],
+                      },
+                      {
+                        id: "ink",
+                        label: "Letter colour",
+                        choices: [
+                          { label: "Espresso", value: "dark espresso brown", swatch: "#4A3121" },
+                          { label: "Black", value: "black", swatch: "#151515" },
+                          { label: "Oxblood", value: "deep oxblood red", swatch: "#7B2B24" },
+                          { label: "Forest", value: "dark forest green", swatch: "#22503C" },
+                          { label: "Mustard", value: "warm mustard", swatch: "#D9A227" },
+                        ],
+                      },
+                      {
+                        id: "ground",
+                        label: "Background colour",
+                        choices: [
+                          { label: "Pale blue", value: "pale powder blue", swatch: "#C3D8E8" },
+                          { label: "Cream", value: "warm cream", swatch: "#F2EBDC" },
+                          { label: "Butter", value: "butter yellow", swatch: "#F5CE4B" },
+                          { label: "Blush", value: "dusty blush pink", swatch: "#EBBFB6" },
+                          { label: "Sage", value: "muted sage green", swatch: "#B7C8AC" },
+                        ],
+                      },
+                      {
+                        id: "extras",
+                        label: "Around the type",
+                        choices: [
+                          { label: "Line-art mascots", value: "Two small hand-drawn line-art animal mascots sit beneath the lettering." },
+                          { label: "Arrows & stars", value: "Small hand-drawn arrows, stars and sparkles are scattered around the lettering." },
+                          { label: "Small caption", value: "A small line of hand-lettered caption text sits beneath the main word." },
+                          { label: "Nothing", value: "Nothing else in the composition — just the lettering." },
+                        ],
+                      },
+                    ],
+                  },
+                  tip: "Image models often typeset instead of drawing. \"Every letter slightly irregular, clearly drawn rather than typeset\" is the line that forces real lettering.",
+                },
+                {
+                  id: "badge-emblem",
+                  label: "Badge / Emblem",
+                  category: "Curved lockup · roundel · heritage",
+                  bestFor: "Logos, stamps, packaging seals, market stalls, coffee bags.",
+                  builder: {
+                    template:
+                      "A hand-drawn {shape} badge emblem for \"{brand}\", printed in {ink} on a flat {ground} background. The brand name curves around the outer edge of the badge following its contour, set in slightly irregular hand-drawn caps. At the centre sits a simple bold illustration of {motif}, reduced to flat graphic shapes. {era} A thin hand-drawn border traces just inside the outer edge, with small drawn stars or dots separating the start and end of the curved text. Two-colour print only, flat fills, visible grain and slightly rough ink edges. No gradients, no 3D, no glossy rendering.",
+                    controls: [
+                      {
+                        id: "brand",
+                        label: "Brand name",
+                        type: "input",
+                        placeholder: "e.g. VALLEY GROVE FARM",
+                        fallback: "[BRAND NAME]",
+                      },
+                      {
+                        id: "motif",
+                        label: "Centre motif",
+                        type: "input",
+                        placeholder: "e.g. an avocado cut in half",
+                        fallback: "[your motif]",
+                      },
+                      {
+                        id: "shape",
+                        label: "Badge shape",
+                        choices: [
+                          { label: "Circle", value: "circular" },
+                          { label: "Oval", value: "tall oval" },
+                          { label: "Shield", value: "shield-shaped" },
+                          { label: "Rounded square", value: "rounded-square" },
+                        ],
+                      },
+                      {
+                        id: "ink",
+                        label: "Ink colour",
+                        choices: [
+                          { label: "Cream", value: "cream", swatch: "#F2EBDC" },
+                          { label: "Black", value: "black", swatch: "#151515" },
+                          { label: "Mustard", value: "warm mustard", swatch: "#D9A227" },
+                          { label: "Oxblood", value: "deep oxblood red", swatch: "#7B2B24" },
+                        ],
+                      },
+                      {
+                        id: "ground",
+                        label: "Background colour",
+                        choices: [
+                          { label: "Forest", value: "deep forest green", swatch: "#22503C" },
+                          { label: "Navy", value: "deep navy", swatch: "#1B2F5E" },
+                          { label: "Brick", value: "brick red", swatch: "#A8432F" },
+                          { label: "Cream", value: "warm cream", swatch: "#F2EBDC" },
+                          { label: "Teal", value: "deep teal", swatch: "#1F5F63" },
+                        ],
+                      },
+                      {
+                        id: "era",
+                        label: "Era",
+                        choices: [
+                          { label: "Farmers market", value: "Wholesome farmers-market produce-label character." },
+                          { label: "Vintage 70s", value: "1970s national-park patch character, warm and slightly faded." },
+                          { label: "Collegiate", value: "Collegiate varsity crest character, confident and symmetrical." },
+                          { label: "Heritage", value: "Old heritage trademark character, like a stamp pressed into a crate." },
+                        ],
+                      },
+                    ],
+                  },
+                  tip: "Say \"the brand name curves around the outer edge following its contour\" — without that, models set the text flat across the middle and it stops reading as a badge.",
+                },
+                {
+                  id: "repeat-pattern",
+                  label: "Repeat Pattern",
+                  category: "Bold motif · flat · tiles seamlessly",
+                  image: "assets/examples/sketch-pattern.jpg",
+                  bestFor: "Packaging wraps, backgrounds, tote prints, story backdrops.",
+                  builder: {
+                    template:
+                      "A {seamless} pattern of {motif} on a flat {ground} background. The motifs are drawn as bold flat graphic shapes in {motifcolor}, {scale}, arranged in {layout}. Hand-drawn edges with a slight wobble and uneven weight — clearly illustrated rather than geometrically generated. Flat colour only, no gradients, no shadows, no 3D. Screenprint texture with visible grain and a faint colour misregistration between layers. High contrast and graphic, the motifs reading clearly even at small size.",
+                    controls: [
+                      {
+                        id: "motif",
+                        label: "Motif",
+                        type: "input",
+                        placeholder: "e.g. watermelon slices, coffee beans, citrus halves",
+                        fallback: "[your motif]",
+                      },
+                      {
+                        id: "ground",
+                        label: "Background colour",
+                        choices: [
+                          { label: "Ink", value: "near-black ink", swatch: "#151515" },
+                          { label: "Cream", value: "warm cream", swatch: "#F2EBDC" },
+                          { label: "Forest", value: "deep forest green", swatch: "#22503C" },
+                          { label: "Navy", value: "deep navy", swatch: "#1B2F5E" },
+                          { label: "Blush", value: "dusty blush pink", swatch: "#EBBFB6" },
+                        ],
+                      },
+                      {
+                        id: "motifcolor",
+                        label: "Motif colour",
+                        choices: [
+                          { label: "Watermelon", value: "bright watermelon red with deep green accents", swatch: "#E24B34" },
+                          { label: "Mustard", value: "warm mustard yellow", swatch: "#D9A227" },
+                          { label: "Cream", value: "soft cream", swatch: "#F2EBDC" },
+                          { label: "Sage", value: "muted sage green", swatch: "#A9BCA0" },
+                          { label: "Terracotta", value: "burnt terracotta", swatch: "#C2603C" },
+                        ],
+                      },
+                      {
+                        id: "scale",
+                        label: "Motif scale",
+                        choices: [
+                          { label: "Large", value: "large and cropped by the edges of the frame" },
+                          { label: "Medium", value: "medium sized with even breathing room between them" },
+                          { label: "Small", value: "small and densely packed" },
+                        ],
+                      },
+                      {
+                        id: "layout",
+                        label: "Layout",
+                        choices: [
+                          { label: "Grid", value: "a strict aligned grid" },
+                          { label: "Half-drop", value: "a half-drop repeat, each column offset vertically from the last" },
+                          { label: "Scattered", value: "a loose scattered arrangement at varying rotations" },
+                          { label: "Stripes", value: "horizontal rows alternating direction like stripes" },
+                        ],
+                      },
+                      {
+                        id: "seamless",
+                        label: "Tiling",
+                        choices: [
+                          { label: "Seamless tile", value: "seamless, edge-to-edge tileable" },
+                          { label: "Single panel", value: "single self-contained panel" },
+                        ],
+                      },
+                    ],
+                  },
+                  tip: "For real wrapping paper or fabric, keep \"seamless, edge-to-edge tileable\" — otherwise the edges won't line up when repeated.",
+                },
+              ],
+            },
+          },
+        ],
+      },
     ],
     footer:
       "Pick 2–3 per piece of content. That's enough to sharpen thinking, improve clarity, and increase performance.",

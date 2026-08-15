@@ -770,6 +770,7 @@
     if (item && item.progressBarBuilder) return buildProgressBarBuilder(item.progressBarBuilder);
     if (item && item.posterLibrary) return buildPosterLibrary(item.posterLibrary);
     if (item && item.uiStyleLibrary) return buildUIStyleLibrary(item.uiStyleLibrary);
+    if (item && item.sketchLibrary) return buildSketchLibrary(item.sketchLibrary);
     if (item && item.heading != null) return buildHeading(item.heading);
 
     const { text, copyable, plain } = normalizeItem(item);
@@ -1788,6 +1789,73 @@
 
     wrap.appendChild(deck);
     wrap.appendChild(buildDeckNav(deck, ".uistyle-card", styles.length, "style"));
+
+    return wrap;
+  }
+
+  // Sketch library — swipe through illustration styles, each card carrying a
+  // reference crop plus its own full builder. Unlike the poster deck (one
+  // subject box per card), the whole control set lives inside the card, so
+  // buildBuilder is embedded wholesale rather than reimplemented; per-card
+  // state then survives swiping away and back for free.
+  function buildSketchLibrary(cfg) {
+    const wrap = document.createElement("div");
+    wrap.className = "sketch-library";
+
+    const styles = Array.isArray(cfg.styles) ? cfg.styles : [];
+
+    const deck = document.createElement("div");
+    deck.className = "persona-deck sketch-deck";
+
+    styles.forEach((style) => {
+      const card = document.createElement("article");
+      card.className = "sketch-card";
+
+      const name = document.createElement("h3");
+      name.className = "persona-name";
+      name.textContent = style.label || "";
+      card.appendChild(name);
+
+      if (style.category) {
+        const category = document.createElement("p");
+        category.className = "poster-category";
+        category.textContent = style.category;
+        card.appendChild(category);
+      }
+
+      if (style.image) {
+        const imgWrap = document.createElement("div");
+        imgWrap.className = "poster-image-wrap";
+        const img = document.createElement("img");
+        img.className = "poster-image";
+        img.src = style.image;
+        img.loading = "lazy";
+        img.alt = style.label ? style.label + " reference" : "Style reference";
+        imgWrap.appendChild(img);
+        card.appendChild(imgWrap);
+      }
+
+      if (style.bestFor) {
+        const bestFor = document.createElement("p");
+        bestFor.className = "persona-tag";
+        bestFor.textContent = style.bestFor;
+        card.appendChild(bestFor);
+      }
+
+      if (style.builder) card.appendChild(buildBuilder(style.builder));
+
+      if (style.tip) {
+        const tip = document.createElement("p");
+        tip.className = "skill-note";
+        tip.textContent = style.tip;
+        card.appendChild(tip);
+      }
+
+      deck.appendChild(card);
+    });
+
+    wrap.appendChild(deck);
+    wrap.appendChild(buildDeckNav(deck, ".sketch-card", styles.length, "style"));
 
     return wrap;
   }
