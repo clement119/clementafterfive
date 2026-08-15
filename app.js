@@ -771,6 +771,7 @@
     if (item && item.posterLibrary) return buildPosterLibrary(item.posterLibrary);
     if (item && item.uiStyleLibrary) return buildUIStyleLibrary(item.uiStyleLibrary);
     if (item && item.sketchLibrary) return buildSketchLibrary(item.sketchLibrary);
+    if (item && item.stylePicker) return buildStylePicker(item.stylePicker);
     if (item && item.heading != null) return buildHeading(item.heading);
 
     const { text, copyable, plain } = normalizeItem(item);
@@ -1857,6 +1858,435 @@
     wrap.appendChild(deck);
     wrap.appendChild(buildDeckNav(deck, ".sketch-card", styles.length, "style"));
 
+    return wrap;
+  }
+
+  // --- Style swatches -------------------------------------------------
+  // 50 styles need 50 previews, and the source article's artwork can't be
+  // republished — so each style declares a palette plus one of these motifs
+  // and the tile is composed from CSS gradients. Twelve generators across
+  // fifty palettes gives every style a distinct, instantly-loading preview
+  // with no image assets. These read as palette-and-texture swatches, not
+  // as finished artwork, which is what the copy beside them says.
+  function hexA(hex, alpha) {
+    const h = String(hex).replace("#", "");
+    const n = parseInt(h.length === 3 ? h.replace(/./g, (c) => c + c) : h, 16);
+    return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+  }
+
+  // Each generator returns { image, size? } and is handed the style's
+  // palette as [ground, primary, secondary, accent]; accent falls back to
+  // primary so a 3-colour palette is legal.
+  const STYLE_MOTIFS = {
+    flat: (p) => ({
+      image: `linear-gradient(148deg, ${p[1]} 0%, ${p[2]} 58%, ${p[3]} 100%)`,
+    }),
+    grid: (p) => ({
+      image:
+        `radial-gradient(circle at 50% 62%, ${p[3]} 0 14%, transparent 14.5%),` +
+        `repeating-linear-gradient(90deg, ${hexA(p[1], 0.55)} 0 1px, transparent 1px 14px),` +
+        `repeating-linear-gradient(0deg, ${hexA(p[1], 0.45)} 0 1px, transparent 1px 18px),` +
+        `linear-gradient(180deg, ${p[2]} 0%, ${p[0]} 70%)`,
+    }),
+    dots: (p) => ({
+      image:
+        `radial-gradient(${p[1]} 26%, transparent 27%),` +
+        `radial-gradient(${p[3]} 22%, transparent 23%),` +
+        `linear-gradient(160deg, ${p[2]}, ${p[0]})`,
+      size: "18px 18px, 18px 18px, cover",
+      position: "0 0, 9px 9px, 0 0",
+    }),
+    arcs: (p) => ({
+      image:
+        `radial-gradient(circle at 0% 100%, transparent 30%, ${p[1]} 31% 46%, transparent 47%),` +
+        `radial-gradient(circle at 100% 0%, transparent 24%, ${p[3]} 25% 40%, transparent 41%),` +
+        `radial-gradient(circle at 100% 100%, ${p[2]} 0 28%, transparent 29%),` +
+        `linear-gradient(140deg, ${p[0]}, ${p[2]})`,
+    }),
+    stripes: (p) => ({
+      image:
+        `repeating-linear-gradient(48deg, ${p[1]} 0 11px, ${p[0]} 11px 22px, ${p[3]} 22px 27px, ${p[0]} 27px 38px)`,
+    }),
+    blobs: (p) => ({
+      image:
+        `radial-gradient(ellipse 62% 48% at 22% 26%, ${hexA(p[1], 0.95)}, transparent 70%),` +
+        `radial-gradient(ellipse 58% 52% at 82% 34%, ${hexA(p[3], 0.9)}, transparent 72%),` +
+        `radial-gradient(ellipse 78% 56% at 50% 96%, ${hexA(p[2], 0.95)}, transparent 74%),` +
+        `linear-gradient(180deg, ${p[0]}, ${p[2]})`,
+    }),
+    rays: (p) => ({
+      image:
+        `conic-gradient(from 12deg at 50% 58%, ${p[1]} 0 8deg, transparent 8deg 30deg, ${p[3]} 30deg 38deg, transparent 38deg 60deg),` +
+        `radial-gradient(circle at 50% 58%, ${p[3]} 0 12%, transparent 13%),` +
+        `linear-gradient(180deg, ${p[2]}, ${p[0]})`,
+    }),
+    glass: (p) => ({
+      image:
+        `linear-gradient(122deg, ${hexA("#ffffff", 0.5)} 0 26%, transparent 26.5% 44%, ${hexA("#ffffff", 0.28)} 44.5% 62%, transparent 63%),` +
+        `radial-gradient(ellipse 60% 60% at 26% 22%, ${p[1]}, transparent 68%),` +
+        `radial-gradient(ellipse 62% 62% at 78% 76%, ${p[3]}, transparent 70%),` +
+        `linear-gradient(150deg, ${p[2]}, ${p[0]})`,
+    }),
+    mosaic: (p) => ({
+      image:
+        `linear-gradient(45deg, ${p[1]} 25%, transparent 25% 75%, ${p[1]} 75%),` +
+        `linear-gradient(45deg, ${p[3]} 25%, transparent 25% 75%, ${p[3]} 75%),` +
+        `linear-gradient(160deg, ${p[2]}, ${p[0]})`,
+      size: "16px 16px, 16px 16px, cover",
+      position: "0 0, 8px 8px, 0 0",
+    }),
+    grain: (p) => ({
+      image:
+        `repeating-linear-gradient(101deg, ${hexA(p[1], 0.5)} 0 1px, transparent 1px 4px),` +
+        `repeating-linear-gradient(7deg, ${hexA(p[3], 0.42)} 0 1px, transparent 1px 3px),` +
+        `linear-gradient(155deg, ${p[2]}, ${p[0]})`,
+    }),
+    ornate: (p) => ({
+      image:
+        `radial-gradient(circle at 50% 0%, transparent 44%, ${p[3]} 45% 50%, transparent 51%),` +
+        `radial-gradient(circle at 0% 50%, transparent 44%, ${p[1]} 45% 50%, transparent 51%),` +
+        `radial-gradient(circle at 100% 50%, transparent 44%, ${p[1]} 45% 50%, transparent 51%),` +
+        `linear-gradient(150deg, ${p[0]}, ${p[2]})`,
+      size: "26px 26px, 26px 26px, 26px 26px, cover",
+    }),
+    chiaroscuro: (p) => ({
+      image:
+        `radial-gradient(ellipse 46% 40% at 38% 28%, ${p[3]} 0%, ${hexA(p[1], 0.75)} 34%, transparent 68%),` +
+        `radial-gradient(ellipse 90% 80% at 38% 28%, ${p[2]} 0%, transparent 76%),` +
+        `linear-gradient(150deg, ${p[0]}, #000)`,
+    }),
+  };
+
+  function applySwatch(el, style) {
+    const p = Array.isArray(style.palette) ? style.palette.slice() : [];
+    while (p.length < 4) p.push(p[p.length - 1] || "#888888");
+    const gen = STYLE_MOTIFS[style.motif] || STYLE_MOTIFS.flat;
+    const spec = gen(p);
+    el.style.backgroundColor = p[0];
+    el.style.backgroundImage = spec.image;
+    if (spec.size) el.style.backgroundSize = spec.size;
+    if (spec.position) el.style.backgroundPosition = spec.position;
+  }
+
+  function styleSwatch(style, cls) {
+    const el = document.createElement("span");
+    el.className = "style-swatch" + (cls ? " " + cls : "");
+    el.setAttribute("aria-hidden", "true");
+    applySwatch(el, style);
+    return el;
+  }
+
+  // --- 50 design styles picker ----------------------------------------
+  // A searchable listbox rather than buildBuilder's pills: fifty options as
+  // pills would be unusable. Everything else borrows the builder's class
+  // vocabulary so it reads as the same family of control.
+  function buildStylePicker(cfg) {
+    const styles = Array.isArray(cfg.styles) ? cfg.styles : [];
+    const outputTypes = Array.isArray(cfg.outputTypes) ? cfg.outputTypes : [];
+    if (!styles.length) return document.createElement("div");
+
+    const wrap = document.createElement("div");
+    wrap.className = "style-picker";
+
+    let selIdx = 0;
+    let outIdx = 0;
+    let sourceIdx = 0; // 0 = describe, 1 = uploaded image
+    let open = false;
+
+    // ---- trigger ----
+    const field = document.createElement("div");
+    field.className = "builder-control";
+    const fieldLabel = document.createElement("span");
+    fieldLabel.className = "builder-label";
+    fieldLabel.textContent = "Design style";
+
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "style-trigger";
+    trigger.setAttribute("aria-haspopup", "listbox");
+    trigger.setAttribute("aria-expanded", "false");
+
+    const trigSwatch = styleSwatch(styles[0]);
+    const trigText = document.createElement("span");
+    trigText.className = "style-trigger-text";
+    const trigName = document.createElement("span");
+    trigName.className = "style-trigger-name";
+    const trigCat = document.createElement("span");
+    trigCat.className = "style-trigger-cat";
+    trigText.append(trigName, trigCat);
+    const chev = document.createElement("span");
+    chev.className = "style-chevron";
+    chev.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>`;
+    trigger.append(trigSwatch, trigText, chev);
+
+    // ---- popup ----
+    const popup = document.createElement("div");
+    popup.className = "style-popup";
+    popup.hidden = true;
+
+    const search = document.createElement("input");
+    search.type = "text";
+    search.className = "builder-input style-search";
+    search.placeholder = "Search " + styles.length + " styles…";
+    search.setAttribute("aria-label", "Search design styles");
+
+    const list = document.createElement("div");
+    list.className = "style-list";
+    list.setAttribute("role", "listbox");
+    list.setAttribute("aria-label", "Design styles");
+
+    const empty = document.createElement("p");
+    empty.className = "style-empty";
+    empty.textContent = "No styles match that search.";
+    empty.hidden = true;
+
+    // Options are built once and shown/hidden on filter, so the swatches
+    // aren't recomposed on every keystroke.
+    const optionEls = [];
+    const groupEls = [];
+    let currentCat = null;
+    styles.forEach((s, i) => {
+      if (s.category !== currentCat) {
+        currentCat = s.category;
+        const g = document.createElement("p");
+        g.className = "style-group";
+        g.textContent = s.category;
+        list.appendChild(g);
+        groupEls.push({ el: g, cat: s.category });
+      }
+      const opt = document.createElement("button");
+      opt.type = "button";
+      opt.className = "style-option";
+      opt.setAttribute("role", "option");
+      opt.setAttribute("aria-selected", i === 0 ? "true" : "false");
+      opt.dataset.index = String(i);
+
+      const t = document.createElement("span");
+      t.className = "style-option-text";
+      const n = document.createElement("span");
+      n.className = "style-option-name";
+      n.textContent = s.name;
+      const d = document.createElement("span");
+      d.className = "style-option-desc";
+      d.textContent = s.desc || "";
+      t.append(n, d);
+
+      opt.append(styleSwatch(s), t);
+      opt.addEventListener("click", () => {
+        select(i);
+        closePopup(true);
+      });
+      list.appendChild(opt);
+      optionEls.push({ el: opt, style: s, cat: s.category });
+    });
+
+    popup.append(search, list, empty);
+    field.append(fieldLabel, trigger, popup);
+
+    // ---- detail panel ----
+    const detail = document.createElement("div");
+    detail.className = "style-detail";
+    const detailSwatch = document.createElement("span");
+    detailSwatch.className = "style-swatch style-swatch--lg";
+    detailSwatch.setAttribute("aria-hidden", "true");
+    const detailDesc = document.createElement("p");
+    detailDesc.className = "style-detail-desc";
+    const detailEls = document.createElement("p");
+    detailEls.className = "style-detail-elements";
+    detail.append(detailSwatch, detailDesc, detailEls);
+
+    // ---- source fork (mirrors the Doodle Icon Sheet's describe/upload) ----
+    const srcGroup = document.createElement("div");
+    srcGroup.className = "builder-control";
+    const srcLabel = document.createElement("span");
+    srcLabel.className = "builder-label";
+    srcLabel.textContent = "Source";
+    const srcChoices = document.createElement("div");
+    srcChoices.className = "builder-choices";
+    const SOURCES = ["Describe an object", "From my uploaded image"];
+    const srcBtns = SOURCES.map((label, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "choice-btn";
+      b.textContent = label;
+      b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+      b.addEventListener("click", () => {
+        sourceIdx = i;
+        srcBtns.forEach((o, j) => o.setAttribute("aria-pressed", j === i ? "true" : "false"));
+        objGroup.hidden = i !== 0;
+        update();
+      });
+      srcChoices.appendChild(b);
+      return b;
+    });
+    srcGroup.append(srcLabel, srcChoices);
+
+    const objGroup = document.createElement("div");
+    objGroup.className = "builder-control";
+    const objLabel = document.createElement("span");
+    objLabel.className = "builder-label";
+    objLabel.textContent = "Object to render";
+    const objInput = document.createElement("input");
+    objInput.type = "text";
+    objInput.className = "builder-input";
+    objInput.placeholder = cfg.placeholder || "e.g. a coffee cup, a running shoe, a landing page hero";
+    objInput.addEventListener("input", update);
+    objGroup.append(objLabel, objInput);
+
+    // ---- output type ----
+    const outGroup = document.createElement("div");
+    outGroup.className = "builder-control";
+    const outLabel = document.createElement("span");
+    outLabel.className = "builder-label";
+    outLabel.textContent = "What are you making?";
+    const outChoices = document.createElement("div");
+    outChoices.className = "builder-choices";
+    const outBtns = outputTypes.map((o, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "choice-btn";
+      b.textContent = o.label;
+      b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+      b.addEventListener("click", () => {
+        outIdx = i;
+        outBtns.forEach((x, j) => x.setAttribute("aria-pressed", j === i ? "true" : "false"));
+        update();
+      });
+      outChoices.appendChild(b);
+      return b;
+    });
+    outGroup.append(outLabel, outChoices);
+
+    // ---- output ----
+    const outBox = document.createElement("div");
+    outBox.className = "item builder-output";
+    const outText = document.createElement("p");
+    outText.className = "item-text";
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy-btn";
+    copyBtn.type = "button";
+    copyBtn.setAttribute("aria-label", "Copy style prompt");
+    copyBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+    copyBtn.addEventListener("click", () => copyText(assemble(), copyBtn));
+    outBox.append(outText, copyBtn);
+
+    function assemble() {
+      const s = styles[selIdx];
+      const out = outputTypes[outIdx] || { value: "An image" };
+      const subject =
+        sourceIdx === 1
+          ? "the subject of the uploaded image"
+          : objInput.value.trim() || "[describe your object]";
+      let text = `${out.value} of ${subject}. STYLE: ${s.name} — ${s.directive}`;
+      if (sourceIdx === 1) {
+        text +=
+          " Keep the subject, proportions and composition of the uploaded image; restyle it completely in this style rather than redrawing it from scratch.";
+      }
+      return text;
+    }
+
+    function update() {
+      outText.textContent = assemble();
+    }
+
+    function select(i) {
+      selIdx = i;
+      const s = styles[i];
+      applySwatch(trigSwatch, s);
+      applySwatch(detailSwatch, s);
+      trigName.textContent = s.name;
+      trigCat.textContent = s.category || "";
+      detailDesc.textContent = s.desc || "";
+      detailEls.textContent = s.elements ? "Core elements — " + s.elements : "";
+      optionEls.forEach((o, j) => o.el.setAttribute("aria-selected", j === i ? "true" : "false"));
+      update();
+    }
+
+    function applyFilter() {
+      const q = search.value.trim().toLowerCase();
+      let shown = 0;
+      const catHas = {};
+      optionEls.forEach((o) => {
+        const hit =
+          !q ||
+          o.style.name.toLowerCase().indexOf(q) > -1 ||
+          String(o.style.category || "").toLowerCase().indexOf(q) > -1 ||
+          String(o.style.desc || "").toLowerCase().indexOf(q) > -1;
+        o.el.hidden = !hit;
+        if (hit) {
+          shown++;
+          catHas[o.cat] = true;
+        }
+      });
+      groupEls.forEach((g) => (g.el.hidden = !catHas[g.cat]));
+      empty.hidden = shown > 0;
+    }
+
+    function visibleOptions() {
+      return optionEls.filter((o) => !o.el.hidden).map((o) => o.el);
+    }
+
+    function openPopup() {
+      open = true;
+      popup.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+      search.value = "";
+      applyFilter();
+      search.focus();
+    }
+    function closePopup(focusTrigger) {
+      open = false;
+      popup.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+      if (focusTrigger) trigger.focus();
+    }
+
+    trigger.addEventListener("click", () => (open ? closePopup(false) : openPopup()));
+    search.addEventListener("input", applyFilter);
+
+    // Keyboard: Escape closes, Down enters the list, Enter picks the first
+    // match so searching then pressing Enter selects without reaching.
+    search.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closePopup(true);
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const v = visibleOptions();
+        if (v.length) v[0].focus();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        const v = visibleOptions();
+        if (v.length) {
+          select(Number(v[0].dataset.index));
+          closePopup(true);
+        }
+      }
+    });
+
+    list.addEventListener("keydown", (e) => {
+      const v = visibleOptions();
+      const at = v.indexOf(document.activeElement);
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (at > -1 && at < v.length - 1) v[at + 1].focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (at > 0) v[at - 1].focus();
+        else search.focus();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        closePopup(true);
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (open && !field.contains(e.target)) closePopup(false);
+    });
+
+    wrap.append(field, detail, srcGroup, objGroup, outGroup, outBox);
+
+    select(0);
     return wrap;
   }
 

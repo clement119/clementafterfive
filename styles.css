@@ -1116,6 +1116,218 @@ body {
   height: auto;
 }
 
+/* ---------- 50 design styles picker ---------- */
+.style-picker {
+  display: grid;
+  gap: 18px;
+  padding: 4px 0 2px;
+  min-width: 0;
+}
+
+/* The popup is absolutely positioned against this control, so the control
+   (not the whole picker) is the positioning context. */
+.style-picker > .builder-control:first-child {
+  position: relative;
+}
+
+/* Swatches are composed from CSS gradients in app.js — no image assets.
+   --sw-size drives the small (list) variant; the large one overrides it. */
+.style-swatch {
+  flex: none;
+  width: var(--sw-size, 38px);
+  height: var(--sw-size, 38px);
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.style-swatch--lg {
+  width: 100%;
+  height: 132px;
+  border-radius: calc(var(--radius) - 4px);
+}
+
+.style-trigger {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.style-trigger:hover {
+  border-color: var(--accent);
+}
+
+.style-trigger-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.style-trigger-name {
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.style-trigger-cat {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.style-chevron {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--ink-soft);
+}
+.style-chevron svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.style-trigger[aria-expanded="true"] .style-chevron {
+  transform: rotate(180deg);
+}
+
+.style-popup {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-width: 100%;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+/* The hidden attribute's UA rule loses to the author display above, so it
+   has to be restated — same reason .builder-control[hidden] exists. */
+.style-popup[hidden] {
+  display: none;
+}
+
+.style-list {
+  display: grid;
+  gap: 2px;
+  max-height: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.style-group {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 6px 0 2px;
+  padding: 4px 2px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--surface);
+}
+
+.style-option {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 8px;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.style-option[hidden] {
+  display: none;
+}
+
+.style-option:hover,
+.style-option:focus-visible {
+  background: var(--surface-2);
+}
+.style-option[aria-selected="true"] {
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.style-option-text {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.style-option-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.style-option-desc {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.style-empty {
+  margin: 0;
+  padding: 10px 4px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.style-detail {
+  display: grid;
+  gap: 9px;
+}
+
+.style-detail-desc {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.style-detail-elements {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.style-detail-elements:empty {
+  display: none;
+}
+
 /* ---------- Sketch library (swipeable illustration styles) ---------- */
 /* min-width:0 is load-bearing: without it the deck grows to its content
    width instead of scrolling, which breaks the nav's index math. */

@@ -1828,6 +1828,605 @@ const journal = [
           },
         ],
       },
+      {
+        title: "50 Design Styles",
+        pillar: "Media Creation & Edit",
+        items: [
+          {
+            text: "Naming a style is the single highest-leverage thing you can do in an image prompt — \"make it nice\" gets you the default AI look, \"Art Deco\" gets you somewhere specific. All 50 styles below, searchable and grouped. Pick one, describe your object or point it at an image you've uploaded, then copy the prompt.",
+            plain: true,
+          },
+          {
+            text: "Each swatch shows that style's palette and texture character so you can compare them at a glance — it's a colour-and-texture sample, not example artwork. The original article (linked below) has a full rendered example for every style.",
+            plain: true,
+          },
+          {
+            stylePicker: {
+              placeholder: "e.g. a coffee cup, a running shoe, a landing page hero",
+              outputTypes: [
+                { label: "Illustration", value: "An illustration" },
+                { label: "Poster", value: "A poster" },
+                { label: "Icon set", value: "An icon set" },
+                { label: "Product shot", value: "A product shot" },
+                { label: "UI screen", value: "A UI screen design" },
+                { label: "Pattern", value: "A repeating pattern" },
+              ],
+              styles: [
+                // ---- Classical & Ornate ----
+                {
+                  id: "neoclassical",
+                  name: "Neoclassical",
+                  category: "Classical & Ornate",
+                  desc: "Classical antiquity revived — order, symmetry and restrained elegance.",
+                  elements: "columns, marble, laurel motifs, strict symmetry, muted stone palette",
+                  palette: ["#EDE7DC", "#C9BCA5", "#8C7C63", "#B79A5B"],
+                  motif: "arcs",
+                  directive:
+                    "classical antiquity revived with strict symmetry and restrained elegance. Marble and pale stone surfaces, fluted columns, laurel and meander motifs, balanced proportion above all. Muted palette of ivory, warm stone and soft gold. Calm, ordered, dignified. Avoid clutter, asymmetry and bright saturated colour.",
+                },
+                {
+                  id: "baroque",
+                  name: "Baroque",
+                  category: "Classical & Ornate",
+                  desc: "Opulent and theatrical, with dramatic ornament and deep contrast.",
+                  elements: "gilded scrollwork, heavy drapery, chiaroscuro, dramatic diagonals",
+                  palette: ["#2A1A14", "#7E2B23", "#C9A227", "#F0E2C4"],
+                  motif: "chiaroscuro",
+                  directive:
+                    "opulent, emotional and theatrical. Heavy gilded scrollwork, rich drapery, dramatic diagonal composition and deep chiaroscuro lighting. Palette of burgundy, dark chocolate, antique gold and candlelit cream. Maximalist and grand — every surface worked. Avoid minimalism, flat lighting and empty space.",
+                },
+                {
+                  id: "filigree",
+                  name: "Filigree",
+                  category: "Classical & Ornate",
+                  desc: "Intricate metallic linework, delicate and jewel-like.",
+                  elements: "fine metal threads, spirals, symmetry, jewellery-scale detail",
+                  palette: ["#12182B", "#C7CBD6", "#8792AC", "#D8B96A"],
+                  motif: "ornate",
+                  directive:
+                    "intricate ornamentation built from hair-fine metal threads twisted into spirals, curls and lattices, like antique jewellery. Delicate gold and silver linework on a deep ground, perfectly symmetrical, jewel-like precision at small scale. Avoid thick strokes, flat fills and any heaviness.",
+                },
+                {
+                  id: "acanthus",
+                  name: "Acanthus",
+                  category: "Classical & Ornate",
+                  desc: "Classical foliage scrollwork — curling leaves and natural elegance.",
+                  elements: "curling leaf scrolls, carved relief, symmetry, botanical rhythm",
+                  palette: ["#E9E3D2", "#8FA07A", "#5C6B4C", "#BFA05E"],
+                  motif: "arcs",
+                  directive:
+                    "classical acanthus-leaf ornamentation — deeply curling carved foliage scrolls that unfurl in rhythmic symmetry, as found on Corinthian capitals. Carved relief depth with soft shadow, sage and olive greens against warm stone and muted gilt. Organic but highly disciplined. Avoid loose or naturalistic plant drawing.",
+                },
+                {
+                  id: "victorian",
+                  name: "Victorian",
+                  category: "Classical & Ornate",
+                  desc: "Grand 19th-century elaboration signalling wealth and refinement.",
+                  elements: "dense pattern, ornate frames, deep jewel tones, engraved detail",
+                  palette: ["#F2E9D8", "#1F4436", "#7B2233", "#C1A15A"],
+                  motif: "ornate",
+                  directive:
+                    "grand, elaborate 19th-century ornamentation. Densely patterned surfaces, ornate engraved frames and borders, botanical wallpaper motifs and heavy detail everywhere. Deep jewel tones — forest green, oxblood, aged gold — on cream. Formal and prosperous. Avoid modern simplicity and open negative space.",
+                },
+                {
+                  id: "art-nouveau",
+                  name: "Art Nouveau",
+                  category: "Classical & Ornate",
+                  desc: "Flowing organic curves drawn from plants and the female form.",
+                  elements: "whiplash curves, botanical forms, stained glass, flowing hair",
+                  palette: ["#F0E6CC", "#7A8C4E", "#C98A3C", "#3D6B6B"],
+                  motif: "arcs",
+                  directive:
+                    "flowing, nature-inspired ornament built on the whiplash curve. Elongated botanical forms, vines, lilies and sinuous flowing hair, contained by confident dark outlines like stained glass leading. Muted olive, mustard, teal and cream. Elegant, organic and asymmetric within a decorative border. Avoid rigid geometry and hard right angles.",
+                },
+                {
+                  id: "art-deco",
+                  name: "Art Deco",
+                  category: "Classical & Ornate",
+                  desc: "Sleek 1920s geometry — luxury rendered in symmetry and gold.",
+                  elements: "sunburst fans, stepped forms, chevrons, gold on black, symmetry",
+                  palette: ["#101010", "#C9A227", "#E8DCC0", "#1F6F63"],
+                  motif: "rays",
+                  directive:
+                    "sleek 1920s geometric luxury. Sunburst fans, stepped ziggurat forms, chevrons and strong vertical emphasis, all rigorously symmetrical. Polished gold and brass linework on deep black and cream, with jade or lapis accents. Streamlined, glamorous and machine-age confident. Avoid organic curves, texture and clutter.",
+                },
+                {
+                  id: "gothic",
+                  name: "Gothic",
+                  category: "Classical & Ornate",
+                  desc: "Medieval architecture and dark romanticism — pointed, vertical, mysterious.",
+                  elements: "pointed arches, tracery, stained glass, deep shadow, verticality",
+                  palette: ["#0D0B12", "#3B2A55", "#7A1F2B", "#9AA3B5"],
+                  motif: "chiaroscuro",
+                  directive:
+                    "medieval Gothic architecture crossed with dark romanticism. Pointed arches, ribbed vaults, delicate stone tracery and jewel-lit stained glass, with strong vertical emphasis drawing the eye upward. Near-black grounds, deep violet, blood red and cold grey stone. Shadowed, solemn and mysterious. Avoid brightness, warmth and horizontal compositions.",
+                },
+
+                // ---- Retro & Pop ----
+                {
+                  id: "memphis",
+                  name: "Memphis",
+                  category: "Retro & Pop",
+                  desc: "Bold, playful 1980s geometry with deliberately clashing colour.",
+                  elements: "squiggles, confetti, terrazzo, clashing brights, tilted shapes",
+                  palette: ["#FFFFFF", "#F0447A", "#22B8CF", "#F7D046"],
+                  motif: "mosaic",
+                  directive:
+                    "bold, playful 1980s Memphis Group design. Squiggles, confetti flecks, terrazzo speckle, tilted triangles and stacked geometric shapes scattered with deliberate imbalance. Clashing bright colours — hot pink, cyan, yellow, black — on white, all flat with no shading. Irreverent and energetic. Avoid gradients, realism and tasteful colour harmony.",
+                },
+                {
+                  id: "pop-art",
+                  name: "Pop Art",
+                  category: "Retro & Pop",
+                  desc: "Mass-media boldness — comic dots, primaries and high contrast.",
+                  elements: "Ben-Day dots, heavy outlines, primary colour, comic panels",
+                  palette: ["#F7D046", "#E62B37", "#1B57C4", "#111111"],
+                  motif: "dots",
+                  directive:
+                    "1960s pop art drawn from comics and advertising. Heavy black outlines, flat primary colour, visible Ben-Day halftone dots, and bold blocky lettering or speech-bubble framing. Deliberately mass-produced and printed-looking, with slight colour misregistration. Loud and graphic. Avoid subtle palettes, soft shading and photographic realism.",
+                },
+                {
+                  id: "kitsch",
+                  name: "Kitsch",
+                  category: "Retro & Pop",
+                  desc: "Knowingly bad taste — sentimental, excessive, gleefully tacky.",
+                  elements: "over-saturation, clashing florals, novelty objects, gaudy trim",
+                  palette: ["#F6C6D8", "#E0455E", "#2FB6A8", "#EFC64A"],
+                  motif: "stripes",
+                  directive:
+                    "deliberately, ironically tacky. Over-saturated sentimental imagery, clashing florals, novelty ornaments and gaudy gold trim layered well past good taste. Sickly-sweet pinks, turquoise and loud reds. Nostalgic, excessive and knowingly kitsch — charming precisely because it is too much. Avoid restraint, minimalism and sophisticated colour.",
+                },
+                {
+                  id: "y2k",
+                  name: "Y2K",
+                  category: "Retro & Pop",
+                  desc: "Late-90s digital optimism — chrome, gloss and lens flare.",
+                  elements: "liquid chrome, bubble forms, lens flare, iridescence, tech gloss",
+                  palette: ["#0B1A3A", "#B9C6DE", "#E85AB5", "#4FE3E0"],
+                  motif: "glass",
+                  directive:
+                    "late-1990s / early-2000s digital futurism. Liquid chrome and polished metal, inflated bubble forms, iridescent oil-slick sheen, lens flares and star glints, soft blue-to-magenta gradients. Glossy, optimistic and unmistakably of the millennium. Avoid matte textures, flat design and muted colour.",
+                },
+                {
+                  id: "mid-century",
+                  name: "Mid-Century",
+                  category: "Retro & Pop",
+                  desc: "1950s–60s warmth — organic simplicity and confident form.",
+                  elements: "organic shapes, tapered legs, warm muted palette, textured flats",
+                  palette: ["#F0E4CE", "#D98E3C", "#2E7E7B", "#B4442F"],
+                  motif: "arcs",
+                  directive:
+                    "1950s–60s mid-century modern illustration. Simplified organic shapes, tapered forms, atomic starbursts and confident flat colour with a subtle printed texture over it. Warm muted palette — mustard, teal, burnt orange, olive on cream. Optimistic and well-composed. Avoid gloss, gradients and digital perfection.",
+                },
+                {
+                  id: "frutiger-aero",
+                  name: "Neo Frutiger Aero",
+                  category: "Retro & Pop",
+                  desc: "Glossy skeuomorphic optimism where nature meets clean tech.",
+                  elements: "aqua gloss, bubbles, water droplets, lush greens, glass buttons",
+                  palette: ["#D8F0FF", "#39A7E0", "#7FD44C", "#FFFFFF"],
+                  motif: "glass",
+                  directive:
+                    "glossy skeuomorphic Frutiger Aero. Glass-bead buttons with specular highlights, floating bubbles and water droplets, lush green foliage against clean blue sky, and a general sense of fresh clean technology. Bright aqua, sky blue, grass green and white. Optimistic and squeaky-clean. Avoid grit, matte surfaces and dark palettes.",
+                },
+                {
+                  id: "vaporwave",
+                  name: "Vaporwave",
+                  category: "Retro & Pop",
+                  desc: "Surreal consumer-nostalgia — glitch, pastel and classical statuary.",
+                  elements: "Roman busts, glitch, pastel pink and cyan, Japanese text, grids",
+                  palette: ["#2B1B4D", "#F26FBF", "#4FE0E8", "#C9A7F0"],
+                  motif: "mosaic",
+                  directive:
+                    "surreal, satirical vaporwave nostalgia. Classical marble busts, 90s computer interfaces, palm trees and grid horizons, treated with glitch artefacts, VHS scanlines and chromatic aberration. Pastel pink, cyan and lavender on deep purple. Dreamlike, ironic and slightly melancholy. Avoid clean modern design and naturalistic colour.",
+                },
+                {
+                  id: "synthwave",
+                  name: "Synthwave",
+                  category: "Retro & Pop",
+                  desc: "Retro-futurist 1980s neon — grid horizons and chrome sunsets.",
+                  elements: "neon grid, gradient sun, chrome type, purple-to-orange skies",
+                  palette: ["#160B2E", "#FF3D8B", "#FF8A3D", "#37E6F0"],
+                  motif: "grid",
+                  directive:
+                    "retro-futuristic 1980s synthwave. A glowing neon perspective grid receding to the horizon, a banded gradient sun, chrome lettering and silhouetted palms or mountains. Deep indigo night with hot magenta, orange and cyan neon glow and heavy atmospheric haze. Cinematic and nostalgic. Avoid daylight, natural colour and matte finishes.",
+                },
+
+                // ---- Digital & Tech ----
+                {
+                  id: "pixel-art",
+                  name: "Pixel Art",
+                  category: "Digital & Tech",
+                  desc: "Grid-built retro game visuals with a strictly limited palette.",
+                  elements: "visible pixels, limited palette, dithering, crisp edges",
+                  palette: ["#1A2340", "#4FC46A", "#F0A63C", "#E8E4D0"],
+                  motif: "mosaic",
+                  directive:
+                    "retro pixel art on a strict grid. Every form built from visible square pixels at a low resolution, a deliberately limited palette, dithered gradients and hard aliased edges — no anti-aliasing or smoothing anywhere. Reads like a 16-bit game sprite. Avoid smooth curves, soft shadows and high-resolution detail.",
+                },
+                {
+                  id: "cybercore",
+                  name: "Cybercore",
+                  category: "Digital & Tech",
+                  desc: "Hacker and sci-fi imagery — terminals, HUDs and acid glow.",
+                  elements: "terminal type, HUD overlays, wireframes, scanlines, acid green",
+                  palette: ["#050A08", "#39FF88", "#28D8E8", "#E838C8"],
+                  motif: "grid",
+                  directive:
+                    "high-tech cybercore drawn from hacker culture and sci-fi interfaces. Monospaced terminal text, HUD overlays and data readouts, wireframe geometry, scanlines and glitch noise, glowing against near-black. Acid green and cyan with magenta accents, everything emitting light. Dense and technical. Avoid warmth, softness and organic form.",
+                },
+                {
+                  id: "glassmorphism",
+                  name: "Glassmorphism",
+                  category: "Digital & Tech",
+                  desc: "Frosted translucent panels floating over colour.",
+                  elements: "background blur, translucency, thin light borders, layered depth",
+                  palette: ["#221C4E", "#6B5BE0", "#F2F0FF", "#3ED0E0"],
+                  motif: "glass",
+                  directive:
+                    "frosted-glass UI surfaces. Translucent panels with heavy background blur, thin luminous white borders and soft inner highlights, layered at different depths over a vivid colourful gradient so the colour bleeds through. Airy and modern with clear hierarchy. Avoid opaque flat panels, hard shadows and busy backgrounds behind text.",
+                },
+                {
+                  id: "bento-box",
+                  name: "Bento Box",
+                  category: "Digital & Tech",
+                  desc: "Content organised into neat modular compartments.",
+                  elements: "rounded tiles, varied cell sizes, tidy grid, one idea per cell",
+                  palette: ["#F1F2F5", "#FFFFFF", "#5B5BD6", "#F5A524"],
+                  motif: "mosaic",
+                  directive:
+                    "bento-box modular layout. Content divided into generously rounded rectangular tiles of varying sizes locked to a tidy grid, each cell holding exactly one idea, separated by even gutters. Light neutral ground, white cells, one or two accent colours. Calm, organised and scannable. Avoid overlapping elements and ragged alignment.",
+                },
+                {
+                  id: "modular-typography",
+                  name: "Modular Typography",
+                  category: "Digital & Tech",
+                  desc: "Letterforms built from a repeating kit of parts.",
+                  elements: "grid-built letters, repeated modules, systematic construction",
+                  palette: ["#F4F2EC", "#141414", "#E23B2E", "#9A9A9A"],
+                  motif: "stripes",
+                  directive:
+                    "modular typography built from a visible kit of parts. Letterforms constructed from a small repeating set of geometric modules — bars, quarter-circles, squares — snapped to an exposed grid, so the underlying system is legible in the result. Monochrome with one signal accent. Systematic and constructivist. Avoid conventional typefaces and decorative flourishes.",
+                },
+                {
+                  id: "neo-brutalism",
+                  name: "Neo-Brutalism",
+                  category: "Digital & Tech",
+                  desc: "Brutalism cleaned up — thick borders, hard shadows, bright flats.",
+                  elements: "thick black borders, hard offset shadows, flat brights, chunky type",
+                  palette: ["#FBEBD2", "#101828", "#F26B21", "#3B5BDB"],
+                  motif: "flat",
+                  directive:
+                    "neo-brutalist design. Thick uniform black borders on every element, hard offset shadows with zero blur, flat saturated fills and chunky bold type. Warm off-white ground so white cards lift off it. Confident, graphic and slightly rough, but properly organised and usable. Avoid soft blurred shadows, gradients and thin hairline borders.",
+                },
+                {
+                  id: "brutalism",
+                  name: "Brutalism",
+                  category: "Digital & Tech",
+                  desc: "Raw and unrefined — function stripped of all polish.",
+                  elements: "concrete texture, default type, harsh contrast, exposed structure",
+                  palette: ["#B7B5B0", "#2E2C29", "#F2F0EC", "#C4351F"],
+                  motif: "grain",
+                  directive:
+                    "raw brutalism that rejects polish entirely. Exposed structure, board-marked concrete texture, default system typefaces, harsh contrast and deliberately awkward spacing. Monolithic grey and off-white with one blunt accent. Confrontational and honest — it should look unstyled rather than styled. Avoid rounded corners, gradients, shadows and any decorative refinement.",
+                },
+                {
+                  id: "bauhaus",
+                  name: "Bauhaus",
+                  category: "Digital & Tech",
+                  desc: "Primary shapes and colour where form follows function.",
+                  elements: "circle-square-triangle, primary colour, flat blocks, diagonal grid",
+                  palette: ["#F0EBE0", "#D42D22", "#1B4FA8", "#F2C230"],
+                  motif: "arcs",
+                  directive:
+                    "Bauhaus geometric composition where form follows function. Built purely from circles, squares and triangles in flat primary red, blue and yellow plus black on off-white, arranged on a strong diagonal grid with heavy weight distribution. Rational, reduced and confident. Avoid gradients, texture, ornament and any illustrative detail.",
+                },
+
+                // ---- Atmospheric & Dreamy ----
+                {
+                  id: "aurora",
+                  name: "Aurora",
+                  category: "Atmospheric & Dreamy",
+                  desc: "Northern-lights colour — iridescent, flowing, luminous.",
+                  elements: "ribboned gradients, iridescence, soft glow, deep night ground",
+                  palette: ["#0A1428", "#3CE0A8", "#7B5BE0", "#38C6E8"],
+                  motif: "blobs",
+                  directive:
+                    "aurora borealis colour. Vast ribbons of luminous green, violet and cyan light flowing and folding across a deep night sky, edges soft and diffuse, colours blending iridescently where they overlap. Everything glows from within. Dreamy, cosmic and atmospheric. Avoid hard edges, flat colour and daylight.",
+                },
+                {
+                  id: "ethereal",
+                  name: "Ethereal",
+                  category: "Atmospheric & Dreamy",
+                  desc: "Weightless and transcendent — soft pastels and diffused light.",
+                  elements: "haze, bloom, translucency, pale pastels, floating forms",
+                  palette: ["#F4EFFA", "#E8D5F0", "#FBE4E8", "#D6E4F5"],
+                  motif: "glass",
+                  directive:
+                    "delicate, weightless and transcendent. Forms dissolving into soft haze, heavy light bloom, translucent overlapping veils and things appearing to float free of gravity. Palette of the palest lilac, blush, cream and sky. Serene, dreamlike and almost insubstantial. Avoid hard contrast, sharp edges and heavy saturated colour.",
+                },
+                {
+                  id: "surrealism",
+                  name: "Surrealism",
+                  category: "Atmospheric & Dreamy",
+                  desc: "Dream logic — impossible juxtapositions rendered convincingly.",
+                  elements: "impossible scale, floating objects, dream space, precise rendering",
+                  palette: ["#BBD4E8", "#E0A860", "#C4522E", "#26406B"],
+                  motif: "blobs",
+                  directive:
+                    "surrealist dream logic. Ordinary objects at impossible scale, floating untethered, melting or merging into one another inside a vast empty landscape with a long horizon and strange raking light. Rendered precisely and believably so the impossibility lands. Unsettling and poetic. Avoid literal, sensible arrangements and cartoon treatment.",
+                },
+                {
+                  id: "tenebrism",
+                  name: "Tenebrism",
+                  category: "Atmospheric & Dreamy",
+                  desc: "Violent light-and-dark contrast from a single source.",
+                  elements: "single light source, near-black shadow, sculpted form, spotlight",
+                  palette: ["#080604", "#E8B15C", "#5A3A20", "#F2E4C8"],
+                  motif: "chiaroscuro",
+                  directive:
+                    "tenebrist lighting in the manner of Caravaggio. A single dramatic light source rakes across the subject while everything else falls into near-black shadow, sculpting form through extreme contrast. Warm candlelit amber against deep brown-black. Theatrical, intense and sculptural. Avoid ambient fill light, flat lighting and bright backgrounds.",
+                },
+                {
+                  id: "mystical-western",
+                  name: "Mystical Western",
+                  category: "Atmospheric & Dreamy",
+                  desc: "Cowboy iconography crossed with occult and celestial symbolism.",
+                  elements: "tarot framing, celestial bodies, desert forms, snakes, sun rays",
+                  palette: ["#2A1F2E", "#C4653C", "#E0B45C", "#3B6B66"],
+                  motif: "rays",
+                  directive:
+                    "the American West fused with occult mysticism. Desert buttes and cacti alongside tarot-card framing, moon phases, all-seeing eyes, snakes and radiating sun rays. Dusty rust, sage, aged gold and deep twilight purple, printed with a slightly worn texture. Mysterious, symbolic and folkloric. Avoid clean modern styling and literal realism.",
+                },
+                {
+                  id: "dark-academia",
+                  name: "Dark Magic Academia",
+                  category: "Atmospheric & Dreamy",
+                  desc: "Gothic scholarship and candlelit mysticism.",
+                  elements: "old books, candlelight, arcane diagrams, dark wood, brass",
+                  palette: ["#1A1410", "#3E2B1C", "#C9A227", "#E8DCC0"],
+                  motif: "chiaroscuro",
+                  directive:
+                    "dark academia laced with mysticism. Towering shelves of old leather books, candlelight and low warm lamps, arcane diagrams and astrolabes, dark oak and tarnished brass, dust suspended in a single shaft of light. Deep browns, forest green and aged gold in heavy shadow. Scholarly, secretive and atmospheric. Avoid daylight, bright colour and modern objects.",
+                },
+                {
+                  id: "light-academia",
+                  name: "Light Academia",
+                  category: "Atmospheric & Dreamy",
+                  desc: "The same scholarly world in warm daylight and soft optimism.",
+                  elements: "parchment, linen, soft daylight, classical busts, dried flowers",
+                  palette: ["#F5EEDF", "#D8C4A0", "#A8B49A", "#8A6E4B"],
+                  motif: "grain",
+                  directive:
+                    "light academia — the romance of learning in warm daylight. Parchment and linen textures, sunlit libraries and stone cloisters, classical busts, pressed flowers and handwritten letters. Cream, oat, soft sage and warm tan with gentle diffused light. Hopeful, poetic and nostalgic. Avoid darkness, heavy contrast and saturated colour.",
+                },
+
+                // ---- Craft & Texture ----
+                {
+                  id: "conceptual-sketch",
+                  name: "Conceptual Sketch",
+                  category: "Craft & Texture",
+                  desc: "Rough hand-drawn thinking, valued for spontaneity over polish.",
+                  elements: "construction lines, hatching, overdrawn strokes, annotations",
+                  palette: ["#F7F5F0", "#5A5A5A", "#2C4BC4", "#C0342B"],
+                  motif: "stripes",
+                  directive:
+                    "a rough conceptual sketch that prizes spontaneity over finish. Searching overdrawn pencil lines, visible construction geometry, quick hatching for shadow, smudges and handwritten annotations with arrows. Graphite and blue biro on off-white paper. It should read as thinking made visible, not a finished drawing. Avoid clean vector lines, flat fills and digital smoothness.",
+                },
+                {
+                  id: "scrapbook",
+                  name: "Scrapbook",
+                  category: "Craft & Texture",
+                  desc: "Handmade collage — torn edges, tape and handwriting.",
+                  elements: "torn paper, washi tape, polaroids, stitching, handwritten notes",
+                  palette: ["#E8DCC4", "#C4763C", "#3E7A78", "#D4453F"],
+                  motif: "grain",
+                  directive:
+                    "a handmade scrapbook collage. Layered torn-edge paper, washi tape and masking tape holding pieces down, polaroid snapshots, ticket stubs, stitched seams and looping handwritten notes in the margins. Kraft and cream papers with warm accents, soft real shadows under each layer. Personal and imperfect. Avoid neat alignment, flat digital layering and uniform spacing.",
+                },
+                {
+                  id: "mixed-media",
+                  name: "Mixed Media",
+                  category: "Craft & Texture",
+                  desc: "Photography, illustration and texture collided in one image.",
+                  elements: "photo cutouts, drawn marks, print texture, scale collisions",
+                  palette: ["#EFE9DC", "#1E1E1E", "#D93B30", "#2F5BA8"],
+                  motif: "mosaic",
+                  directive:
+                    "mixed-media collage combining photography, drawing and print texture in a single image. Cut-out photographic fragments sit beside hand-drawn marks, screen-printed blocks, halftone patches and typographic scraps, with deliberate scale collisions between elements. Layered, tactile and slightly chaotic but compositionally controlled. Avoid a single uniform rendering style.",
+                },
+                {
+                  id: "pointillism",
+                  name: "Pointillism",
+                  category: "Craft & Texture",
+                  desc: "Form assembled entirely from small dots of pure colour.",
+                  elements: "discrete dots, optical mixing, no outlines, luminous surfaces",
+                  palette: ["#F0E8D2", "#3B6BC4", "#E0913C", "#4C9E5A"],
+                  motif: "dots",
+                  directive:
+                    "pointillism — the entire image built from thousands of small discrete dots of pure unmixed colour that blend optically at viewing distance. No outlines and no blended strokes anywhere; complementary colours placed side by side to make surfaces vibrate and shimmer. Luminous and textural. Avoid smooth gradients, flat fills and line work.",
+                },
+                {
+                  id: "graffiti",
+                  name: "Graffiti",
+                  category: "Craft & Texture",
+                  desc: "Street-culture spray work — wildstyle letters, drips and grit.",
+                  elements: "spray texture, drips, wildstyle letterforms, overspray, concrete",
+                  palette: ["#8E8B86", "#E01E8C", "#B4E82C", "#141414"],
+                  motif: "grain",
+                  directive:
+                    "street graffiti sprayed on concrete. Interlocking wildstyle letterforms with hard outlines and inline highlights, aerosol overspray haze, deliberate paint drips and splatter, over a weathered wall with existing marks showing through. Electric magenta and lime against grey concrete. Rebellious and kinetic. Avoid clean vector edges and evenly flat fills.",
+                },
+                {
+                  id: "wabi-sabi",
+                  name: "Wabi Sabi",
+                  category: "Craft & Texture",
+                  desc: "Beauty in imperfection, weathering and impermanence.",
+                  elements: "raw clay, cracks, kintsugi seams, uneven glaze, asymmetry",
+                  palette: ["#E4DDD0", "#B8A48C", "#7C7061", "#93A08A"],
+                  motif: "flat",
+                  directive:
+                    "wabi-sabi — beauty found in imperfection and impermanence. Raw unglazed clay, uneven hand-formed edges, visible cracks and kintsugi repair seams, weathered wood and undyed linen, with generous empty space and quiet asymmetry. Muted clay, stone, oat and moss under soft natural light. Humble and still. Avoid symmetry, gloss, bright colour and mechanical precision.",
+                },
+                {
+                  id: "luxury-typography",
+                  name: "Luxury Typography",
+                  category: "Craft & Texture",
+                  desc: "Refined letterforms carrying the brand almost alone.",
+                  elements: "high-contrast serifs, wide letter-spacing, foil, deep negative space",
+                  palette: ["#12100E", "#F2EDE4", "#C0A46A", "#8A8073"],
+                  motif: "chiaroscuro",
+                  directive:
+                    "luxury typographic design where the letterforms carry the whole identity. A high-contrast display serif set large with confident wide letter-spacing, paired with a small refined sans for support, foil-stamped gold on deep black or soft cream. Enormous negative space and precise optical alignment. Restrained and expensive. Avoid decoration, imagery competing with the type, and busy layouts.",
+                },
+
+                // ---- Place & Lifestyle ----
+                {
+                  id: "japandi",
+                  name: "Japandi",
+                  category: "Place & Lifestyle",
+                  desc: "Japanese minimalism married to Scandinavian function.",
+                  elements: "pale wood, linen, low forms, muted neutrals, deep negative space",
+                  palette: ["#F2EEE6", "#D8C8B0", "#3A3733", "#9AA396"],
+                  motif: "flat",
+                  directive:
+                    "Japandi — Japanese minimalism fused with Scandinavian functionality. Pale ash and oak, undyed linen, matte ceramics and low horizontal forms, everything purposeful with nothing extra. Warm white, oat, soft charcoal and muted sage in diffused natural light with long soft shadows. Calm, warm and uncluttered. Avoid ornament, saturated colour and visual busyness.",
+                },
+                {
+                  id: "bohemian",
+                  name: "Bohemian",
+                  category: "Place & Lifestyle",
+                  desc: "Eclectic, globally-sourced pattern, texture and plants.",
+                  elements: "layered textiles, rattan, macramé, plants, mixed global patterns",
+                  palette: ["#EFE0C8", "#C4693C", "#D9A62E", "#2F7068"],
+                  motif: "stripes",
+                  directive:
+                    "eclectic bohemian layering. Mixed global textiles — kilim, ikat, block print — stacked without matching, rattan and macramé, trailing plants, brass and low warm lamplight. Terracotta, mustard, cream and teal, rich with texture. Collected over time rather than bought as a set. Avoid matching sets, minimalism and cool grey palettes.",
+                },
+                {
+                  id: "shabby-chic",
+                  name: "Shabby Chic",
+                  category: "Place & Lifestyle",
+                  desc: "Distressed vintage softness — chalk paint, florals and pastels.",
+                  elements: "chipped paint, faded florals, lace, whitewash, soft pastels",
+                  palette: ["#F5F0E8", "#E8CBD0", "#B8C4AC", "#D8C8A8"],
+                  motif: "grain",
+                  directive:
+                    "shabby chic vintage softness. Chalk-painted furniture worn through at the edges, faded rose florals, lace and ruffled linen, whitewashed wood and slightly foxed surfaces. Chalky white, powder pink, sage and cream in gentle diffused light. Romantic, feminine and gently worn. Avoid sharp modern edges, gloss and strong saturated colour.",
+                },
+                {
+                  id: "cottagecore",
+                  name: "Farmhouse / Cottagecore",
+                  category: "Place & Lifestyle",
+                  desc: "Romanticised rural life — handmade, seasonal and warm.",
+                  elements: "gingham, wildflowers, enamelware, bread, hand-lettered labels",
+                  palette: ["#F4EBD6", "#A8B48A", "#E8C55C", "#9E3B2E"],
+                  motif: "mosaic",
+                  directive:
+                    "romanticised rural cottage life. Gingham and ticking stripe, jars of wildflowers, chipped enamelware, fresh bread and preserves, weathered barn wood and hand-lettered labels. Cream, sage, butter yellow and barn red in soft morning light. Homely, seasonal and handmade. Avoid urban settings, sleek surfaces and mass-produced perfection.",
+                },
+                {
+                  id: "nautical",
+                  name: "Nautical",
+                  category: "Place & Lifestyle",
+                  desc: "Maritime signalling — stripes, rope and weathered timber.",
+                  elements: "navy stripes, rope, anchors, brass, weathered planking",
+                  palette: ["#F2F0E8", "#1B3A6B", "#C0392B", "#D8C8A0"],
+                  motif: "stripes",
+                  directive:
+                    "maritime nautical design. Crisp navy-and-white breton stripes, coiled rope and knots, anchors and signal flags, polished brass fittings and salt-weathered timber planking. Navy, off-white, signal red and sand. Clean, sturdy and coastal. Avoid tropical brights, gloss and fussy ornament.",
+                },
+                {
+                  id: "wild-west",
+                  name: "South West / Wild West",
+                  category: "Place & Lifestyle",
+                  desc: "Desert heritage — canyon colour and woven geometry.",
+                  elements: "mesa forms, Navajo-style geometry, tooled leather, cacti, turquoise",
+                  palette: ["#E8D5BC", "#C4562F", "#3E8C8A", "#8A5A3C"],
+                  motif: "mosaic",
+                  directive:
+                    "American south-west desert heritage. Layered mesa and canyon forms, woven blanket geometry in stepped bands, tooled leather and stamped silver, cacti and long low sun. Terracotta, sand, turquoise and rust with a sun-faded matte finish. Warm, rugged and handcrafted. Avoid cool palettes, gloss and urban references.",
+                },
+                {
+                  id: "utilitarian",
+                  name: "Utilitarian",
+                  category: "Place & Lifestyle",
+                  desc: "Function first — rugged, legible, no decoration.",
+                  elements: "stencil type, safety colour, webbing, rivets, technical labels",
+                  palette: ["#D9D6CE", "#4A4F3D", "#E07B22", "#232323"],
+                  motif: "flat",
+                  directive:
+                    "utilitarian function-first design. Stencilled condensed type, technical labelling and part numbers, heavy webbing and hardware, rivets and reinforced seams, safety-orange accents against olive drab and raw grey. Everything present because it does a job. Honest, rugged and legible. Avoid decoration, delicate detail and luxury cues.",
+                },
+                {
+                  id: "steampunk",
+                  name: "Steampunk",
+                  category: "Place & Lifestyle",
+                  desc: "Victorian invention rendered in brass, gears and steam.",
+                  elements: "brass gears, rivets, pressure gauges, leather, exposed mechanism",
+                  palette: ["#2B1D12", "#B08D3F", "#C4713C", "#E8DCC0"],
+                  motif: "ornate",
+                  directive:
+                    "Victorian steampunk invention. Exposed brass gearing and clockwork, riveted copper plate, pressure gauges and valves, stitched leather and polished mahogany, with steam and warm gaslight. Aged brass, copper, deep brown and parchment. Ornate machinery that looks genuinely engineered. Avoid clean modern technology, plastics and cool colour.",
+                },
+
+                // ---- Character & Cute ----
+                {
+                  id: "anthropomorphic",
+                  name: "Anthropomorphic",
+                  category: "Character & Cute",
+                  desc: "Objects given faces, limbs and personality.",
+                  elements: "simple faces, expressive poses, rubber limbs, object-as-character",
+                  palette: ["#F4EBDA", "#E0714C", "#3E8C86", "#8A5A3C"],
+                  motif: "flat",
+                  directive:
+                    "everyday objects turned into characters. The object keeps its recognisable silhouette but gains a simple expressive face, bendy rubber-hose limbs, gloved hands and shoes, and a clear posture that carries emotion. Warm flat colour with soft printed texture. Charming and immediately readable. Avoid photorealistic faces and complex anatomy.",
+                },
+                {
+                  id: "kawaii",
+                  name: "Kawaii",
+                  category: "Character & Cute",
+                  desc: "Japanese cuteness — round forms, big eyes, soft pastels.",
+                  elements: "rounded shapes, oversized eyes, blush cheeks, pastel palette",
+                  palette: ["#FDF2F6", "#F7C3D4", "#A8E0D0", "#FBE29A"],
+                  motif: "dots",
+                  directive:
+                    "Japanese kawaii cuteness. Everything rounded and soft with no sharp corners, oversized sparkling eyes, tiny simple mouths, blush cheeks and stubby proportions, surrounded by little stars, hearts and sparkles. Pastel pink, mint, cream and butter yellow. Sweet, gentle and comforting. Avoid sharp angles, dark palettes and realistic proportions.",
+                },
+                {
+                  id: "coquette",
+                  name: "Coquette",
+                  category: "Character & Cute",
+                  desc: "Ultra-feminine vintage flirtation — bows, lace and soft focus.",
+                  elements: "ribbon bows, lace trim, pearls, soft focus, blush and cream",
+                  palette: ["#FBF2EC", "#F0C4CC", "#C43F5C", "#D8B87C"],
+                  motif: "ornate",
+                  directive:
+                    "coquette — ultra-feminine vintage flirtation. Satin ribbon bows tied everywhere, delicate lace trim, pearls, roses and hand mirrors, shot through a soft-focus filter with a faint warm grain. Cream, blush pink, cherry red and antique gold. Romantic, nostalgic and a little theatrical. Avoid hard edges, cool colour and minimalism.",
+                },
+                {
+                  id: "rebus",
+                  name: "Rebus",
+                  category: "Character & Cute",
+                  desc: "Meaning carried by pictures standing in for words and sounds.",
+                  elements: "picture-for-word substitution, icon clarity, puzzle logic, sequence",
+                  palette: ["#F4F0E4", "#1E1E1E", "#D93B30", "#2F5BA8"],
+                  motif: "mosaic",
+                  directive:
+                    "a rebus puzzle where pictures replace words and syllables. Simple bold pictograms sit in a left-to-right sequence with the occasional letter or plus sign between them, so the meaning has to be read aloud to be understood. Flat high-contrast icons with maximum clarity at small size, on a plain ground. Playful and puzzle-like. Avoid detailed illustration and ambiguous symbols.",
+                },
+              ],
+            },
+          },
+          {
+            link: {
+              href: "https://uxplanet.org/50-design-styles-every-designer-should-know-for-better-prompting-56c09d55db62",
+              label: "Source — 50 Design Styles Every Designer Should Know (UX Planet), with a rendered example for each",
+              compact: true,
+            },
+          },
+        ],
+      },
     ],
     footer:
       "Pick 2–3 per piece of content. That's enough to sharpen thinking, improve clarity, and increase performance.",
