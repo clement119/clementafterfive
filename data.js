@@ -1855,6 +1855,7 @@ const journal = [
                 // ---- Classical & Ornate ----
                 {
                   id: "neoclassical",
+                  image: "assets/examples/style-neoclassical.jpg",
                   name: "Neoclassical",
                   category: "Classical & Ornate",
                   desc: "Classical antiquity revived — order, symmetry and restrained elegance.",
@@ -1866,6 +1867,7 @@ const journal = [
                 },
                 {
                   id: "baroque",
+                  image: "assets/examples/style-baroque.jpg",
                   name: "Baroque",
                   category: "Classical & Ornate",
                   desc: "Opulent and theatrical, with dramatic ornament and deep contrast.",
@@ -1877,6 +1879,7 @@ const journal = [
                 },
                 {
                   id: "filigree",
+                  image: "assets/examples/style-filigree.jpg",
                   name: "Filigree",
                   category: "Classical & Ornate",
                   desc: "Intricate metallic linework, delicate and jewel-like.",
@@ -1888,6 +1891,7 @@ const journal = [
                 },
                 {
                   id: "acanthus",
+                  image: "assets/examples/style-acanthus.jpg",
                   name: "Acanthus",
                   category: "Classical & Ornate",
                   desc: "Classical foliage scrollwork — curling leaves and natural elegance.",
@@ -1899,6 +1903,7 @@ const journal = [
                 },
                 {
                   id: "victorian",
+                  image: "assets/examples/style-victorian.jpg",
                   name: "Victorian",
                   category: "Classical & Ornate",
                   desc: "Grand 19th-century elaboration signalling wealth and refinement.",
@@ -1910,6 +1915,7 @@ const journal = [
                 },
                 {
                   id: "art-nouveau",
+                  image: "assets/examples/style-art-nouveau.jpg",
                   name: "Art Nouveau",
                   category: "Classical & Ornate",
                   desc: "Flowing organic curves drawn from plants and the female form.",
@@ -1921,6 +1927,7 @@ const journal = [
                 },
                 {
                   id: "art-deco",
+                  image: "assets/examples/style-art-deco.jpg",
                   name: "Art Deco",
                   category: "Classical & Ornate",
                   desc: "Sleek 1920s geometry — luxury rendered in symmetry and gold.",
@@ -1932,6 +1939,7 @@ const journal = [
                 },
                 {
                   id: "gothic",
+                  image: "assets/examples/style-gothic.jpg",
                   name: "Gothic",
                   category: "Classical & Ornate",
                   desc: "Medieval architecture and dark romanticism — pointed, vertical, mysterious.",
@@ -1945,6 +1953,7 @@ const journal = [
                 // ---- Retro & Pop ----
                 {
                   id: "memphis",
+                  image: "assets/examples/style-memphis.jpg",
                   name: "Memphis",
                   category: "Retro & Pop",
                   desc: "Bold, playful 1980s geometry with deliberately clashing colour.",
@@ -1956,6 +1965,7 @@ const journal = [
                 },
                 {
                   id: "pop-art",
+                  image: "assets/examples/style-pop-art.jpg",
                   name: "Pop Art",
                   category: "Retro & Pop",
                   desc: "Mass-media boldness — comic dots, primaries and high contrast.",
@@ -1967,6 +1977,7 @@ const journal = [
                 },
                 {
                   id: "kitsch",
+                  image: "assets/examples/style-kitsch.jpg",
                   name: "Kitsch",
                   category: "Retro & Pop",
                   desc: "Knowingly bad taste — sentimental, excessive, gleefully tacky.",
@@ -1978,6 +1989,7 @@ const journal = [
                 },
                 {
                   id: "y2k",
+                  image: "assets/examples/style-y2k.jpg",
                   name: "Y2K",
                   category: "Retro & Pop",
                   desc: "Late-90s digital optimism — chrome, gloss and lens flare.",
@@ -1989,6 +2001,7 @@ const journal = [
                 },
                 {
                   id: "mid-century",
+                  image: "assets/examples/style-mid-century.jpg",
                   name: "Mid-Century",
                   category: "Retro & Pop",
                   desc: "1950s–60s warmth — organic simplicity and confident form.",
@@ -2000,6 +2013,7 @@ const journal = [
                 },
                 {
                   id: "frutiger-aero",
+                  image: "assets/examples/style-frutiger-aero.jpg",
                   name: "Neo Frutiger Aero",
                   category: "Retro & Pop",
                   desc: "Glossy skeuomorphic optimism where nature meets clean tech.",
@@ -2011,6 +2025,7 @@ const journal = [
                 },
                 {
                   id: "vaporwave",
+                  image: "assets/examples/style-vaporwave.jpg",
                   name: "Vaporwave",
                   category: "Retro & Pop",
                   desc: "Surreal consumer-nostalgia — glitch, pastel and classical statuary.",
@@ -2022,6 +2037,7 @@ const journal = [
                 },
                 {
                   id: "synthwave",
+                  image: "assets/examples/style-synthwave.jpg",
                   name: "Synthwave",
                   category: "Retro & Pop",
                   desc: "Retro-futurist 1980s neon — grid horizons and chrome sunsets.",
@@ -2035,6 +2051,7 @@ const journal = [
                 // ---- Digital & Tech ----
                 {
                   id: "pixel-art",
+                  image: "assets/examples/style-pixel-art.jpg",
                   name: "Pixel Art",
                   category: "Digital & Tech",
                   desc: "Grid-built retro game visuals with a strictly limited palette.",
@@ -2046,6 +2063,7 @@ const journal = [
                 },
                 {
                   id: "cybercore",
+                  image: "assets/examples/style-cybercore.jpg",
                   name: "Cybercore",
                   category: "Digital & Tech",
                   desc: "Hacker and sci-fi imagery — terminals, HUDs and acid glow.",
@@ -2057,6 +2075,7 @@ const journal = [
                 },
                 {
                   id: "glassmorphism",
+                  image: "assets/examples/style-glassmorphism.jpg",
                   name: "Glassmorphism",
                   category: "Digital & Tech",
                   desc: "Frosted translucent panels floating over colour.",
@@ -2068,6 +2087,7 @@ const journal = [
                 },
                 {
                   id: "bento-box",
+                  image: "assets/examples/style-bento-box.jpg",
                   name: "Bento Box",
                   category: "Digital & Tech",
                   desc: "Content organised into neat modular compartments.",
@@ -2079,6 +2099,7 @@ const journal = [
                 },
                 {
                   id: "modular-typography",
+                  image: "assets/examples/style-modular-typography.jpg",
                   name: "Modular Typography",
                   category: "Digital & Tech",
                   desc: "Letterforms built from a repeating kit of parts.",
@@ -2090,6 +2111,7 @@ const journal = [
                 },
                 {
                   id: "neo-brutalism",
+                  image: "assets/examples/style-neo-brutalism.jpg",
                   name: "Neo-Brutalism",
                   category: "Digital & Tech",
                   desc: "Brutalism cleaned up — thick borders, hard shadows, bright flats.",
@@ -2101,6 +2123,7 @@ const journal = [
                 },
                 {
                   id: "brutalism",
+                  image: "assets/examples/style-brutalism.jpg",
                   name: "Brutalism",
                   category: "Digital & Tech",
                   desc: "Raw and unrefined — function stripped of all polish.",
@@ -2112,6 +2135,7 @@ const journal = [
                 },
                 {
                   id: "bauhaus",
+                  image: "assets/examples/style-bauhaus.jpg",
                   name: "Bauhaus",
                   category: "Digital & Tech",
                   desc: "Primary shapes and colour where form follows function.",
@@ -2125,6 +2149,7 @@ const journal = [
                 // ---- Atmospheric & Dreamy ----
                 {
                   id: "aurora",
+                  image: "assets/examples/style-aurora.jpg",
                   name: "Aurora",
                   category: "Atmospheric & Dreamy",
                   desc: "Northern-lights colour — iridescent, flowing, luminous.",
@@ -2136,6 +2161,7 @@ const journal = [
                 },
                 {
                   id: "ethereal",
+                  image: "assets/examples/style-ethereal.jpg",
                   name: "Ethereal",
                   category: "Atmospheric & Dreamy",
                   desc: "Weightless and transcendent — soft pastels and diffused light.",
@@ -2147,6 +2173,7 @@ const journal = [
                 },
                 {
                   id: "surrealism",
+                  image: "assets/examples/style-surrealism.jpg",
                   name: "Surrealism",
                   category: "Atmospheric & Dreamy",
                   desc: "Dream logic — impossible juxtapositions rendered convincingly.",
@@ -2158,6 +2185,7 @@ const journal = [
                 },
                 {
                   id: "tenebrism",
+                  image: "assets/examples/style-tenebrism.jpg",
                   name: "Tenebrism",
                   category: "Atmospheric & Dreamy",
                   desc: "Violent light-and-dark contrast from a single source.",
@@ -2169,6 +2197,7 @@ const journal = [
                 },
                 {
                   id: "mystical-western",
+                  image: "assets/examples/style-mystical-western.jpg",
                   name: "Mystical Western",
                   category: "Atmospheric & Dreamy",
                   desc: "Cowboy iconography crossed with occult and celestial symbolism.",
@@ -2180,6 +2209,7 @@ const journal = [
                 },
                 {
                   id: "dark-academia",
+                  image: "assets/examples/style-dark-academia.jpg",
                   name: "Dark Magic Academia",
                   category: "Atmospheric & Dreamy",
                   desc: "Gothic scholarship and candlelit mysticism.",
@@ -2191,6 +2221,7 @@ const journal = [
                 },
                 {
                   id: "light-academia",
+                  image: "assets/examples/style-light-academia.jpg",
                   name: "Light Academia",
                   category: "Atmospheric & Dreamy",
                   desc: "The same scholarly world in warm daylight and soft optimism.",
@@ -2204,6 +2235,7 @@ const journal = [
                 // ---- Craft & Texture ----
                 {
                   id: "conceptual-sketch",
+                  image: "assets/examples/style-conceptual-sketch.jpg",
                   name: "Conceptual Sketch",
                   category: "Craft & Texture",
                   desc: "Rough hand-drawn thinking, valued for spontaneity over polish.",
@@ -2215,6 +2247,7 @@ const journal = [
                 },
                 {
                   id: "scrapbook",
+                  image: "assets/examples/style-scrapbook.jpg",
                   name: "Scrapbook",
                   category: "Craft & Texture",
                   desc: "Handmade collage — torn edges, tape and handwriting.",
@@ -2226,6 +2259,7 @@ const journal = [
                 },
                 {
                   id: "mixed-media",
+                  image: "assets/examples/style-mixed-media.jpg",
                   name: "Mixed Media",
                   category: "Craft & Texture",
                   desc: "Photography, illustration and texture collided in one image.",
@@ -2237,6 +2271,7 @@ const journal = [
                 },
                 {
                   id: "pointillism",
+                  image: "assets/examples/style-pointillism.jpg",
                   name: "Pointillism",
                   category: "Craft & Texture",
                   desc: "Form assembled entirely from small dots of pure colour.",
@@ -2248,6 +2283,7 @@ const journal = [
                 },
                 {
                   id: "graffiti",
+                  image: "assets/examples/style-graffiti.jpg",
                   name: "Graffiti",
                   category: "Craft & Texture",
                   desc: "Street-culture spray work — wildstyle letters, drips and grit.",
@@ -2259,6 +2295,7 @@ const journal = [
                 },
                 {
                   id: "wabi-sabi",
+                  image: "assets/examples/style-wabi-sabi.jpg",
                   name: "Wabi Sabi",
                   category: "Craft & Texture",
                   desc: "Beauty in imperfection, weathering and impermanence.",
@@ -2270,6 +2307,7 @@ const journal = [
                 },
                 {
                   id: "luxury-typography",
+                  image: "assets/examples/style-luxury-typography.jpg",
                   name: "Luxury Typography",
                   category: "Craft & Texture",
                   desc: "Refined letterforms carrying the brand almost alone.",
@@ -2283,6 +2321,7 @@ const journal = [
                 // ---- Place & Lifestyle ----
                 {
                   id: "japandi",
+                  image: "assets/examples/style-japandi.jpg",
                   name: "Japandi",
                   category: "Place & Lifestyle",
                   desc: "Japanese minimalism married to Scandinavian function.",
@@ -2294,6 +2333,7 @@ const journal = [
                 },
                 {
                   id: "bohemian",
+                  image: "assets/examples/style-bohemian.jpg",
                   name: "Bohemian",
                   category: "Place & Lifestyle",
                   desc: "Eclectic, globally-sourced pattern, texture and plants.",
@@ -2305,6 +2345,7 @@ const journal = [
                 },
                 {
                   id: "shabby-chic",
+                  image: "assets/examples/style-shabby-chic.jpg",
                   name: "Shabby Chic",
                   category: "Place & Lifestyle",
                   desc: "Distressed vintage softness — chalk paint, florals and pastels.",
@@ -2316,6 +2357,7 @@ const journal = [
                 },
                 {
                   id: "cottagecore",
+                  image: "assets/examples/style-cottagecore.jpg",
                   name: "Farmhouse / Cottagecore",
                   category: "Place & Lifestyle",
                   desc: "Romanticised rural life — handmade, seasonal and warm.",
@@ -2327,6 +2369,7 @@ const journal = [
                 },
                 {
                   id: "nautical",
+                  image: "assets/examples/style-nautical.jpg",
                   name: "Nautical",
                   category: "Place & Lifestyle",
                   desc: "Maritime signalling — stripes, rope and weathered timber.",
@@ -2338,6 +2381,7 @@ const journal = [
                 },
                 {
                   id: "wild-west",
+                  image: "assets/examples/style-wild-west.jpg",
                   name: "South West / Wild West",
                   category: "Place & Lifestyle",
                   desc: "Desert heritage — canyon colour and woven geometry.",
@@ -2349,6 +2393,7 @@ const journal = [
                 },
                 {
                   id: "utilitarian",
+                  image: "assets/examples/style-utilitarian.jpg",
                   name: "Utilitarian",
                   category: "Place & Lifestyle",
                   desc: "Function first — rugged, legible, no decoration.",
@@ -2360,6 +2405,7 @@ const journal = [
                 },
                 {
                   id: "steampunk",
+                  image: "assets/examples/style-steampunk.jpg",
                   name: "Steampunk",
                   category: "Place & Lifestyle",
                   desc: "Victorian invention rendered in brass, gears and steam.",
@@ -2373,6 +2419,7 @@ const journal = [
                 // ---- Character & Cute ----
                 {
                   id: "anthropomorphic",
+                  image: "assets/examples/style-anthropomorphic.jpg",
                   name: "Anthropomorphic",
                   category: "Character & Cute",
                   desc: "Objects given faces, limbs and personality.",
@@ -2384,6 +2431,7 @@ const journal = [
                 },
                 {
                   id: "kawaii",
+                  image: "assets/examples/style-kawaii.jpg",
                   name: "Kawaii",
                   category: "Character & Cute",
                   desc: "Japanese cuteness — round forms, big eyes, soft pastels.",
@@ -2395,6 +2443,7 @@ const journal = [
                 },
                 {
                   id: "coquette",
+                  image: "assets/examples/style-coquette.jpg",
                   name: "Coquette",
                   category: "Character & Cute",
                   desc: "Ultra-feminine vintage flirtation — bows, lace and soft focus.",
@@ -2406,6 +2455,7 @@ const journal = [
                 },
                 {
                   id: "rebus",
+                  image: "assets/examples/style-rebus.jpg",
                   name: "Rebus",
                   category: "Character & Cute",
                   desc: "Meaning carried by pictures standing in for words and sounds.",

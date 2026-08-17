@@ -1968,11 +1968,36 @@
     if (spec.position) el.style.backgroundPosition = spec.position;
   }
 
+  // Prefers a real preview image when the style has one; falls back to the
+  // generated CSS tile otherwise (and if the image 404s, since a partial
+  // asset batch should never leave a style rendering blank). Used both to
+  // build a fresh swatch element and to re-target an existing one (the
+  // trigger and detail-panel swatches persist across selections, so their
+  // content has to be swappable in place, not just built once).
+  function setSwatchContent(el, style) {
+    el.innerHTML = "";
+    el.style.backgroundImage = "";
+    if (style.image) {
+      const img = document.createElement("img");
+      img.className = "style-swatch-img";
+      img.src = style.image;
+      img.loading = "lazy";
+      img.alt = "";
+      img.addEventListener("error", () => {
+        img.remove();
+        applySwatch(el, style);
+      });
+      el.appendChild(img);
+    } else {
+      applySwatch(el, style);
+    }
+  }
+
   function styleSwatch(style, cls) {
     const el = document.createElement("span");
     el.className = "style-swatch" + (cls ? " " + cls : "");
     el.setAttribute("aria-hidden", "true");
-    applySwatch(el, style);
+    setSwatchContent(el, style);
     return el;
   }
 
@@ -2192,8 +2217,8 @@
     function select(i) {
       selIdx = i;
       const s = styles[i];
-      applySwatch(trigSwatch, s);
-      applySwatch(detailSwatch, s);
+      setSwatchContent(trigSwatch, s);
+      setSwatchContent(detailSwatch, s);
       trigName.textContent = s.name;
       trigCat.textContent = s.category || "";
       detailDesc.textContent = s.desc || "";
