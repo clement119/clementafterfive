@@ -711,7 +711,7 @@
           demo.href = s.demo;
           demo.target = "_blank";
           demo.rel = "noopener noreferrer";
-          demo.textContent = "▶ Watch demo";
+          demo.textContent = s.demoLabel || "▶ Watch demo";
           links.appendChild(demo);
         }
 

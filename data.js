@@ -3479,6 +3479,18 @@ const journal = [
                   "note": "Can also import and redraw existing draw.io or Mermaid files. PNG export needs Python 3 + Playwright (pip install playwright && playwright install chromium)."
                 },
                 {
+                  "name": "ip-as-logo",
+                  "type": "skill",
+                  "domain": "Design",
+                  "tag": "Mascot logo generator",
+                  "desc": "Generates simple, cute, company-ready mascot logos — 4-7 bold shapes, three colors, built for instant recognition at tiny sizes. Proposes 3 directions, then 6 independent candidates, no auto-filtering.",
+                  "install": "npx skills@latest add s1dashu/ip-as-logo-skill",
+                  "repo": "https://github.com/s1dashu/ip-as-logo-skill",
+                  "demo": "https://ipaslogo.com",
+                  "demoLabel": "Browse example logos →",
+                  "note": "Needs an agent with BUILT-IN image generation (Codex, Coze, Doubao, YouMind, Manus, Gemini Apps, Replit Agent per its README) — Claude Code isn't on that list and has no native image generator, so this needs a connected image tool (e.g. nano-banana, already set up in this project) to actually produce logos. Free for commercial use."
+                },
+                {
                   "name": "humanizer",
                   "type": "skill",
                   "domain": "Marketing & Content",
