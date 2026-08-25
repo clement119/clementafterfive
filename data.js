@@ -2815,6 +2815,119 @@ const journal = [
               },
             ],
           },
+          {
+            title: "Retro Editorial Illustration",
+            items: [
+              { text: "A 1970s–80s print-advertising look — flat vector that still reads as hand-drawn, thick hand-inked outlines, subtle risograph grain and a tightly controlled palette. Describe a scene or base it on an uploaded image, then set the palette, cast, setting and format. On the headline: image models garble type more often than not, so \"Reserve clean space\" leaves the top third empty for you to typeset properly — switch to \"Render the headline\" only when you want to gamble on baked-in lettering." },
+              {
+                builder: {
+                  template:
+                    "Create a modern editorial illustration with a vintage 1970s–1980s print-advertising aesthetic, inspired by hand-drawn commercial illustration and retro lifestyle magazine graphics.\n\n" +
+                    "SUBJECT: {source}\n\n" +
+                    "SCENE: {setting} {figures}\n\n" +
+                    "STYLE: Clean flat-vector illustration that still reads as human-drawn — slightly imperfect and tactile, with subtle variation in line weight and shape. Never overly polished digital vector.\n" +
+                    "• Warm off-white / ivory paper background\n" +
+                    "• Limited palette of {palette} — flat, highly controlled, 4–6 colours total\n" +
+                    "• Thick but elegant hand-inked outlines in the palette's darkest ink rather than pure black: crisp, slightly irregular, moderately thick, occasionally doubled with small offset details to create vintage printed character. No ultra-thin technical vector lines.\n" +
+                    "• Flat solid colour fills, minimal or no gradients\n" +
+                    "• Very subtle vintage paper grain, print noise and slightly imperfect screen-print / risograph colour registration — understated and sophisticated, never distressed or grungy\n" +
+                    "• Strong geometric shapes combined with organic human figures\n" +
+                    "• Simplified faces with small minimal features; long, elegant, slightly exaggerated limbs; simple flat clothing; flowing hair; expressive but understated poses — fashion/editorial illustration rather than a children's cartoon\n" +
+                    "• Clean negative space; balanced and uncluttered even with multiple objects\n\n" +
+                    "COMPOSITION: {format} {perspective} Large central illustrated subject occupying roughly the lower 60–70% of the canvas, leaving generous empty space above. Cabinets, shelves, counters and display structures drawn with clean geometric perspective lines. The whole thing should read like a premium lifestyle brand advertisement or an editorial magazine page.\n\n" +
+                    "{headlineMode}\n\n" +
+                    "AVOID: photorealism, 3D rendering, realistic shadows, glossy modern illustration effects, anime, manga, Pixar or Disney style, children's book illustration, glossy gradients, excessive shadows, photorealistic people, hyper-detailed environments, realistic textures, neon colours, and overly clean corporate vector graphics.",
+                  controls: [
+                    {
+                      id: "source",
+                      label: "Source",
+                      choices: [
+                        { label: "From uploaded image", value: "Base the illustration on the uploaded image — keep its subject, objects and overall layout, but redraw everything completely in the style below." },
+                        { label: "Describe the scene", value: "{scene}" },
+                      ],
+                    },
+                    {
+                      id: "scene",
+                      label: "Scene to illustrate",
+                      type: "input",
+                      placeholder: "e.g. a woman choosing a leather keychain at a customisation counter",
+                      fallback: "[describe your scene]",
+                      showWhen: { source: 1 },
+                    },
+                    {
+                      id: "palette",
+                      label: "Colour palette",
+                      choices: [
+                        { label: "Cobalt & coral", value: "deep navy ink, bright cobalt blue, warm coral red and muted sand beige on warm ivory paper", swatch: "#E0553F" },
+                        { label: "Forest & mustard", value: "deep forest green ink, soft sage green, warm mustard yellow and oat beige on warm ivory paper", swatch: "#D9A227" },
+                        { label: "Plum & peach", value: "deep plum ink, dusty mauve, soft peach and warm greige on warm ivory paper", swatch: "#E8A07C" },
+                        { label: "Teal & burnt orange", value: "deep teal ink, mid teal blue, burnt orange and sand beige on warm ivory paper", swatch: "#C25A2E" },
+                        { label: "Oxblood & sage", value: "deep oxblood ink, muted sage green, terracotta and bone beige on warm ivory paper", swatch: "#7B2B24" },
+                        { label: "Monochrome navy", value: "a single-colour navy scheme — deep navy ink with mid-blue and pale blue tints only, plus sand beige on warm ivory paper", swatch: "#1B3A6B" },
+                      ],
+                    },
+                    {
+                      id: "figures",
+                      label: "Who's in the scene",
+                      choices: [
+                        { label: "One figure", value: "Include one stylised editorial figure interacting naturally with the subject." },
+                        { label: "Two figures", value: "Include two stylised editorial figures interacting naturally with the subject and with each other." },
+                        { label: "Objects only", value: "No people at all — objects, furniture and environment only." },
+                        { label: "Small crowd", value: "Include a small group of three or four stylised editorial figures at varied scales." },
+                      ],
+                    },
+                    {
+                      id: "setting",
+                      label: "Setting",
+                      choices: [
+                        { label: "Retail interior", value: "Set inside a retail store interior with shelving, display cabinets and a service counter." },
+                        { label: "Workshop / studio", value: "Set in a workshop or maker studio with tools, workbenches and raw materials." },
+                        { label: "Home interior", value: "Set in a warm domestic interior with simple furniture and a few plants." },
+                        { label: "Outdoor street", value: "Set on a simple outdoor street scene with a shopfront and a minimal background." },
+                        { label: "Plain backdrop", value: "No environment at all — the subject sits on a plain ivory backdrop with clean negative space." },
+                      ],
+                    },
+                    {
+                      id: "perspective",
+                      label: "Perspective",
+                      choices: [
+                        { label: "Three-quarter", value: "Subtle three-quarter architectural perspective, with clean geometric perspective lines on every built structure." },
+                        { label: "Flat elevation", value: "Flat front-on elevation with no perspective — everything squared to the picture plane." },
+                        { label: "Isometric", value: "Isometric projection on consistent 30-degree axes." },
+                        { label: "Close-up vignette", value: "Tightly cropped close-up vignette focused on hands and the key object." },
+                      ],
+                    },
+                    {
+                      id: "format",
+                      label: "Format",
+                      choices: [
+                        { label: "Square 1:1", value: "Square 1:1 canvas." },
+                        { label: "Portrait 4:5", value: "Portrait 4:5 canvas." },
+                        { label: "Story 9:16", value: "Tall vertical 9:16 canvas." },
+                        { label: "Wide 16:9", value: "Wide 16:9 landscape canvas." },
+                      ],
+                    },
+                    {
+                      id: "headlineMode",
+                      label: "Headline",
+                      choices: [
+                        { label: "Reserve clean space", value: "TEXT: Leave the upper third of the canvas as clean, empty ivory space for a headline to be set later. Do not render any text, letterforms, lettering or typography anywhere in the image." },
+                        { label: "Render the headline", value: "TEXT: Render the headline \"{headline}\" across the upper third in large bold retro editorial typography — a bold serif or geometric display typeface, paired with a monospaced typewriter-style font for any smaller supporting line. Typography must be clean, correctly spelled, highly legible and integrated naturally into the illustration." },
+                      ],
+                    },
+                    {
+                      id: "headline",
+                      label: "Headline text",
+                      type: "input",
+                      placeholder: "e.g. Customise in-store",
+                      fallback: "[your headline]",
+                      showWhen: { headlineMode: 1 },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
         ],
       },
       {
