@@ -4390,4 +4390,124 @@ const journal = [
     footer:
       "Save as .pbip, install the powerbi-authoring bundle, describe the pages you want, and give it something to look at. The agent writes the report files — you keep the review and the git history.",
   },
+
+  {
+    dimension: "Working with AI Agents",
+    title: "The Economics of Agentic Workflows",
+    subtitle:
+      "Tokens usually aren't the biggest line on an agent's bill \u2014 human oversight is. A total-cost-of-ownership read on what agents actually cost, and why cost per run collapses as volume climbs.",
+    date: "2026-08-25",
+    sections: [
+      {
+        title: "The headline",
+        open: true,
+        items: [
+          { text: "Tokens sometimes aren't the highest cost. To manage agents, leaders need a \u201ctotal cost of ownership\u201d mindset \u2014 both fixed and variable costs, not just the model bill.", plain: true },
+          { text: "In McKinsey's illustrative banking example, human oversight is 70\u201375% of variable cost. Large language model tokens are only 20\u201325%. The line everyone budgets for is the second-biggest one.", plain: true },
+          { text: "So before you optimize an agent's token spend, price the humans reviewing its output. That is usually where the money actually is.", plain: true },
+        ],
+      },
+
+      {
+        title: "Exhibit 1 \u2014 where the money goes (banking, 10,000 runs)",
+        items: [
+          { text: "Total annual run cost per agent splits roughly: variable 70\u201375%, fixed 25\u201330%.", plain: true },
+
+          { heading: "Variable cost, per agent run (= 100%)" },
+          { text: "Human oversight \u2014 70\u201375%\nLarge language model tokens \u2014 20\u201325%\nAI infrastructure \u2014 3\u20134%\nAPIs and add-ons \u2014 2\u20133%", plain: true },
+
+          { heading: "Fixed cost, per agent run (= 100%)" },
+          { text: "Agent orchestration \u2014 95\u201398%\nCloud platform \u2014 2\u20135%", plain: true },
+
+          { text: "Read it as a map of where to look, not a benchmark to copy. It's one illustrative customer-facing banking agent with direct P&L impact, at midpoint values.", plain: true },
+        ],
+      },
+
+      {
+        title: "The assumptions underneath \u2014 where the levers actually are",
+        items: [
+          { text: "The footnotes are the useful part. Each assumption is a dial you can turn on your own workflow.", plain: true },
+
+          { heading: "Human oversight \u2014 the biggest dial" },
+          { text: "Assumes 10\u201320% of runs reviewed by human FTEs for ~5 minutes each, at ~$100,000 annual cost per FTE.", plain: true },
+          { text: "Run that on your own review policy: at 10,000 runs, reviewing 10\u201320% for 5 minutes each is 83\u2013167 hours of FTE time a year. Review rate and review time are the two levers with the most money behind them.", plain: true },
+
+          { heading: "LLM tokens" },
+          { text: "Assumes ~70% of runs use frontier or higher-cost models at published token pricing; each run averages 12 turns, 4,000 input words and 500 output words per turn, at ~1.3 words per token.", plain: true },
+          { text: "Twelve turns at 4,000 input words each is the real driver. Cutting turns and trimming what you resend each turn moves more than routing the easy runs to a cheaper model.", plain: true },
+
+          { heading: "AI infrastructure" },
+          { text: "Orchestration, model gateway, observability, and vector database reads priced per turn, with vector database writes priced per run \u2014 using Langfuse, LangGraph, and Portkey benchmarks.", plain: true },
+
+          { heading: "APIs and add-ons" },
+          { text: "Approximately 10\u201315 tool and data API calls per run.", plain: true },
+
+          { heading: "Agent orchestration \u2014 the fixed base" },
+          { text: "Assumes ~500 agents per enterprise, managed by agent operations FTEs at ~$150,000 per year, at roughly 20 agents per FTE.", plain: true },
+          { text: "Agent ops headcount is 95\u201398% of fixed cost. How many agents one operator can hold is the fixed-cost lever \u2014 and it's the arithmetic behind preferring fewer, reused agents over many bespoke ones.", plain: true },
+
+          { heading: "Cloud platform" },
+          { text: "Approximately $80,000 per year based on Azure benchmarks, covering a 500-agent fleet with no corporate discount.", plain: true },
+        ],
+      },
+
+      {
+        title: "Exhibit 2 \u2014 cost per run collapses with volume",
+        items: [
+          { text: "Cost per run and total annual run cost, by number of agent runs:", plain: true },
+          { text: "     100 runs \u2014 $78\u201379 per run \u2014 $7,000\u20138,000 total\n   2,500 runs \u2014   $4\u20135 per run \u2014 $10,000\u201315,000 total\n   5,000 runs \u2014   $3\u20134 per run \u2014 $15,000\u201320,000 total\n 10,000 runs \u2014   $2\u20133 per run \u2014 $20,000\u201330,000 total", plain: true },
+          { text: "McKinsey's example: a conversational agent onboarding 2,500 new customers a year costs $10,000\u201315,000. Doubling the volume raised it to just $15,000\u201320,000.", plain: true },
+          { text: "Notice what the 100-run row is really saying: ~$7,500 of bill for almost no work. That's the fixed base you pay whether the agent runs once or ten thousand times.", plain: true },
+          { text: "A hundredfold increase in volume is roughly a threefold increase in cost \u2014 and about a 30x drop in cost per run. Low-volume agents aren't expensive because they're inefficient; they're expensive because there's nothing to spread the fixed base across.", plain: true },
+          { text: "Practical test before you build: can this agent clear a few thousand runs a year? If not, the honest options are to widen its scope, fold it into an agent you already run, or not build it.", plain: true },
+        ],
+      },
+
+      {
+        title: "Four moves that follow from the numbers",
+        items: [
+          { text: "Price the whole thing, not the tokens \u2014 budget agents on total cost of ownership: oversight labour, agent ops headcount, infrastructure, and platform, not the model bill alone.", copy: true },
+          { text: "Design the oversight instead of defaulting it \u2014 decide deliberately what share of runs a human reviews and for how long, then revisit it as the agent proves out. Review-everything is the most expensive default available.", copy: true },
+          { text: "Chase volume \u2014 point agents at high-volume workflows so the fixed base amortizes. Cost per run falls sharply with scale while total cost rises far more slowly than volume.", copy: true },
+          { text: "Build once, reuse everywhere \u2014 prioritize building agents once and reusing them across multiple high-value workflows, which takes a disciplined evaluation to find the tasks common to your priority workflows. Every extra bespoke agent adds to the agent-ops load that dominates fixed cost.", copy: true },
+        ],
+      },
+
+      {
+        title: "Second-order questions to bring to your own budget",
+        items: [
+          { text: "When should AI costs be passed through to customers or absorbed by the organization?", copy: true },
+          { text: "How much pricing flexibility do business leaders need to build into their budgets?", copy: true },
+          { text: "How do current budgeting, governance, and operating disciplines (internal chargebacks, cost coding) need to evolve to account for AI economics?", copy: true },
+          { text: "How should cost and pricing decisions be made as AI agents work increasingly across functional boundaries?", copy: true },
+          { text: "McKinsey's framing: we're only in the foothills of the AI economics climb, and it's too early for definitive answers \u2014 but leaders need stronger AI economics muscles so they don't inadvertently make choices that damage their business model over time.", plain: true },
+        ],
+      },
+
+      {
+        title: "Run this on your own workflow \u2014 copy this prompt",
+        items: [
+          {
+            prompt: "Help me build a total-cost-of-ownership model for an AI agent I'm considering, using McKinsey's cost structure.\n\nMy workflow: [describe it]\nExpected runs per year: [number]\n\nWork through it in this order, and ask me for any number you need rather than assuming it:\n\n1. VARIABLE COST\n   - Human oversight: what share of runs get reviewed, how many minutes each, at what fully-loaded hourly cost? Compute the annual total.\n   - LLM tokens: how many turns per run, input and output words per turn, which model tier, at what published price? Compute the annual total.\n   - AI infrastructure (orchestration, model gateway, observability, vector DB) and tool/data API calls per run.\n\n2. FIXED COST\n   - Agent ops headcount: how many agents can one operator hold, at what salary, and what is this agent's share?\n   - Platform and cloud, apportioned across the fleet.\n\n3. OUTPUT\n   - Cost per run and total annual cost at my expected volume, then at 10x and 0.1x that volume.\n   - Rank every line by size and tell me which single lever moves the total most.\n   - Tell me straight whether this agent clears enough volume to be worth building, or whether I should widen its scope, fold it into an existing agent, or skip it.\n\nFlag any assumption where you think my number is optimistic.",
+          },
+        ],
+      },
+
+      {
+        title: "Source",
+        items: [
+          { text: "Where AI agents pay off: A practical guide to the economics of agentic workflows \u2014 McKinsey QuantumBlack. Every figure above is from their illustrative banking example; the arithmetic and the \u201cwhat to do about it\u201d reading are mine.", plain: true },
+          {
+            link: {
+              href: "https://www.mckinsey.com/capabilities/quantumblack/our-insights/where-ai-agents-pay-off-a-practical-guide-to-the-economics-of-agentic-workflows",
+              label: "Read the McKinsey article",
+              compact: true,
+            },
+          },
+        ],
+      },
+    ],
+    footer:
+      "The cheapest agent isn't the one on the cheapest model \u2014 it's the one running enough volume to amortize its fixed base, reviewed no more than it needs to be, and reused across more than one workflow.",
+  },
 ];
