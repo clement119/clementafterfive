@@ -3513,6 +3513,22 @@ const journal = [
                   "note": "Couldn't confirm the exact source — find the current marketplace in Claude Code's /plugin directory first."
                 },
                 {
+                  "name": "finance-agents-for-claude",
+                  "type": "skill",
+                  "domain": "Finance",
+                  "tag": "42 agents, whole finance function",
+                  "desc": "The finance function as 42 agents, not 42 prompts — budget planning, rolling forecasts, price/volume/mix variance bridges, month-end close, cash positioning and 13-week liquidity, tax provision and transfer pricing, NPV/IRR and a WACC build, risk and controls, and the board pack. Each agent is one SKILL.md carrying a named method, so run one, run a group, or chain the set from first forecast to board-ready pack.",
+                  "install": [
+                    "curl -L -o fin.zip https://www.oria.one/resources/finance-agents-for-claude-skills.zip",
+                    "unzip -qo fin.zip -d fin && cp -R fin/skills/* ~/.claude/skills/ && rm -rf fin fin.zip"
+                  ],
+                  "repo": "https://www.oria.one/resources/finance-agents-for-claude",
+                  "linkLabel": "Read the setup guide \u2192",
+                  "demo": "https://www.oria.one/resources/finance-agents-for-claude-skills.zip",
+                  "demoLabel": "Download the zip (42 agents) \u2192",
+                  "note": "Free, no signup. Two ways in: the commands above drop all 42 into your Claude Code skills folder (~/.claude/skills/), or — the pack's own route for the web/desktop app — make a Claude Project, upload the .md files to Project Knowledge, and name the agent in your prompt (\"Run the variance-analysis agent on this month's actuals\"). Educational tooling, not legal, tax, or investment advice — confirm treatment with your own advisers."
+                },
+                {
                   "name": "claude-skills",
                   "type": "plugin",
                   "domain": "Development",
