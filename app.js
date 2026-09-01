@@ -755,8 +755,170 @@
     return wrap;
   }
 
+  // A swipeable gallery of idea/use-case cards. Native scroll-snap does the
+  // swiping on touch; arrows + a counter give the same control on desktop.
+  // Each card is a scenario: where you are, what you ask, what comes back.
+  function buildIdeaDeck(cfg) {
+    const cards = Array.isArray(cfg && cfg.cards) ? cfg.cards : [];
+
+    const wrap = document.createElement("div");
+    wrap.className = "ideadeck";
+
+    const track = document.createElement("div");
+    track.className = "ideadeck-track";
+
+    cards.forEach((card, idx) => {
+      const c = document.createElement("article");
+      c.className = "ideadeck-card";
+
+      const head = document.createElement("div");
+      head.className = "ideadeck-head";
+      const num = document.createElement("span");
+      num.className = "ideadeck-num";
+      num.textContent = String(idx + 1).padStart(2, "0");
+      head.appendChild(num);
+      if (card.tag) {
+        const tag = document.createElement("span");
+        tag.className = "ideadeck-tag";
+        tag.textContent = card.tag;
+        head.appendChild(tag);
+      }
+      c.appendChild(head);
+
+      if (card.title) {
+        const h = document.createElement("h3");
+        h.className = "ideadeck-title";
+        h.textContent = card.title;
+        c.appendChild(h);
+      }
+
+      // Three beats per card: the moment, the ask, the payoff.
+      const rows = [
+        ["Looking at", card.looking],
+        ["You ask", card.ask],
+        ["You get", card.get],
+      ];
+      rows.forEach(([label, value]) => {
+        if (!value) return;
+        const row = document.createElement("div");
+        row.className = "ideadeck-row";
+        const lab = document.createElement("span");
+        lab.className = "ideadeck-label";
+        lab.textContent = label;
+        const val = document.createElement("p");
+        val.className = "ideadeck-value";
+        if (label === "You ask") val.classList.add("ideadeck-value--ask");
+        val.textContent = label === "You ask" ? "\u201c" + value + "\u201d" : value;
+        row.append(lab, val);
+        c.appendChild(row);
+      });
+
+      if (card.ask) {
+        const btn = document.createElement("button");
+        btn.className = "copy-btn ideadeck-copy";
+        btn.type = "button";
+        btn.setAttribute("aria-label", "Copy the ask for " + (card.title || "this use case"));
+        btn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy the ask</span>`;
+        btn.addEventListener("click", () => copyText(card.ask, btn));
+        c.appendChild(btn);
+      }
+
+      track.appendChild(c);
+    });
+
+    wrap.appendChild(track);
+
+    // Controls — a counter plus prev/next. Hidden entirely for a single card.
+    if (cards.length > 1) {
+      const nav = document.createElement("div");
+      nav.className = "ideadeck-nav";
+
+      const prev = document.createElement("button");
+      prev.type = "button";
+      prev.className = "ideadeck-arrow";
+      prev.setAttribute("aria-label", "Previous card");
+      prev.textContent = "\u2190";
+
+      const count = document.createElement("span");
+      count.className = "ideadeck-count";
+
+      const next = document.createElement("button");
+      next.type = "button";
+      next.className = "ideadeck-arrow";
+      next.setAttribute("aria-label", "Next card");
+      next.textContent = "\u2192";
+
+      // The index is authoritative: arrows drive it and update instantly, so
+      // rapid clicks can't compound off a half-finished smooth scroll. A manual
+      // swipe re-derives it, but only once the scroll has settled.
+      let idx = 0;
+      let programmatic = false;
+      let settle = null;
+
+      function maxScroll() {
+        return track.scrollWidth - track.clientWidth;
+      }
+      // Centre the card, clamped to the scrollable range — the first and last
+      // cards can never truly centre, so they pin to the ends instead.
+      function offsetFor(i) {
+        const el = track.children[i];
+        if (!el) return 0;
+        const centred = el.offsetLeft - (track.clientWidth - el.offsetWidth) / 2;
+        return Math.max(0, Math.min(maxScroll(), centred));
+      }
+      function render() {
+        count.textContent = (idx + 1) + " / " + cards.length;
+        prev.disabled = idx === 0;
+        next.disabled = idx === cards.length - 1;
+      }
+      function go(delta) {
+        idx = Math.min(Math.max(idx + delta, 0), cards.length - 1);
+        programmatic = true;
+        track.scrollTo({ left: offsetFor(idx), behavior: "smooth" });
+        render();
+      }
+      // Because the ends clamp, treat "scrolled to the edge" as the edge card
+      // rather than asking which card is nearest the centre.
+      function fromScroll() {
+        if (track.scrollLeft <= 2) {
+          idx = 0;
+        } else if (track.scrollLeft >= maxScroll() - 2) {
+          idx = cards.length - 1;
+        } else {
+          const mid = track.scrollLeft + track.clientWidth / 2;
+          let best = 0;
+          let bestDist = Infinity;
+          [...track.children].forEach((el, i) => {
+            const d = Math.abs(el.offsetLeft + el.offsetWidth / 2 - mid);
+            if (d < bestDist) { bestDist = d; best = i; }
+          });
+          idx = best;
+        }
+        render();
+      }
+
+      prev.addEventListener("click", () => go(-1));
+      next.addEventListener("click", () => go(1));
+
+      track.addEventListener("scroll", () => {
+        clearTimeout(settle);
+        settle = setTimeout(() => {
+          if (programmatic) { programmatic = false; render(); return; }
+          fromScroll();
+        }, 120);
+      });
+
+      nav.append(prev, count, next);
+      wrap.appendChild(nav);
+      render();
+    }
+
+    return wrap;
+  }
+
   function buildItem(item, i) {
     if (item && item.deck) return buildPersonaDeck(item.deck);
+    if (item && item.ideaDeck) return buildIdeaDeck(item.ideaDeck);
     if (item && item.skills) return buildSkillList(item.skills);
     if (item && item.catalog) return buildCatalog(item.catalog);
     if (item && item.compare) return buildBeforeAfter(item.compare);
