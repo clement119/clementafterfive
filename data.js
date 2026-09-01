@@ -4399,170 +4399,174 @@ const journal = [
     date: "2026-09-01",
     sections: [
       {
-        title: "The inspiration \u2014 Clicky",
-        open: true,
-        items: [
-          { text: "\u201cAn AI buddy that lives on your Mac.\u201d Press a hotkey, and it sees what's on your screen. Ask out loud or by text about whatever you're looking at, and it answers \u2014 in conversation, as annotations drawn onto the screen itself, or by doing the task for you when you invoke agent mode.", plain: true },
-          { text: "macOS only for now (Sonoma 14.2+), with a Windows waitlist. It works with any app that's visible \u2014 no plugins, no integrations \u2014 because the screen is the interface. Screenshots are taken only while the hotkey is pressed, and aren't stored.", plain: true },
-          { text: "The framing is the interesting part: they treat AI's remaining problem as an interface problem, not a model problem. The models are already good; getting to them still means a chat box or a terminal. Clicky's bet is that the fix is meeting you where you already are.", plain: true },
+        title: "Clicky \u2014 point, capture, ask at work",
+        tips: [
           {
-            link: {
-              href: "https://www.heyclicky.com/",
-              label: "heyclicky.com",
-              compact: true,
-            },
+            title: "The inspiration \u2014 Clicky",
+            items: [
+              { text: "\u201cAn AI buddy that lives on your Mac.\u201d Press a hotkey, and it sees what's on your screen. Ask out loud or by text about whatever you're looking at, and it answers \u2014 in conversation, as annotations drawn onto the screen itself, or by doing the task for you when you invoke agent mode.", plain: true },
+              { text: "macOS only for now (Sonoma 14.2+), with a Windows waitlist. It works with any app that's visible \u2014 no plugins, no integrations \u2014 because the screen is the interface. Screenshots are taken only while the hotkey is pressed, and aren't stored.", plain: true },
+              { text: "The framing is the interesting part: they treat AI's remaining problem as an interface problem, not a model problem. The models are already good; getting to them still means a chat box or a terminal. Clicky's bet is that the fix is meeting you where you already are.", plain: true },
+              {
+                link: {
+                  href: "https://www.heyclicky.com/",
+                  label: "heyclicky.com",
+                  compact: true,
+                },
+              },
+            ],
           },
-        ],
-      },
 
-      {
-        title: "The idea, in one line",
-        items: [
-          { text: "Point at something on your work screen, capture it, and ask about it right there \u2014 the screen is the context, so the question can be short.", plain: true },
-          { text: "Every workplace question already has an answer somewhere: a wiki, a policy, a system of record, a colleague who did it last quarter. The friction isn't that the answer is missing \u2014 it's that asking requires you to stop, switch apps, and re-describe in words a thing you are currently looking at.", plain: true },
-          { text: "Take the re-describing away and a lot of small questions get asked that currently just don't.", plain: true },
-        ],
-      },
-
-      {
-        title: "Use cases \u2014 swipe through",
-        items: [
-          { text: "Fourteen moments where the screen is already the whole question. Swipe, or use the arrows.", plain: true },
           {
-            ideaDeck: {
-              cards: [
-                {
-                  tag: "Finance",
-                  title: "The number that moved",
-                  looking: "A variance cell in the monthly model that jumped 12% with no comment attached.",
-                  ask: "Why is this different from last month, and which driver moved it?",
-                  get: "The formula chain traced back to the two inputs that actually changed, and the tab they live on.",
-                },
-                {
-                  tag: "Analytics",
-                  title: "The spike nobody ordered",
-                  looking: "A Tuesday spike on a dashboard, thirty seconds before you have to explain it in standup.",
-                  ask: "What's behind this spike \u2014 is it real or is it the data?",
-                  get: "The filters currently applied, what they quietly exclude, and the slices worth checking before you call it real.",
-                },
-                {
-                  tag: "Ops",
-                  title: "The unlabelled button",
-                  looking: "A twenty-year-old internal system with eight buttons and no tooltips.",
-                  ask: "What does this button do, and is it safe to press on a live record?",
-                  get: "A plain-English read of the screen \u2014 and a warning when the thing writes rather than reads.",
-                },
-                {
-                  tag: "Engineering",
-                  title: "The error with no search results",
-                  looking: "A stack trace from an internal service that returns nothing useful anywhere.",
-                  ask: "What's actually failing here, and what do I check first?",
-                  get: "The one line in the trace that matters, ranked next steps, and which team owns that service.",
-                },
-                {
-                  tag: "Legal",
-                  title: "The clause at 6pm",
-                  looking: "A redlined indemnity clause in a contract you didn't draft.",
-                  ask: "Is this standard, and what's our usual fallback position?",
-                  get: "How it differs from your own template, the exposure it opens, and the two words worth negotiating.",
-                },
-                {
-                  tag: "Onboarding",
-                  title: "The shoulder tap you didn't make",
-                  looking: "Any internal system in week one, with no idea what you're looking at.",
-                  ask: "What is this screen, and what am I supposed to do on it?",
-                  get: "An orientation for that exact screen, instead of a wiki page written two reorgs ago.",
-                },
-                {
-                  tag: "Risk",
-                  title: "The form before you submit",
-                  looking: "A completed client-onboarding form, cursor hovering over Submit.",
-                  ask: "Does anything here breach policy or look incomplete?",
-                  get: "A pre-flight check against the fields that usually get it kicked back.",
-                },
-                {
-                  tag: "Finance ops",
-                  title: "The invoice that doesn't match",
-                  looking: "An invoice in the approval queue, sitting next to its purchase order.",
-                  ask: "Do these two agree, and what's off?",
-                  get: "A line-by-line match with the mismatches called out \u2014 before you approve, not after.",
-                },
-                {
-                  tag: "Design",
-                  title: "The mock that's almost right",
-                  looking: "A frame in design review that feels off, and you can't name why.",
-                  ask: "Where does this drift from our design system?",
-                  get: "The specifics: the spacing that isn't on the scale, the two greys that should be one.",
-                },
-                {
-                  tag: "SRE",
-                  title: "The alert you've seen before",
-                  looking: "A monitoring alert at 2am that looks familiar and probably is.",
-                  ask: "Have we seen this before, and what fixed it?",
-                  get: "The matching incident, what actually resolved it, and whether the runbook still holds.",
-                },
-                {
-                  tag: "Global teams",
-                  title: "The screen you can't read",
-                  looking: "A supplier portal in a language you don't speak, halfway through a task.",
-                  ask: "What is this asking me for?",
-                  get: "The screen read back to you field by field, without leaving it or breaking the session.",
-                },
-                {
-                  tag: "Meetings",
-                  title: "The slide with no source",
-                  looking: "A number on someone else's slide, live in the room.",
-                  ask: "Where does this figure come from, and does it match our system of record?",
-                  get: "A quiet answer on your own screen, before you decide whether to ask out loud.",
-                },
-                {
-                  tag: "Support",
-                  title: "The ticket that smells like a duplicate",
-                  looking: "A new bug report at the top of the triage queue.",
-                  ask: "Has this come in before, and who handled it?",
-                  get: "The near-duplicates, the last resolution, and whether this is a regression.",
-                },
-                {
-                  tag: "Knowledge",
-                  title: "The process only one person knows",
-                  looking: "A colleague running a monthly close step you inherit next quarter.",
-                  ask: "Write down what just happened on this screen as a repeatable procedure.",
-                  get: "A first draft of the runbook, captured from the real thing instead of remembered weeks later.",
-                },
-              ],
-            },
+            title: "The idea, in one line",
+            items: [
+              { text: "Point at something on your work screen, capture it, and ask about it right there \u2014 the screen is the context, so the question can be short.", plain: true },
+              { text: "Every workplace question already has an answer somewhere: a wiki, a policy, a system of record, a colleague who did it last quarter. The friction isn't that the answer is missing \u2014 it's that asking requires you to stop, switch apps, and re-describe in words a thing you are currently looking at.", plain: true },
+              { text: "Take the re-describing away and a lot of small questions get asked that currently just don't.", plain: true },
+            ],
           },
-        ],
-      },
 
-      {
-        title: "Why this beats pasting a screenshot into chat",
-        items: [
-          { text: "The obvious objection: you can already screenshot and paste into any chat window. Worth being honest that this is the bar to clear.", plain: true },
-          { text: "No context switch \u2014 you stay in the tool you're working in, which is the difference between asking and not bothering.", plain: true },
-          { text: "The ask gets shorter. \u201cWhy is this different?\u201d only works when \u201cthis\u201d is unambiguous, and pointing makes it unambiguous.", plain: true },
-          { text: "The answer can land on the thing itself \u2014 an annotation over the cell or the button, rather than a paragraph describing where to look.", plain: true },
-          { text: "It sees the whole screen, not the crop you chose. The filter you forgot was applied is usually the answer.", plain: true },
-        ],
-      },
-
-      {
-        title: "What would make or break it",
-        items: [
-          { text: "At work, screen capture is a permissions question before it's a product question. Four things decide whether this is adoptable: what gets captured, what leaves the device, what's retained, and who can audit it. Clicky's answer \u2014 capture only while the hotkey is held, store nothing \u2014 is the right shape to start from.", plain: true },
-          { text: "Other people's data is usually on screen too. Customer records, a colleague's shared screen, an open inbox. Consent and redaction can't be an afterthought when the input is \u201ceverything visible.\u201d", plain: true },
-          { text: "Some screens need hard exclusion, not policy text \u2014 health records, card numbers, anything price-sensitive. That's a blocklist enforced by the app, not a line in a handbook.", plain: true },
-          { text: "The value is highest in exactly the systems that are most locked down: legacy internal tools with no API and no docs. That's the wedge and the obstacle at once.", plain: true },
-          { text: "Agent mode changes the risk profile completely. Reading a screen is reversible; clicking on it isn't. Read-only is a product, act-on-my-behalf is a governance project.", plain: true },
-          { text: "And it has to be genuinely faster than alt-tab and paste. If it isn't, none of the rest matters.", plain: true },
-        ],
-      },
-
-      {
-        title: "Take the idea further \u2014 copy this prompt",
-        items: [
           {
-            prompt: "I want to pressure-test a product idea: a workplace version of Clicky (an AI that sees whatever is on your screen when you press a hotkey, so you can ask about what you're looking at without pasting it into a chat).\n\nThe idea: at work, point at anything on screen \u2014 a spreadsheet cell, a legacy tool, an error, a contract clause \u2014 capture it, and ask about it in place.\n\nWork through this with me:\n\n1. WEDGE\n   - Which single workplace scenario should this launch with, and why that one first?\n   - What's the specific alternative it has to beat, and by how much, for someone to change habit?\n\n2. WHY NOT ALREADY\n   - This is technically buildable today. So why doesn't it exist at work yet? Separate the real blockers (procurement, security review, data residency) from the imagined ones.\n\n3. TRUST\n   - Design the capture model: what's captured, what leaves the device, what's retained, who audits it.\n   - What would a CISO need to see before approving a rollout? Write the objections, then the answers.\n\n4. LIMITS\n   - Where does read-only stop being enough, and what does the first act-on-my-behalf feature need before it ships?\n   - Which screens should be hard-excluded by the app rather than by policy?\n\n5. VERDICT\n   - Is this a product, a feature of an existing suite, or a demo that doesn't survive contact with an enterprise? Argue the strongest case against it before you give me your answer.\n\nBe blunt. I'd rather find the fatal flaw now.",
+            title: "Use cases \u2014 swipe through",
+            items: [
+              { text: "Fourteen moments where the screen is already the whole question. Swipe, or use the arrows.", plain: true },
+              {
+                ideaDeck: {
+                  cards: [
+                    {
+                      tag: "Finance",
+                      title: "The number that moved",
+                      looking: "A variance cell in the monthly model that jumped 12% with no comment attached.",
+                      ask: "Why is this different from last month, and which driver moved it?",
+                      get: "The formula chain traced back to the two inputs that actually changed, and the tab they live on.",
+                    },
+                    {
+                      tag: "Analytics",
+                      title: "The spike nobody ordered",
+                      looking: "A Tuesday spike on a dashboard, thirty seconds before you have to explain it in standup.",
+                      ask: "What's behind this spike \u2014 is it real or is it the data?",
+                      get: "The filters currently applied, what they quietly exclude, and the slices worth checking before you call it real.",
+                    },
+                    {
+                      tag: "Ops",
+                      title: "The unlabelled button",
+                      looking: "A twenty-year-old internal system with eight buttons and no tooltips.",
+                      ask: "What does this button do, and is it safe to press on a live record?",
+                      get: "A plain-English read of the screen \u2014 and a warning when the thing writes rather than reads.",
+                    },
+                    {
+                      tag: "Engineering",
+                      title: "The error with no search results",
+                      looking: "A stack trace from an internal service that returns nothing useful anywhere.",
+                      ask: "What's actually failing here, and what do I check first?",
+                      get: "The one line in the trace that matters, ranked next steps, and which team owns that service.",
+                    },
+                    {
+                      tag: "Legal",
+                      title: "The clause at 6pm",
+                      looking: "A redlined indemnity clause in a contract you didn't draft.",
+                      ask: "Is this standard, and what's our usual fallback position?",
+                      get: "How it differs from your own template, the exposure it opens, and the two words worth negotiating.",
+                    },
+                    {
+                      tag: "Onboarding",
+                      title: "The shoulder tap you didn't make",
+                      looking: "Any internal system in week one, with no idea what you're looking at.",
+                      ask: "What is this screen, and what am I supposed to do on it?",
+                      get: "An orientation for that exact screen, instead of a wiki page written two reorgs ago.",
+                    },
+                    {
+                      tag: "Risk",
+                      title: "The form before you submit",
+                      looking: "A completed client-onboarding form, cursor hovering over Submit.",
+                      ask: "Does anything here breach policy or look incomplete?",
+                      get: "A pre-flight check against the fields that usually get it kicked back.",
+                    },
+                    {
+                      tag: "Finance ops",
+                      title: "The invoice that doesn't match",
+                      looking: "An invoice in the approval queue, sitting next to its purchase order.",
+                      ask: "Do these two agree, and what's off?",
+                      get: "A line-by-line match with the mismatches called out \u2014 before you approve, not after.",
+                    },
+                    {
+                      tag: "Design",
+                      title: "The mock that's almost right",
+                      looking: "A frame in design review that feels off, and you can't name why.",
+                      ask: "Where does this drift from our design system?",
+                      get: "The specifics: the spacing that isn't on the scale, the two greys that should be one.",
+                    },
+                    {
+                      tag: "SRE",
+                      title: "The alert you've seen before",
+                      looking: "A monitoring alert at 2am that looks familiar and probably is.",
+                      ask: "Have we seen this before, and what fixed it?",
+                      get: "The matching incident, what actually resolved it, and whether the runbook still holds.",
+                    },
+                    {
+                      tag: "Global teams",
+                      title: "The screen you can't read",
+                      looking: "A supplier portal in a language you don't speak, halfway through a task.",
+                      ask: "What is this asking me for?",
+                      get: "The screen read back to you field by field, without leaving it or breaking the session.",
+                    },
+                    {
+                      tag: "Meetings",
+                      title: "The slide with no source",
+                      looking: "A number on someone else's slide, live in the room.",
+                      ask: "Where does this figure come from, and does it match our system of record?",
+                      get: "A quiet answer on your own screen, before you decide whether to ask out loud.",
+                    },
+                    {
+                      tag: "Support",
+                      title: "The ticket that smells like a duplicate",
+                      looking: "A new bug report at the top of the triage queue.",
+                      ask: "Has this come in before, and who handled it?",
+                      get: "The near-duplicates, the last resolution, and whether this is a regression.",
+                    },
+                    {
+                      tag: "Knowledge",
+                      title: "The process only one person knows",
+                      looking: "A colleague running a monthly close step you inherit next quarter.",
+                      ask: "Write down what just happened on this screen as a repeatable procedure.",
+                      get: "A first draft of the runbook, captured from the real thing instead of remembered weeks later.",
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+
+          {
+            title: "Why this beats pasting a screenshot into chat",
+            items: [
+              { text: "The obvious objection: you can already screenshot and paste into any chat window. Worth being honest that this is the bar to clear.", plain: true },
+              { text: "No context switch \u2014 you stay in the tool you're working in, which is the difference between asking and not bothering.", plain: true },
+              { text: "The ask gets shorter. \u201cWhy is this different?\u201d only works when \u201cthis\u201d is unambiguous, and pointing makes it unambiguous.", plain: true },
+              { text: "The answer can land on the thing itself \u2014 an annotation over the cell or the button, rather than a paragraph describing where to look.", plain: true },
+              { text: "It sees the whole screen, not the crop you chose. The filter you forgot was applied is usually the answer.", plain: true },
+            ],
+          },
+
+          {
+            title: "What would make or break it",
+            items: [
+              { text: "At work, screen capture is a permissions question before it's a product question. Four things decide whether this is adoptable: what gets captured, what leaves the device, what's retained, and who can audit it. Clicky's answer \u2014 capture only while the hotkey is held, store nothing \u2014 is the right shape to start from.", plain: true },
+              { text: "Other people's data is usually on screen too. Customer records, a colleague's shared screen, an open inbox. Consent and redaction can't be an afterthought when the input is \u201ceverything visible.\u201d", plain: true },
+              { text: "Some screens need hard exclusion, not policy text \u2014 health records, card numbers, anything price-sensitive. That's a blocklist enforced by the app, not a line in a handbook.", plain: true },
+              { text: "The value is highest in exactly the systems that are most locked down: legacy internal tools with no API and no docs. That's the wedge and the obstacle at once.", plain: true },
+              { text: "Agent mode changes the risk profile completely. Reading a screen is reversible; clicking on it isn't. Read-only is a product, act-on-my-behalf is a governance project.", plain: true },
+              { text: "And it has to be genuinely faster than alt-tab and paste. If it isn't, none of the rest matters.", plain: true },
+            ],
+          },
+
+          {
+            title: "Take the idea further \u2014 copy this prompt",
+            items: [
+              {
+                prompt: "I want to pressure-test a product idea: a workplace version of Clicky (an AI that sees whatever is on your screen when you press a hotkey, so you can ask about what you're looking at without pasting it into a chat).\n\nThe idea: at work, point at anything on screen \u2014 a spreadsheet cell, a legacy tool, an error, a contract clause \u2014 capture it, and ask about it in place.\n\nWork through this with me:\n\n1. WEDGE\n   - Which single workplace scenario should this launch with, and why that one first?\n   - What's the specific alternative it has to beat, and by how much, for someone to change habit?\n\n2. WHY NOT ALREADY\n   - This is technically buildable today. So why doesn't it exist at work yet? Separate the real blockers (procurement, security review, data residency) from the imagined ones.\n\n3. TRUST\n   - Design the capture model: what's captured, what leaves the device, what's retained, who audits it.\n   - What would a CISO need to see before approving a rollout? Write the objections, then the answers.\n\n4. LIMITS\n   - Where does read-only stop being enough, and what does the first act-on-my-behalf feature need before it ships?\n   - Which screens should be hard-excluded by the app rather than by policy?\n\n5. VERDICT\n   - Is this a product, a feature of an existing suite, or a demo that doesn't survive contact with an enterprise? Argue the strongest case against it before you give me your answer.\n\nBe blunt. I'd rather find the fatal flaw now.",
+              },
+            ],
           },
         ],
       },

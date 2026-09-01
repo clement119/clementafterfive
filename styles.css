@@ -198,7 +198,9 @@ body {
   transition: transform 0.24s ease;
 }
 
-.section[open] .chevron {
+/* Direct child only — a descendant selector here also flips the chevrons of
+   nested, still-closed subsections whenever the parent section is open. */
+.section[open] > summary .chevron {
   transform: rotate(180deg);
 }
 
@@ -256,7 +258,7 @@ body {
   color: var(--ink-soft);
 }
 
-.subsection[open] .subsection-head .chevron {
+.subsection[open] > .subsection-head .chevron {
   transform: rotate(180deg);
 }
 

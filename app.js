@@ -3120,7 +3120,7 @@
     const body = document.createElement("div");
     body.className = "section-body";
     if (tips) {
-      tips.forEach((tip, i) => body.appendChild(buildSubsection(tip, i === 0)));
+      tips.forEach((tip) => body.appendChild(buildSubsection(tip)));
     } else {
       items.forEach((item, i) => body.appendChild(buildItem(item, i)));
     }
@@ -3129,10 +3129,12 @@
   }
 
   // A nested, collapsible tip inside a section.
-  function buildSubsection(tip, openByDefault) {
+  // Open only when the tip asks for it, so a section can expand into a clean
+  // list of collapsed subsections.
+  function buildSubsection(tip) {
     const details = document.createElement("details");
     details.className = "subsection";
-    if (tip.open === true || openByDefault) details.open = true;
+    if (tip.open === true) details.open = true;
 
     const items = Array.isArray(tip.items) ? tip.items : [];
 
