@@ -4184,6 +4184,102 @@ const journal = [
           },
         ],
       },
+      {
+        title: "Hover tilt — 3D cards that follow the cursor",
+        items: [
+          {
+            text: "The card leans toward your cursor and a highlight slides across it. Cheap to add, and it makes a flat grid feel physical — worth it on product cards, pricing tiles and hero art. Not worth it on anything you actually have to read.",
+            plain: true,
+          },
+          {
+            tiltDemo: {
+              eyebrow: "Hover tilt",
+              title: "Tilt me",
+              subtitle: "Move your cursor across the card — or drag a finger sideways on it.",
+              note: "This preview is a ~40-line stand-in so you can feel the effect; it is not the library. The real hover-tilt adds spring physics, dynamic shadows and glare masking on top of this.",
+            },
+          },
+          { heading: "Install" },
+          { code: { label: "npm", text: "npm install hover-tilt" } },
+          { heading: "Use it anywhere — Web Component" },
+          {
+            text: "The web-component build works in vanilla HTML, Vue, React, Angular, Astro and jQuery. Import it once, then use the tag.",
+            plain: true,
+          },
+          {
+            code: {
+              label: "HTML",
+              text:
+                '<script type="module" src="node_modules/hover-tilt/dist/hover-tilt.js"></script>\n\n' +
+                '<hover-tilt tilt-factor="1.5" scale-factor="1.1">\n' +
+                '  <div class="card">Your content here</div>\n' +
+                "</hover-tilt>",
+            },
+          },
+          { heading: "Use it in Svelte 5" },
+          {
+            code: {
+              label: "Svelte",
+              text:
+                "<script>\n" +
+                "  import { HoverTilt } from 'hover-tilt';\n" +
+                "</script>\n\n" +
+                "<HoverTilt tiltFactor={1.5} scaleFactor={1.1}>\n" +
+                '  <div class="card">Your content here</div>\n' +
+                "</HoverTilt>",
+            },
+          },
+          { heading: "Props worth knowing" },
+          {
+            text: "Attribute names below are the web-component (kebab-case) form. In Svelte they're camelCase — tilt-factor becomes tiltFactor, and so on.",
+            plain: true,
+          },
+          {
+            code: {
+              label: "Interaction",
+              text:
+                "tilt-factor          1        horizontal tilt intensity\n" +
+                "tilt-factor-y        = tilt   vertical tilt — set apart for asymmetry\n" +
+                "scale-factor         1        scale on hover (>1 grows, <1 shrinks)\n" +
+                "enter-delay          0        ms before the effect kicks in\n" +
+                "exit-delay           200      ms before it settles back\n" +
+                "spring-options       {stiffness: 0.2, damping: 0.8}\n" +
+                "tilt-spring-options  = spring physics for the tilt alone",
+            },
+          },
+          {
+            code: {
+              label: "Glare & shadow",
+              text:
+                "shadow               false    dynamic shadow that moves with the tilt\n" +
+                "shadow-blur          12       shadow blur radius, px\n" +
+                "glare-intensity      1        glare strength multiplier\n" +
+                "glare-hue            270      glare colour, 0–360\n" +
+                "blend-mode           overlay  CSS blend mode for the glare\n" +
+                "glare-mask           —        mask image to confine the glare\n" +
+                "glare-mask-mode      —        match-source | luminance | alpha | none",
+            },
+          },
+          {
+            text: "Start with tilt-factor and scale-factor alone. Glare and shadow are what tip it from tactile into gaudy, so add them last and keep them low.",
+            plain: true,
+          },
+          {
+            link: {
+              href: "https://github.com/simeydotme/hover-tilt",
+              label: "hover-tilt on GitHub — Simon Goellner, MPL-2.0",
+              compact: true,
+            },
+          },
+          {
+            link: {
+              href: "https://hover-tilt.simey.me/options/props",
+              label: "Full props reference and live examples",
+              compact: true,
+            },
+          },
+        ],
+      },
     ],
     footer:
       "Foundation, rules, examples, words — run the loop and the AI ships UI that looks good. No magic prompt required.",

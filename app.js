@@ -162,6 +162,121 @@
     return h;
   }
 
+  // A copyable monospace snippet. Borrows the catalog's install-command
+  // styling (.skill-install/.skill-cmd) rather than inventing a second
+  // code treatment; multi-line switches to the pre-wrapped variant.
+  function buildCodeBlock(cfg) {
+    const text = typeof cfg === "string" ? cfg : (cfg && cfg.text) || "";
+    const label = cfg && cfg.label;
+
+    const wrap = document.createElement("div");
+    wrap.className = "code-block";
+
+    if (label) {
+      const lab = document.createElement("p");
+      lab.className = "code-block-label";
+      lab.textContent = label;
+      wrap.appendChild(lab);
+    }
+
+    const multi = text.indexOf("\n") > -1;
+    const box = document.createElement("div");
+    box.className = multi ? "skill-install skill-install--multi" : "skill-install";
+
+    const code = document.createElement("code");
+    code.className = multi ? "skill-cmd skill-cmd--multi" : "skill-cmd";
+    code.textContent = text;
+
+    const btn = document.createElement("button");
+    btn.className = "copy-btn";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Copy " + (label || "code snippet"));
+    btn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+    btn.addEventListener("click", () => copyText(text, btn));
+
+    box.append(code, btn);
+    wrap.appendChild(box);
+    return wrap;
+  }
+
+  // A dependency-free stand-in for the hover-tilt library, so the effect can
+  // actually be felt on the page. Driven by pointer events rather than
+  // :hover, because hover doesn't exist on a phone — which is where this
+  // journal mostly gets read. Stands down entirely under reduced motion.
+  function buildTiltDemo(cfg) {
+    const opts = cfg && typeof cfg === "object" ? cfg : {};
+
+    const wrap = document.createElement("div");
+    wrap.className = "tilt-demo";
+
+    const stage = document.createElement("div");
+    stage.className = "tilt-stage";
+
+    const card = document.createElement("div");
+    card.className = "tilt-card";
+
+    const inner = document.createElement("div");
+    inner.className = "tilt-card-inner";
+    const eyebrow = document.createElement("p");
+    eyebrow.className = "tilt-eyebrow";
+    eyebrow.textContent = opts.eyebrow || "Hover tilt";
+    const title = document.createElement("h4");
+    title.className = "tilt-title";
+    title.textContent = opts.title || "Tilt me";
+    const sub = document.createElement("p");
+    sub.className = "tilt-sub";
+    sub.textContent = opts.subtitle || "Move your cursor across the card — or drag a finger sideways on it.";
+    inner.append(eyebrow, title, sub);
+
+    const glare = document.createElement("span");
+    glare.className = "tilt-glare";
+    glare.setAttribute("aria-hidden", "true");
+
+    card.append(inner, glare);
+    stage.appendChild(card);
+    wrap.appendChild(stage);
+
+    if (opts.note) {
+      const note = document.createElement("p");
+      note.className = "skill-note tilt-note";
+      note.textContent = opts.note;
+      wrap.appendChild(note);
+    }
+
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+    const maxTilt = Number(opts.maxTilt) || 12;
+
+    function reset() {
+      card.style.transform = "";
+      glare.style.opacity = "0";
+    }
+
+    function move(e) {
+      if (reduce && reduce.matches) return;
+      const r = card.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      // rotateY follows the horizontal axis, rotateX the vertical — and X is
+      // inverted so the card leans toward the pointer rather than away.
+      const ry = (px - 0.5) * 2 * maxTilt;
+      const rx = (0.5 - py) * 2 * maxTilt;
+      card.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) scale(1.02)`;
+      glare.style.opacity = "1";
+      glare.style.setProperty("--gx", (px * 100).toFixed(1) + "%");
+      glare.style.setProperty("--gy", (py * 100).toFixed(1) + "%");
+    }
+
+    card.addEventListener("pointermove", move);
+    card.addEventListener("pointerdown", move);
+    card.addEventListener("pointerleave", reset);
+    card.addEventListener("pointercancel", reset);
+    if (reduce && reduce.addEventListener) reduce.addEventListener("change", reset);
+
+    reset();
+    return wrap;
+  }
+
   // A bold group label spanning multiple sections (e.g. "Strategic Planning"
   // over several accordion sections). `isFirst` tightens the top margin for
   // a pillar heading that opens a dimension, right under the subtitle/meta.
@@ -934,6 +1049,8 @@
     if (item && item.uiStyleLibrary) return buildUIStyleLibrary(item.uiStyleLibrary);
     if (item && item.sketchLibrary) return buildSketchLibrary(item.sketchLibrary);
     if (item && item.stylePicker) return buildStylePicker(item.stylePicker);
+    if (item && item.tiltDemo) return buildTiltDemo(item.tiltDemo);
+    if (item && item.code) return buildCodeBlock(item.code);
     if (item && item.heading != null) return buildHeading(item.heading);
 
     const { text, copyable, plain } = normalizeItem(item);

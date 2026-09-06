@@ -1444,6 +1444,121 @@ body {
   color: var(--ink);
 }
 
+/* ---------- Code snippet block ---------- */
+.code-block {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px 0;
+}
+
+.code-block-label {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ---------- Hover-tilt demo ----------
+   A dependency-free stand-in for the hover-tilt library, so the effect is
+   feelable on the page without vendoring an MPL-2.0 dependency. */
+.tilt-demo {
+  display: grid;
+  gap: 10px;
+  padding: 4px 0 2px;
+  min-width: 0;
+}
+
+.tilt-stage {
+  perspective: 900px;
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 16px;
+}
+
+.tilt-card {
+  position: relative;
+  width: min(100%, 340px);
+  aspect-ratio: 5 / 3;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(150deg, var(--accent) 0%, #5b4bd6 100%);
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease;
+  cursor: grab;
+  /* Vertical scrolling still belongs to the page; a sideways drag tilts. */
+  touch-action: pan-y;
+}
+
+.tilt-card-inner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 3px;
+  padding: 20px;
+}
+
+.tilt-eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.tilt-title {
+  margin: 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.tilt-sub {
+  margin: 2px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
+/* Glare — soft highlight whose centre tracks the pointer via --gx/--gy. */
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  transition: opacity 0.25s ease;
+  background: radial-gradient(
+    circle at var(--gx, 50%) var(--gy, 50%),
+    rgba(255, 255, 255, 0.75) 0%,
+    rgba(255, 255, 255, 0.22) 34%,
+    transparent 66%
+  );
+}
+
+.tilt-note {
+  text-align: center;
+}
+
+/* The JS also refuses to apply a transform under reduced motion; this kills
+   the easing so nothing animates even on the reset path. */
+@media (prefers-reduced-motion: reduce) {
+  .tilt-card,
+  .tilt-glare {
+    transition: none;
+  }
+}
+
 /* ---------- Link button (CTA to an external page) ---------- */
 .item-link {
   display: inline-flex;
