@@ -938,6 +938,90 @@ body {
   margin-top: 3px;
 }
 
+/* ---------- Font library — sticker generator ---------- */
+/* Spacing/case ride on the same wrapper classes as the cards, so the
+   sticker always matches the sample on screen. */
+.font-library.fl-case-upper .fl-sticker-text {
+  text-transform: uppercase;
+}
+.font-library.fl-spacing-narrow .fl-sticker-text {
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.fl-sticker-block {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.fl-sticker-intro {
+  margin: 0 0 4px;
+}
+
+.fl-sticker-input {
+  resize: vertical;
+  min-height: 56px;
+}
+
+/* Checkerboard reads as "transparent" the way image editors do. Only
+   .fl-sticker is rasterised, so the checks never reach the PNG. */
+.fl-sticker-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: auto;
+  background-color: #8f8f8f;
+  background-image: linear-gradient(45deg, #6f6f6f 25%, transparent 25%),
+    linear-gradient(-45deg, #6f6f6f 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #6f6f6f 75%),
+    linear-gradient(-45deg, transparent 75%, #6f6f6f 75%);
+  background-size: 18px 18px;
+  background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+}
+
+/* fit-content, not block: the PNG is cropped to this element, so a
+   full-width box would export mostly empty transparency. */
+.fl-sticker {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px 6px;
+  line-height: 1.15;
+}
+
+/* Backdrop colour is set in JS from the text colour, not from the theme —
+   this sticker ends up on a photo, not on this page. */
+.fl-sticker--pill {
+  padding: 14px 28px;
+  border-radius: 999px;
+}
+
+.fl-sticker--card {
+  padding: 22px 26px;
+  border-radius: 18px;
+}
+
+.fl-sticker-text {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  line-height: 1.15;
+}
+
+.fl-sticker-standin {
+  margin: 10px 0 0;
+}
+
+.fl-sticker-actions {
+  margin-top: 14px;
+}
+
 /* ---------- Sticker Library ---------- */
 .sticker-library {
   display: grid;
