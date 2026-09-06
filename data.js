@@ -783,6 +783,72 @@ const journal = [
                   ],
                   "allowCustomUseCase": true,
                   "template": "Use {family} italic, a high-contrast Didone serif, for {useCase}."
+                },
+                {
+                  "id": "libre-baskerville",
+                  "label": "Libre Baskerville",
+                  "family": "Libre Baskerville",
+                  "category": "serif",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 400,
+                      "label": "Regular (400)",
+                      "phrase": "regular"
+                    },
+                    {
+                      "value": 700,
+                      "label": "Bold (700)",
+                      "phrase": "bold",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "editorial",
+                      "label": "an editorial, aesthetic quote carousel",
+                      "default": true
+                    },
+                    {
+                      "key": "long-form",
+                      "label": "a long-form, readable text slide"
+                    },
+                    {
+                      "key": "quote-card",
+                      "label": "a quote-card carousel slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true,
+                  "template": "Use {family}{weightClause}, a classic transitional serif with crisp high-contrast strokes and open, highly readable letterforms, for {useCase}{caseClause}."
+                },
+                {
+                  "id": "libre-baskerville-italic",
+                  "label": "Libre Baskerville Italic",
+                  "family": "Libre Baskerville",
+                  "fontStyle": "italic",
+                  "category": "serif",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 400,
+                      "label": "Regular (400)",
+                      "phrase": "regular",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "editorial-quote",
+                      "label": "an elegant editorial pull-quote",
+                      "default": true
+                    },
+                    {
+                      "key": "reflective",
+                      "label": "a reflective, personal-story slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true,
+                  "template": "Use {family} italic, a classic transitional serif italic with calligraphic, gently flowing letterforms, for {useCase}."
                 }
               ],
               "categoryTemplates": {
