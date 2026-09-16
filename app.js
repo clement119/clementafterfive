@@ -1031,13 +1031,64 @@
     return wrap;
   }
 
-  // Live hover demos. Each stage builder returns the markup for one
-  // interaction and wires any pointer maths; listeners live on the demo
+  // Live hover demos — one builder per interaction, all 24 of them.
+  // Every stage is a fixed size and animates transforms/opacity only, so a
+  // demo can never reflow the page. Pointer listeners are attached to the demo
   // element itself, so a tab switch that drops the node drops them with it.
-  // Every demo mirrors its hover state on :focus-visible and animates with
-  // transforms only, so nothing reflows and nothing is hover-only.
+  // Pointer-driven demos expose a representative state on :focus-visible.
+  const hlIcon = {
+    arrow:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+    hand:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5v-4a1.5 1.5 0 0 1 3 0V11m0-2a1.5 1.5 0 0 1 3 0v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-2a1.5 1.5 0 0 1 3 0"/></svg>',
+  };
+
+  // Shared helper: track the pointer over `el` and publish --x/--y in px.
+  function hlTrack(el, onMove) {
+    el.addEventListener("pointermove", (e) => {
+      if (e.pointerType === "touch") return;
+      const r = el.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      el.style.setProperty("--x", x + "px");
+      el.style.setProperty("--y", y + "px");
+      if (onMove) onMove(x, y, r);
+    });
+    el.addEventListener("pointerleave", () => {
+      el.style.removeProperty("--x");
+      el.style.removeProperty("--y");
+      if (onMove) onMove(null, null, null);
+    });
+  }
+
   const hoverStages = {
-    // Feedback — the control leans toward the cursor, then springs back.
+    /* ---------------- Feedback ---------------- */
+
+    // The face rolls over to a second one.
+    rotation(stage) {
+      stage.innerHTML =
+        '<button type="button" class="hl-rot" aria-label="Get in touch">' +
+        '<span class="hl-rot-box" aria-hidden="true">' +
+        '<span class="hl-rot-face hl-rot-front">Get in touch</span>' +
+        '<span class="hl-rot-face hl-rot-back">Say hello</span>' +
+        "</span></button>";
+    },
+
+    // A rule draws itself under the item you are exploring.
+    underline(stage) {
+      const nav = document.createElement("nav");
+      nav.className = "hl-nav";
+      ["Work", "About", "Contact"].forEach((w) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "hl-nav-link";
+        b.innerHTML = w + '<span class="hl-nav-rule" aria-hidden="true"></span>';
+        nav.appendChild(b);
+      });
+      stage.appendChild(nav);
+    },
+
+    // The control leans toward the cursor, then springs back.
     magnet(stage) {
       const btn = document.createElement("button");
       btn.type = "button";
@@ -1060,59 +1111,13 @@
       btn.addEventListener("blur", () => { btn.style.transform = ""; });
     },
 
-    // Feedback — colour blooms from wherever the pointer crossed the edge.
-    fill(stage) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "hl-fill";
-      const ink = document.createElement("span");
-      ink.className = "hl-fill-ink";
-      const label = document.createElement("span");
-      label.className = "hl-fill-label";
-      label.textContent = "Fill me";
-      btn.append(ink, label);
-      stage.appendChild(btn);
-
-      btn.addEventListener("pointerenter", (e) => {
-        const r = btn.getBoundingClientRect();
-        ink.style.left = (e.clientX - r.left) + "px";
-        ink.style.top = (e.clientY - r.top) + "px";
-      });
-    },
-
-    // Discovery — the panel lifts just enough to make room for its detail.
-    caption(stage) {
-      stage.innerHTML =
-        '<div class="hl-caption" tabindex="0" role="group" aria-label="Card with hidden caption">' +
-        '<div class="hl-caption-photo"></div>' +
-        '<p class="hl-caption-text">Blue Flower &middot; 2026</p>' +
-        "</div>";
-    },
-
-    // Discovery — strips lift in sequence to uncover what is underneath.
-    blinds(stage) {
-      const wrap = document.createElement("div");
-      wrap.className = "hl-blinds";
-      wrap.tabIndex = 0;
-      wrap.setAttribute("role", "group");
-      wrap.setAttribute("aria-label", "Panel revealed by lifting strips");
-      for (let i = 0; i < 6; i++) {
-        const strip = document.createElement("span");
-        strip.className = "hl-blind";
-        strip.style.setProperty("--i", String(i));
-        wrap.appendChild(strip);
-      }
-      stage.appendChild(wrap);
-    },
-
-    // Delight — letters roll up one after another.
+    // Letters roll to their twins, staggered across the word.
     roll(stage) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "hl-roll";
       btn.setAttribute("aria-label", "Read more");
-      const word = "Read more";
-      [...word].forEach((ch, i) => {
+      [..."Read more"].forEach((ch, i) => {
         const slot = document.createElement("span");
         slot.className = "hl-roll-slot";
         slot.setAttribute("aria-hidden", "true");
@@ -1130,18 +1135,298 @@
       stage.appendChild(btn);
     },
 
-    // Delight — the field gives the pointer a little space.
+    // Colour blooms from wherever the pointer crossed the edge.
+    fill(stage) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "hl-fill";
+      const ink = document.createElement("span");
+      ink.className = "hl-fill-ink";
+      const label = document.createElement("span");
+      label.className = "hl-fill-label";
+      label.textContent = "Fill me";
+      btn.append(ink, label);
+      stage.appendChild(btn);
+      btn.addEventListener("pointerenter", (e) => {
+        const r = btn.getBoundingClientRect();
+        ink.style.left = e.clientX - r.left + "px";
+        ink.style.top = e.clientY - r.top + "px";
+      });
+    },
+
+    // One arrow leaves as the next arrives.
+    arrow(stage) {
+      stage.innerHTML =
+        '<button type="button" class="hl-arrow">Continue' +
+        '<span class="hl-arrow-slot" aria-hidden="true">' +
+        '<span class="hl-arrow-a">' + hlIcon.arrow + "</span>" +
+        '<span class="hl-arrow-b">' + hlIcon.arrow + "</span>" +
+        "</span></button>";
+    },
+
+    // A pool of light travels the rim, following the pointer.
+    spotlight(stage) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "hl-spot";
+      btn.innerHTML = '<span class="hl-spot-glow" aria-hidden="true"></span><span class="hl-spot-label">Spotlight</span>';
+      stage.appendChild(btn);
+      hlTrack(btn);
+    },
+
+    // A hand rises to greet the cursor and waves.
+    wave(stage) {
+      stage.innerHTML =
+        '<button type="button" class="hl-wave">' +
+        '<span class="hl-wave-hand" aria-hidden="true">' + hlIcon.hand + "</span>" +
+        '<span class="hl-wave-label">Say hi</span></button>';
+    },
+
+    /* ---------------- Discovery ---------------- */
+
+    // Hovering a row brings out a card to introduce it.
+    preview(stage) {
+      const list = document.createElement("ul");
+      list.className = "hl-list";
+      [["Cobalt bloom", "a"], ["Sunlit lemon", "b"], ["Chrome loop", "c"]].forEach(([name, key]) => {
+        const li = document.createElement("li");
+        li.innerHTML =
+          '<button type="button" class="hl-list-row">' + name +
+          '<span class="hl-list-card hl-sw-' + key + '" aria-hidden="true"></span></button>';
+        list.appendChild(li);
+      });
+      stage.appendChild(list);
+    },
+
+    // A neat stack fans open.
+    fan(stage) {
+      const wrap = document.createElement("div");
+      wrap.className = "hl-fan";
+      wrap.tabIndex = 0;
+      wrap.setAttribute("role", "group");
+      wrap.setAttribute("aria-label", "A stack of three cards that fans open");
+      ["a", "b", "c"].forEach((k, i) => {
+        const c = document.createElement("span");
+        c.className = "hl-fan-card hl-sw-" + k;
+        c.style.setProperty("--i", String(i - 1));
+        wrap.appendChild(c);
+      });
+      stage.appendChild(wrap);
+    },
+
+    // Strips lift in sequence to uncover what is underneath.
+    blinds(stage) {
+      const wrap = document.createElement("div");
+      wrap.className = "hl-blinds";
+      wrap.tabIndex = 0;
+      wrap.setAttribute("role", "group");
+      wrap.setAttribute("aria-label", "Panel revealed by lifting strips");
+      for (let i = 0; i < 6; i++) {
+        const strip = document.createElement("span");
+        strip.className = "hl-blind";
+        strip.style.setProperty("--i", String(i));
+        wrap.appendChild(strip);
+      }
+      stage.appendChild(wrap);
+    },
+
+    // The panel you point at takes a little more room and names itself.
+    accordion(stage) {
+      const wrap = document.createElement("div");
+      wrap.className = "hl-acc";
+      [["Bloom", "a"], ["Lemon", "b"], ["Chrome", "c"], ["Dusk", "d"]].forEach(([name, k]) => {
+        const p = document.createElement("button");
+        p.type = "button";
+        p.className = "hl-acc-panel hl-sw-" + k;
+        p.innerHTML = '<span class="hl-acc-name">' + name + "</span>";
+        wrap.appendChild(p);
+      });
+      stage.appendChild(wrap);
+    },
+
+    // A little window travels with the cursor, uncovering another layer.
+    window(stage) {
+      const card = document.createElement("div");
+      card.className = "hl-win";
+      card.tabIndex = 0;
+      card.setAttribute("role", "group");
+      card.setAttribute("aria-label", "Card with a hidden image revealed by a moving window");
+      card.innerHTML =
+        '<span class="hl-win-base" aria-hidden="true"></span>' +
+        '<span class="hl-win-reveal" aria-hidden="true"></span>';
+      stage.appendChild(card);
+      hlTrack(card);
+    },
+
+    // A folded corner opens on a note tucked underneath.
+    peel(stage) {
+      const card = document.createElement("div");
+      card.className = "hl-peel";
+      card.tabIndex = 0;
+      card.setAttribute("role", "group");
+      card.setAttribute("aria-label", "Card with a note under a folded corner");
+      card.innerHTML =
+        '<span class="hl-peel-note">Turn me over</span>' +
+        '<span class="hl-peel-sheet" aria-hidden="true"></span>' +
+        '<span class="hl-peel-corner" aria-hidden="true"></span>';
+      stage.appendChild(card);
+    },
+
+    // The panel lifts just enough to make room for its own detail.
+    caption(stage) {
+      stage.innerHTML =
+        '<div class="hl-caption" tabindex="0" role="group" aria-label="Card with hidden caption">' +
+        '<div class="hl-caption-photo"></div>' +
+        '<p class="hl-caption-text">Blue Flower &middot; 2026</p></div>';
+    },
+
+    // The composition separates so you can see how it is built.
+    layers(stage) {
+      const wrap = document.createElement("div");
+      wrap.className = "hl-layers";
+      wrap.tabIndex = 0;
+      wrap.setAttribute("role", "group");
+      wrap.setAttribute("aria-label", "Composition that separates into three layers");
+      ["a", "b", "c"].forEach((k, i) => {
+        const l = document.createElement("span");
+        l.className = "hl-layer hl-sw-" + k;
+        l.style.setProperty("--i", String(i));
+        wrap.appendChild(l);
+      });
+      stage.appendChild(wrap);
+    },
+
+    /* ---------------- Delight ---------------- */
+
+    // A friendly word does a soft wobble.
+    jelly(stage) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "hl-jelly";
+      btn.textContent = "Squish";
+      stage.appendChild(btn);
+    },
+
+    // A glossy finish catches the light as you move.
+    holo(stage) {
+      const card = document.createElement("div");
+      card.className = "hl-holo";
+      card.tabIndex = 0;
+      card.setAttribute("role", "group");
+      card.setAttribute("aria-label", "Card with a holographic finish");
+      card.innerHTML =
+        '<span class="hl-holo-sheen" aria-hidden="true"></span>' +
+        '<span class="hl-holo-label">Foil</span>';
+      stage.appendChild(card);
+      hlTrack(card);
+    },
+
+    // Foreground and background drift at different speeds.
+    parallax(stage) {
+      const card = document.createElement("div");
+      card.className = "hl-para";
+      card.tabIndex = 0;
+      card.setAttribute("role", "group");
+      card.setAttribute("aria-label", "Card whose layers drift at different speeds");
+      card.innerHTML =
+        '<span class="hl-para-bg" aria-hidden="true"></span>' +
+        '<span class="hl-para-mid" aria-hidden="true"></span>' +
+        '<span class="hl-para-fg">Drift</span>';
+      stage.appendChild(card);
+
+      const bg = card.querySelector(".hl-para-bg");
+      const mid = card.querySelector(".hl-para-mid");
+      const fg = card.querySelector(".hl-para-fg");
+      hlTrack(card, (x, y, r) => {
+        if (x === null) {
+          [bg, mid, fg].forEach((el) => { el.style.transform = ""; });
+          return;
+        }
+        const nx = (x / r.width - 0.5) * 2;
+        const ny = (y / r.height - 0.5) * 2;
+        bg.style.transform = "translate(" + nx * 5 + "px," + ny * 4 + "px)";
+        mid.style.transform = "translate(" + nx * 12 + "px," + ny * 9 + "px)";
+        fg.style.transform = "translate(" + nx * 20 + "px," + ny * 14 + "px)";
+      });
+    },
+
+    // Small accents orbit a word, then settle back.
+    orbit(stage) {
+      stage.innerHTML =
+        '<button type="button" class="hl-orbit">' +
+        '<span class="hl-orbit-word">Magic</span>' +
+        '<span class="hl-orbit-ring" aria-hidden="true">' +
+        '<i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i>' +
+        "</span></button>";
+    },
+
+    // A typographic strip strolls while you are there, and waits when you go.
+    marquee(stage) {
+      const wrap = document.createElement("div");
+      wrap.className = "hl-marq";
+      wrap.tabIndex = 0;
+      wrap.setAttribute("role", "group");
+      wrap.setAttribute("aria-label", "Scrolling typographic strip");
+      const inner = document.createElement("div");
+      inner.className = "hl-marq-track";
+      inner.setAttribute("aria-hidden", "true");
+      for (let i = 0; i < 6; i++) {
+        const s = document.createElement("span");
+        s.textContent = "NEW WORK";
+        inner.appendChild(s);
+      }
+      wrap.appendChild(inner);
+      stage.appendChild(wrap);
+    },
+
+    // The pointer becomes a light source and the shadow answers to it.
+    shadow(stage) {
+      const el = document.createElement("div");
+      el.className = "hl-shadow";
+      el.tabIndex = 0;
+      el.setAttribute("role", "group");
+      el.setAttribute("aria-label", "Text whose shadow follows a light source");
+      el.innerHTML = '<span class="hl-shadow-word">LIGHT</span>';
+      stage.appendChild(el);
+
+      const word = el.querySelector(".hl-shadow-word");
+      hlTrack(el, (x, y, r) => {
+        if (x === null) { word.style.textShadow = ""; return; }
+        const dx = (0.5 - x / r.width) * 16;
+        const dy = (0.5 - y / r.height) * 12;
+        word.style.textShadow =
+          dx + "px " + dy + "px 0 var(--accent), " +
+          dx * 1.9 + "px " + dy * 1.9 + "px 0 var(--line-strong)";
+      });
+    },
+
+    // Soft labels lift and compress while their lettering stays crisp.
+    chips(stage) {
+      const wrap = document.createElement("div");
+      wrap.className = "hl-chips";
+      ["Design", "Motion", "Type", "Colour"].forEach((t) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "hl-chip";
+        b.innerHTML = "<span>" + t + "</span>";
+        wrap.appendChild(b);
+      });
+      stage.appendChild(wrap);
+    },
+
+    // The field gives the pointer a little space, then falls back in.
     dots(stage) {
       const wrap = document.createElement("div");
       wrap.className = "hl-dots";
+      wrap.tabIndex = 0;
+      wrap.setAttribute("role", "group");
+      wrap.setAttribute("aria-label", "A field of dots that moves away from the pointer");
       const dots = [];
-      for (let r = 0; r < 5; r++) {
-        for (let c = 0; c < 9; c++) {
-          const d = document.createElement("span");
-          d.className = "hl-dot";
-          wrap.appendChild(d);
-          dots.push(d);
-        }
+      for (let i = 0; i < 45; i++) {
+        const d = document.createElement("span");
+        d.className = "hl-dot";
+        wrap.appendChild(d);
+        dots.push(d);
       }
       stage.appendChild(wrap);
 
@@ -1154,7 +1439,8 @@
           const dist = Math.hypot(dx, dy) || 1;
           if (dist > 70) { d.style.transform = ""; return; }
           const push = (1 - dist / 70) * 14;
-          d.style.transform = "translate(" + (dx / dist) * push + "px," + (dy / dist) * push + "px)";
+          d.style.transform =
+            "translate(" + (dx / dist) * push + "px," + (dy / dist) * push + "px)";
         });
       });
       stage.addEventListener("pointerleave", () => {
@@ -1163,20 +1449,30 @@
     },
   };
 
+  // The 24 demos, filterable by principle.
   function buildHoverLab(cfg) {
     const demos = Array.isArray(cfg && cfg.demos) ? cfg.demos : [];
 
     const wrap = document.createElement("div");
     wrap.className = "hoverlab";
 
-    const hint = document.createElement("p");
-    hint.className = "hoverlab-hint";
-    hint.textContent =
-      "Hover each one — or tab to it, every demo answers to keyboard focus too.";
-    wrap.appendChild(hint);
+    const principles = ["All"].concat(
+      demos.reduce((acc, d) => (d.principle && acc.indexOf(d.principle) === -1 ? acc.concat(d.principle) : acc), [])
+    );
+    let current = "All";
+    const chipEls = {};
+
+    const bar = document.createElement("div");
+    bar.className = "hoverlab-filter";
+    bar.setAttribute("role", "tablist");
+    bar.setAttribute("aria-label", "Filter by principle");
+
+    const count = document.createElement("p");
+    count.className = "hoverlab-count";
 
     const grid = document.createElement("div");
     grid.className = "hoverlab-grid";
+    const cards = [];
 
     demos.forEach((d) => {
       const card = document.createElement("article");
@@ -1197,7 +1493,6 @@
       if (d.principle) {
         const chip = document.createElement("span");
         chip.className = "hoverlab-chip";
-        chip.dataset.principle = d.principle;
         chip.textContent = d.principle;
         head.appendChild(chip);
       }
@@ -1226,9 +1521,39 @@
 
       card.appendChild(meta);
       grid.appendChild(card);
+      cards.push({ el: card, principle: d.principle || "" });
     });
 
-    wrap.appendChild(grid);
+    function apply() {
+      let n = 0;
+      cards.forEach((c) => {
+        const show = current === "All" || c.principle === current;
+        c.el.style.display = show ? "" : "none";
+        if (show) n++;
+      });
+      count.textContent = n + " of " + cards.length + " shown";
+      Object.keys(chipEls).forEach((k) =>
+        chipEls[k].setAttribute("aria-selected", k === current ? "true" : "false"));
+    }
+
+    principles.forEach((pr) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "skill-filter-btn";
+      b.setAttribute("role", "tab");
+      b.textContent = pr;
+      b.addEventListener("click", () => { current = pr; apply(); });
+      chipEls[pr] = b;
+      bar.appendChild(b);
+    });
+
+    const hint = document.createElement("p");
+    hint.className = "hoverlab-hint";
+    hint.textContent =
+      "Hover any of them — or tab through, every demo answers to keyboard focus too.";
+
+    wrap.append(hint, bar, count, grid);
+    apply();
     return wrap;
   }
 

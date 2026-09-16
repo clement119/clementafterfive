@@ -2257,17 +2257,29 @@ body {
   text-align: center;
 }
 
-/* ---------- Hover lab — live hover-interaction demos ---------- */
+/* ---------- Hover lab — the 24 live hover-interaction demos ---------- */
 .hoverlab {
   display: grid;
   min-width: 0;
-  gap: 12px;
+  gap: 10px;
   margin: 6px 0 4px;
 }
 
 .hoverlab-hint {
   margin: 0;
   font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.hoverlab-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.hoverlab-count {
+  margin: 0;
+  font-size: 12px;
   color: var(--ink-soft);
 }
 
@@ -2294,8 +2306,9 @@ body {
   overflow: hidden;
 }
 
-/* Fixed-height stage so a demo can never reflow the page while animating. */
+/* Fixed-height stage — a demo can never reflow the page while animating. */
 .hoverlab-stage {
+  position: relative;
   display: grid;
   place-items: center;
   height: 150px;
@@ -2347,7 +2360,100 @@ body {
   margin-top: 3px;
 }
 
-/* --- 1. Magnetic button --- */
+/* Shared swatches, so no demo needs an image file. */
+.hl-sw-a { background: linear-gradient(135deg, #6f8cf5, #b57bea 55%, #e08a57); }
+.hl-sw-b { background: linear-gradient(135deg, #f5c04b, #e8913f 60%, #d9603f); }
+.hl-sw-c { background: linear-gradient(135deg, #c9d2dd, #8fa0b4 55%, #5d6b7d); }
+.hl-sw-d { background: linear-gradient(135deg, #7be0c3, #4aa8c9 55%, #6d6be0); }
+
+/* Shared focus ring for the demos. */
+.hl-rot:focus-visible, .hl-nav-link:focus-visible, .hl-magnet:focus-visible,
+.hl-roll:focus-visible, .hl-fill:focus-visible, .hl-arrow:focus-visible,
+.hl-spot:focus-visible, .hl-wave:focus-visible, .hl-list-row:focus-visible,
+.hl-fan:focus-visible, .hl-blinds:focus-visible, .hl-acc-panel:focus-visible,
+.hl-win:focus-visible, .hl-peel:focus-visible, .hl-caption:focus-visible,
+.hl-layers:focus-visible, .hl-jelly:focus-visible, .hl-holo:focus-visible,
+.hl-para:focus-visible, .hl-orbit:focus-visible, .hl-marq:focus-visible,
+.hl-shadow:focus-visible, .hl-chip:focus-visible, .hl-dots:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ===== Feedback ===== */
+
+/* 1 · Rotating button */
+.hl-rot {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  width: 170px;
+  height: 52px;
+  perspective: 600px;
+  cursor: pointer;
+  border-radius: 12px;
+}
+.hl-rot-box {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.34, 1.3, 0.5, 1);
+}
+.hl-rot-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  backface-visibility: hidden;
+}
+.hl-rot-front {
+  background: var(--ink);
+  color: var(--surface);
+  transform: translateZ(26px);
+}
+.hl-rot-back {
+  background: var(--accent);
+  color: var(--accent-ink);
+  transform: rotateX(90deg) translateZ(26px);
+}
+.hl-rot:hover .hl-rot-box,
+.hl-rot:focus-visible .hl-rot-box { transform: rotateX(-90deg); }
+
+/* 2 · Underline navigation */
+.hl-nav { display: flex; gap: 20px; }
+.hl-nav-link {
+  position: relative;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 4px 2px 8px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+.hl-nav-rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hl-nav-link:hover .hl-nav-rule,
+.hl-nav-link:focus-visible .hl-nav-rule { transform: scaleX(1); }
+
+/* 3 · Magnetic button */
 .hl-magnet {
   appearance: none;
   border: 0;
@@ -2361,13 +2467,35 @@ body {
   cursor: pointer;
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.hl-magnet:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  transform: translate(6px, -4px);
-}
+.hl-magnet:focus-visible { transform: translate(6px, -4px); }
 
-/* --- 2. Expanding fill button --- */
+/* 4 · Rolling text */
+.hl-roll {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 10px 6px;
+  font: inherit;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  border-radius: 6px;
+}
+.hl-roll-slot { display: inline-block; height: 1.15em; line-height: 1.15em; overflow: hidden; }
+.hl-roll-inner {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 28ms);
+}
+.hl-roll-inner > span { height: 1.15em; line-height: 1.15em; }
+.hl-roll-inner > span:last-child { color: var(--accent); }
+.hl-roll:hover .hl-roll-inner,
+.hl-roll:focus-visible .hl-roll-inner { transform: translateY(-1.15em); }
+
+/* 5 · Expanding fill */
 .hl-fill {
   position: relative;
   appearance: none;
@@ -2394,27 +2522,306 @@ body {
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   z-index: -1;
 }
-.hl-fill-label {
-  transition: color 0.3s ease 0.06s;
-}
+.hl-fill-label { transition: color 0.3s ease 0.06s; }
 .hl-fill:hover .hl-fill-ink,
-.hl-fill:focus-visible .hl-fill-ink {
-  transform: scale(1);
-}
+.hl-fill:focus-visible .hl-fill-ink { transform: scale(1); }
 .hl-fill:hover .hl-fill-label,
-.hl-fill:focus-visible .hl-fill-label {
-  color: var(--accent-ink);
+.hl-fill:focus-visible .hl-fill-label { color: var(--accent-ink); }
+
+/* 6 · Arrow relay */
+.hl-arrow {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 12px 20px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.25s ease;
 }
-.hl-fill:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+.hl-arrow:hover, .hl-arrow:focus-visible { border-color: var(--accent); }
+.hl-arrow-slot { position: relative; width: 18px; height: 18px; overflow: hidden; }
+.hl-arrow-slot span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hl-arrow-slot svg { width: 18px; height: 18px; }
+.hl-arrow-b { transform: translateX(-130%); }
+.hl-arrow:hover .hl-arrow-a,
+.hl-arrow:focus-visible .hl-arrow-a { transform: translateX(130%); }
+.hl-arrow:hover .hl-arrow-b,
+.hl-arrow:focus-visible .hl-arrow-b { transform: translateX(0); }
+
+/* 7 · Spotlight border */
+.hl-spot {
+  position: relative;
+  appearance: none;
+  border: 0;
+  border-radius: 12px;
+  padding: 1.5px;            /* the rim thickness */
+  background: var(--line-strong);
+  font: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+}
+.hl-spot-glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(90px circle at var(--x, 50%) var(--y, 50%), var(--accent), transparent 65%);
+  transition: opacity 0.3s ease;
+}
+.hl-spot:hover .hl-spot-glow { opacity: 1; }
+.hl-spot:focus-visible .hl-spot-glow { opacity: 1; }
+.hl-spot-label {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 12px 26px;
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
 }
 
-/* --- 3. Caption reveal --- */
+/* 8 · Waving hand */
+.hl-wave {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 24px 12px 16px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--ink);
+  color: var(--surface);
+  cursor: pointer;
+}
+.hl-wave-hand {
+  display: grid;
+  place-items: center;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+.hl-wave-hand svg { width: 18px; height: 18px; }
+.hl-wave:hover .hl-wave-hand,
+.hl-wave:focus-visible .hl-wave-hand {
+  width: 22px;
+  opacity: 1;
+  transform: translateY(0);
+  animation: hl-waving 0.9s ease-in-out 0.25s 2;
+}
+@keyframes hl-waving {
+  0%, 100% { rotate: 0deg; }
+  25% { rotate: 16deg; }
+  75% { rotate: -16deg; }
+}
+
+/* ===== Discovery ===== */
+
+/* 9 · List image preview */
+.hl-list { list-style: none; margin: 0; padding: 0; width: 100%; }
+.hl-list-row {
+  position: relative;
+  appearance: none;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  padding: 11px 18px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.hl-list li:last-child .hl-list-row { border-bottom: 0; }
+.hl-list-row:hover, .hl-list-row:focus-visible { color: var(--accent); }
+.hl-list-card {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  width: 52px;
+  height: 36px;
+  border-radius: 7px;
+  opacity: 0;
+  transform: translate(10px, -50%) scale(0.8) rotate(-5deg);
+  transition: opacity 0.28s ease, transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.hl-list-row:hover .hl-list-card,
+.hl-list-row:focus-visible .hl-list-card {
+  opacity: 1;
+  transform: translate(0, -50%) scale(1) rotate(0deg);
+}
+
+/* 10 · Image stack fan */
+.hl-fan { position: relative; width: 120px; height: 104px; cursor: pointer; border-radius: 10px; }
+.hl-fan-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  border: 2px solid var(--surface);
+  transform: rotate(0deg) translateX(0);
+  transition: transform 0.45s cubic-bezier(0.34, 1.2, 0.5, 1);
+}
+.hl-fan:hover .hl-fan-card,
+.hl-fan:focus-visible .hl-fan-card {
+  transform: rotate(calc(var(--i) * 13deg)) translateX(calc(var(--i) * 26px));
+}
+
+/* 11 · Blinds reveal */
+.hl-blinds {
+  position: relative;
+  display: flex;
+  width: 168px;
+  height: 108px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: linear-gradient(135deg, #f5b44b, #e0575f 50%, #8d5bd6);
+}
+.hl-blind {
+  flex: 1;
+  background: var(--ink);
+  border-right: 1px solid var(--surface-2);
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: calc(var(--i) * 55ms);
+}
+.hl-blind:last-child { border-right: 0; }
+.hl-blinds:hover .hl-blind,
+.hl-blinds:focus-visible .hl-blind { transform: translateY(-100%); }
+
+/* 12 · Image accordion */
+.hl-acc { display: flex; gap: 5px; width: 190px; height: 108px; }
+.hl-acc-panel {
+  position: relative;
+  flex: 1;
+  border: 0;
+  padding: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: flex 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hl-acc-panel:hover, .hl-acc-panel:focus-visible { flex: 2.4; }
+.hl-acc-name {
+  position: absolute;
+  left: 8px;
+  bottom: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.3s ease 0.08s, transform 0.3s ease 0.08s;
+  white-space: nowrap;
+}
+.hl-acc-panel:hover .hl-acc-name,
+.hl-acc-panel:focus-visible .hl-acc-name { opacity: 1; transform: translateY(0); }
+
+/* 13 · Cursor reveal window */
+.hl-win {
+  position: relative;
+  width: 168px;
+  height: 108px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: crosshair;
+}
+.hl-win-base { position: absolute; inset: 0; background: var(--ink); }
+.hl-win-reveal {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #6f8cf5, #b57bea 55%, #e08a57);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  -webkit-clip-path: circle(38px at var(--x, 50%) var(--y, 50%));
+  clip-path: circle(38px at var(--x, 50%) var(--y, 50%));
+}
+.hl-win:hover .hl-win-reveal,
+.hl-win:focus-visible .hl-win-reveal { opacity: 1; }
+
+/* 14 · Peel reveal */
+.hl-peel {
+  position: relative;
+  width: 134px;
+  height: 104px;
+  border-radius: 11px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.hl-peel-note {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 0 14px;
+  text-align: center;
+}
+.hl-peel-sheet {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #c9d2dd, #8fa0b4 55%, #5d6b7d);
+  transition: clip-path 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+.hl-peel-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 0 0;
+  border-color: transparent transparent transparent var(--line-strong);
+  transition: border-width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: drop-shadow(-2px 2px 3px rgba(0, 0, 0, 0.25));
+}
+.hl-peel:hover .hl-peel-sheet,
+.hl-peel:focus-visible .hl-peel-sheet {
+  -webkit-clip-path: polygon(0 0, 46% 0, 0 46%, 0 100%, 100% 100%, 100% 0);
+  clip-path: polygon(0 0, 46% 0, 0 46%, 0 100%, 100% 100%, 100% 0);
+}
+.hl-peel:hover .hl-peel-corner,
+.hl-peel:focus-visible .hl-peel-corner {
+  border-width: 0 0 62px 62px;
+  border-color: transparent transparent var(--line-strong) transparent;
+  top: 0;
+  right: auto;
+  left: 0;
+}
+
+/* 15 · Caption reveal */
 .hl-caption {
   position: relative;
   width: 150px;
-  height: 112px;
+  height: 108px;
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
@@ -2436,104 +2843,232 @@ body {
   padding: 0 12px 11px;
   font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.02em;
   color: #fff;
   opacity: 0;
   transition: opacity 0.3s ease 0.1s;
 }
 .hl-caption:hover .hl-caption-photo,
-.hl-caption:focus-visible .hl-caption-photo {
-  transform: translateY(-26px);
-}
+.hl-caption:focus-visible .hl-caption-photo { transform: translateY(-26px); }
 .hl-caption:hover .hl-caption-text,
-.hl-caption:focus-visible .hl-caption-text {
-  opacity: 1;
+.hl-caption:focus-visible .hl-caption-text { opacity: 1; }
+
+/* 16 · Layer explorer */
+.hl-layers { position: relative; width: 130px; height: 110px; cursor: pointer; border-radius: 10px; }
+.hl-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 22px;
+  height: 62px;
+  border-radius: 9px;
+  border: 2px solid var(--surface);
+  transform: translateY(0) scale(1);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 45ms);
 }
-.hl-caption:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+.hl-layers:hover .hl-layer,
+.hl-layers:focus-visible .hl-layer {
+  transform: translateY(calc((var(--i) - 1) * 26px)) scale(calc(1 - var(--i) * 0.07));
 }
 
-/* --- 4. Blinds reveal --- */
-.hl-blinds {
+/* ===== Delight ===== */
+
+/* 17 · Jelly text */
+.hl-jelly {
+  appearance: none;
+  border: 0;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 12px;
+  padding: 13px 26px;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.hl-jelly:hover, .hl-jelly:focus-visible { animation: hl-jellywob 0.7s ease; }
+@keyframes hl-jellywob {
+  0% { transform: scale(1, 1); }
+  28% { transform: scale(1.18, 0.82); }
+  45% { transform: scale(0.88, 1.12); }
+  62% { transform: scale(1.08, 0.94); }
+  80% { transform: scale(0.97, 1.03); }
+  100% { transform: scale(1, 1); }
+}
+
+/* 18 · Holographic card */
+.hl-holo {
   position: relative;
-  display: flex;
-  width: 168px;
-  height: 112px;
+  width: 132px;
+  height: 108px;
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  background: linear-gradient(135deg, #f5b44b, #e0575f 50%, #8d5bd6);
+  background: linear-gradient(135deg, #3b2f63, #1d2340);
+  display: grid;
+  place-items: center;
 }
-.hl-blind {
-  flex: 1;
-  background: var(--ink);
-  border-right: 1px solid var(--surface-2);
-  transform: translateY(0);
-  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
-  transition-delay: calc(var(--i) * 55ms);
+.hl-holo-sheen {
+  position: absolute;
+  inset: -40%;
+  opacity: 0;
+  background: conic-gradient(from 0deg at var(--x, 50%) var(--y, 50%),
+    #ff8ab5, #ffd66e, #8affc1, #7fd9f5, #b98aff, #ff8ab5);
+  mix-blend-mode: screen;
+  filter: blur(6px);
+  transition: opacity 0.3s ease;
 }
-.hl-blind:last-child {
-  border-right: 0;
-}
-.hl-blinds:hover .hl-blind,
-.hl-blinds:focus-visible .hl-blind {
-  transform: translateY(-100%);
-}
-.hl-blinds:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+.hl-holo:hover .hl-holo-sheen,
+.hl-holo:focus-visible .hl-holo-sheen { opacity: 0.75; }
+.hl-holo-label {
+  position: relative;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #fff;
 }
 
-/* --- 5. Rolling text --- */
-.hl-roll {
+/* 19 · Parallax card */
+.hl-para {
+  position: relative;
+  width: 150px;
+  height: 108px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #1d2340;
+  display: grid;
+  place-items: center;
+}
+.hl-para-bg, .hl-para-mid {
+  position: absolute;
+  border-radius: 50%;
+  transition: transform 0.25s ease-out;
+}
+.hl-para-bg {
+  inset: -16%;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4a3d7d, #23294a);
+}
+.hl-para-mid {
+  width: 62px;
+  height: 62px;
+  background: linear-gradient(135deg, #f5b44b, #e0575f);
+}
+.hl-para-fg {
+  position: relative;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #fff;
+  transition: transform 0.25s ease-out;
+}
+
+/* 20 · Orbiting accents */
+.hl-orbit {
+  position: relative;
   appearance: none;
   border: 0;
   background: transparent;
-  padding: 10px 6px;
+  padding: 16px 22px;
   font: inherit;
-  font-size: 19px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--ink);
   cursor: pointer;
-  display: inline-flex;
+  border-radius: 10px;
 }
-.hl-roll-slot {
-  display: inline-block;
-  height: 1.15em;
-  line-height: 1.15em;
-  overflow: hidden;
+.hl-orbit-word { font-size: 19px; font-weight: 700; color: var(--ink); }
+.hl-orbit-ring { position: absolute; inset: 0; pointer-events: none; }
+.hl-orbit-ring i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  transform: rotate(calc(var(--i) * 120deg)) translateX(0) scale(0.4);
+  transition: opacity 0.3s ease, transform 0.55s cubic-bezier(0.34, 1.2, 0.5, 1);
+  transition-delay: calc(var(--i) * 60ms);
 }
-.hl-roll-inner {
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: calc(var(--i) * 28ms);
-}
-.hl-roll-inner > span {
-  height: 1.15em;
-  line-height: 1.15em;
-}
-.hl-roll-inner > span:last-child {
-  color: var(--accent);
-}
-.hl-roll:hover .hl-roll-inner,
-.hl-roll:focus-visible .hl-roll-inner {
-  transform: translateY(-1.15em);
-}
-.hl-roll:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 6px;
+.hl-orbit:hover .hl-orbit-ring i,
+.hl-orbit:focus-visible .hl-orbit-ring i {
+  opacity: 1;
+  transform: rotate(calc(var(--i) * 120deg + 200deg)) translateX(46px) scale(1);
 }
 
-/* --- 6. Repelling dots --- */
+/* 21 · Hover marquee */
+.hl-marq {
+  width: 100%;
+  overflow: hidden;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+.hl-marq-track {
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  animation: hl-scroll 9s linear infinite;
+  animation-play-state: paused;
+}
+.hl-marq-track span {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.hl-marq-track span:nth-child(even) { color: var(--accent); }
+.hl-marq:hover .hl-marq-track,
+.hl-marq:focus-visible .hl-marq-track { animation-play-state: running; }
+@keyframes hl-scroll {
+  to { transform: translateX(-50%); }
+}
+
+/* 22 · Dynamic text shadow */
+.hl-shadow { display: grid; place-items: center; width: 100%; height: 100%; cursor: crosshair; }
+.hl-shadow-word {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-shadow: 0 0 0 var(--accent);
+  transition: text-shadow 0.18s ease-out;
+}
+
+/* 23 · Squishy labels */
+.hl-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 0 14px; }
+.hl-chip {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 16px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--ink);
+  color: var(--surface);
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.5, 1), background 0.25s ease;
+}
+.hl-chip > span { display: inline-block; transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.5, 1); }
+.hl-chip:hover, .hl-chip:focus-visible {
+  background: var(--accent);
+  color: var(--accent-ink);
+  transform: translateY(-5px) scale(1.12, 0.9);
+}
+/* Counter-scale so the lettering stays crisp while the pill squashes. */
+.hl-chip:hover > span, .hl-chip:focus-visible > span { transform: scale(0.893, 1.111); }
+
+/* 24 · Repelling dots */
 .hl-dots {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   gap: 13px;
   padding: 10px;
+  border-radius: 10px;
 }
 .hl-dot {
   width: 7px;
@@ -2542,25 +3077,23 @@ body {
   background: var(--line-strong);
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.hl-dots:focus-visible .hl-dot { background: var(--accent); }
 
-/* Motion is the whole point of these demos, so when it is not wanted the
-   state change still happens — it just arrives without the travel. */
+/* Motion is the point of these demos, so when it is not wanted the state
+   change still happens — it just arrives without the travel. */
 @media (prefers-reduced-motion: reduce) {
-  .hl-magnet,
-  .hl-fill-ink,
-  .hl-caption-photo,
-  .hl-blind,
-  .hl-roll-inner,
-  .hl-dot {
+  .hoverlab-stage *,
+  .hoverlab-stage *::before,
+  .hoverlab-stage *::after {
     transition-duration: 0.01ms !important;
     transition-delay: 0ms !important;
+    animation: none !important;
   }
   .hl-caption:hover .hl-caption-photo,
-  .hl-caption:focus-visible .hl-caption-photo {
-    transform: none;
-  }
+  .hl-caption:focus-visible .hl-caption-photo { transform: none; }
   .hl-caption-text {
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
     padding-top: 18px;
   }
+  .hl-marq-track { animation: none !important; transform: none; }
 }
