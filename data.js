@@ -4118,6 +4118,119 @@ const journal = [
           },
         ],
       },
+      {
+        title: "Hover interactions \u2014 little details worth playing with",
+        tips: [
+          {
+            title: "The idea",
+            items: [
+              { text: "Janus Tiu\u2019s Hover Interaction Collection is 24 live hover demos, and the framing is the useful part: every one is filed under Feedback, Discovery, or Delight \u2014 eight each. Before building a hover effect you have to say which of the three it is, and if it isn\u2019t any of them, it doesn\u2019t need to exist.", plain: true },
+              { text: "Feedback confirms something is interactive. Discovery brings information closer without a click. Delight adds nothing functional at all \u2014 and is honest about it. Most bad hover states are Delight wearing a Discovery costume: motion hiding something the user actually needed.", plain: true },
+              { text: "Each demo ships with a copy-paste build prompt rather than a code dump \u2014 the same loop as the rest of this note: examples in, sharper prompt out. Best experienced by actually hovering things:", plain: true },
+              {
+                link: {
+                  href: "https://components.janustiu.com/",
+                  label: "The Hover Interaction Collection \u2014 Janus Tiu",
+                  compact: true,
+                },
+              },
+            ],
+          },
+          {
+            title: "Live preview \u2014 hover these",
+            items: [
+              { text: "Six built into this page so you can feel the difference rather than read about it \u2014 two per principle, written to the rules below. Each carries a prompt to rebuild it in your own system.", plain: true },
+              {
+                hoverLab: {
+                  demos: [
+                {
+                  id: "magnet",
+                  principle: "Feedback",
+                  title: "Magnetic button",
+                  note: "The control leans a few pixels toward your cursor and springs back on leave. Pure feedback \u2014 it says \u201cI am reachable\u201d before you arrive.",
+                  prompt:
+                    "Build a magnetic button. On pointermove within a padded stage around it, translate the button toward the cursor along the vector from its centre, scaled by proximity and capped at about 10px so the hit area stays honest. Ease back to rest on pointerleave with a soft spring (about 450ms). Skip the maths entirely for touch pointers.\n\nRequirements: adapt it to my existing visual system. Animate with transforms and opacity only so nothing reflows, and keep the hit area a fixed size. Mirror the hover state on :focus-visible so keyboard users get the same thing, and give touch a tap-friendly equivalent. Never trigger the real action on hover, and never put information only reachable by hovering. Under prefers-reduced-motion: reduce, drop the travel but keep the state change. Return complete, working code.",
+                },
+                {
+                  id: "fill",
+                  principle: "Feedback",
+                  title: "Expanding fill",
+                  note: "Colour blooms from the exact point where the pointer crossed the edge, so the button answers where you actually touched it.",
+                  prompt:
+                    "Build a button whose fill expands from the pointer\u2019s entry point. On pointerenter, record the cursor position relative to the button and place a circular element there; scale it from 0 to fully cover the button over about 500ms. Flip the label colour just behind the leading edge. The circle is clipped by the button and sits behind the label.\n\nRequirements: adapt it to my existing visual system. Animate with transforms and opacity only so nothing reflows, and keep the hit area a fixed size. Mirror the hover state on :focus-visible so keyboard users get the same thing, and give touch a tap-friendly equivalent. Never trigger the real action on hover, and never put information only reachable by hovering. Under prefers-reduced-motion: reduce, drop the travel but keep the state change. Return complete, working code.",
+                },
+                {
+                  id: "caption",
+                  principle: "Discovery",
+                  title: "Caption reveal",
+                  note: "The panel lifts just enough to make room for its own detail line. The information was always there \u2014 hover only shortens the trip.",
+                  prompt:
+                    "Build a card that lifts to reveal its caption. The image fills the card; on hover it translates up by roughly its caption height while the caption fades in underneath. The card\u2019s own box never changes size. Because this is discovery rather than essential content, make sure the same detail is reachable without hovering.\n\nRequirements: adapt it to my existing visual system. Animate with transforms and opacity only so nothing reflows, and keep the hit area a fixed size. Mirror the hover state on :focus-visible so keyboard users get the same thing, and give touch a tap-friendly equivalent. Never trigger the real action on hover, and never put information only reachable by hovering. Under prefers-reduced-motion: reduce, drop the travel but keep the state change. Return complete, working code.",
+                },
+                {
+                  id: "blinds",
+                  principle: "Discovery",
+                  title: "Blinds reveal",
+                  note: "Six strips lift in sequence to uncover the panel beneath. The stagger is the whole trick \u2014 it reads as one gesture rather than six.",
+                  prompt:
+                    "Build a blinds reveal. Cover a colourful panel with six equal vertical strips; on hover each strip translates fully upward, staggered by about 55ms using an index custom property, so they lift as a wave rather than together. Reverse on leave. The container is a fixed size and clips the strips.\n\nRequirements: adapt it to my existing visual system. Animate with transforms and opacity only so nothing reflows, and keep the hit area a fixed size. Mirror the hover state on :focus-visible so keyboard users get the same thing, and give touch a tap-friendly equivalent. Never trigger the real action on hover, and never put information only reachable by hovering. Under prefers-reduced-motion: reduce, drop the travel but keep the state change. Return complete, working code.",
+                },
+                {
+                  id: "roll",
+                  principle: "Delight",
+                  title: "Rolling letters",
+                  note: "Each letter rolls to its twin, staggered across the word. Adds nothing functional \u2014 that is the point of delight.",
+                  prompt:
+                    "Build a rolling-letter text button. Split the label into per-character slots, each clipping a vertical pair of identical letters. On hover translate each pair up by exactly one line height, staggered by about 28ms per character, so the word rolls left to right. Give the second copy an accent colour. Expose one accessible label on the button and hide the duplicated characters from assistive technology.\n\nRequirements: adapt it to my existing visual system. Animate with transforms and opacity only so nothing reflows, and keep the hit area a fixed size. Mirror the hover state on :focus-visible so keyboard users get the same thing, and give touch a tap-friendly equivalent. Never trigger the real action on hover, and never put information only reachable by hovering. Under prefers-reduced-motion: reduce, drop the travel but keep the state change. Return complete, working code.",
+                },
+                {
+                  id: "dots",
+                  principle: "Delight",
+                  title: "Repelling dots",
+                  note: "The field politely gives your cursor room, then falls back in. Pure play, and a good test of whether your motion easing feels alive or mechanical.",
+                  prompt:
+                    "Build a field of dots that repels the pointer. For each dot in the grid, compute the vector from the cursor to the dot on pointermove; within about 70px, translate it away by up to 14px scaled by proximity. Release everything on pointerleave with a soft ease. Ignore touch pointers.\n\nRequirements: adapt it to my existing visual system. Animate with transforms and opacity only so nothing reflows, and keep the hit area a fixed size. Mirror the hover state on :focus-visible so keyboard users get the same thing, and give touch a tap-friendly equivalent. Never trigger the real action on hover, and never put information only reachable by hovering. Under prefers-reduced-motion: reduce, drop the travel but keep the state change. Return complete, working code.",
+                },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            title: "The rules that separate good from annoying",
+            items: [
+              { text: "Every prompt in the collection carries the same non-negotiables. Worth stealing wholesale, because they are exactly what AI-generated hover effects get wrong.", plain: true },
+              { text: "Keep the hit area fixed. A control that grows on hover moves itself out from under the cursor \u2014 animate transforms, never layout.", copy: true },
+              { text: "Mirror every hover state on :focus-visible. A keyboard user should get the same reveal, not a dead element.", copy: true },
+              { text: "Never put essential information behind hover alone. Touch has no hover, and neither does a screen reader.", copy: true },
+              { text: "Never fire the real action on hover \u2014 preview only. Hover is not consent.", copy: true },
+              { text: "Honour prefers-reduced-motion by removing the travel, not the state change. The information still has to arrive.", copy: true },
+              { text: "Inline SVG with currentColor for any icon \u2014 never emoji or an icon font, which render differently on every device.", copy: true },
+              { text: "Clean up pointer listeners and animation frames when the element goes away.", copy: true },
+            ],
+          },
+          {
+            title: "All 24, by principle",
+            items: [
+              { text: "The full index, so you can pick the interaction before you write the prompt.", plain: true },
+              { heading: "Feedback \u2014 confirm it\u2019s interactive" },
+              { text: "Rotating button \u2014 A contact button rolls into a new face.\nUnderline navigation \u2014 A hand-drawn underline stretches under the link you're exploring.\nMagnetic button \u2014 A button leans toward your cursor, then springs back.\nRolling text button \u2014 Letters roll upward one by one.\nExpanding fill button \u2014 Colour blooms from your cursor's entry point.\nArrow relay \u2014 One arrow slips away as the next arrives.\nSpotlight border \u2014 A pool of light follows the pointer around the edge.\nWaving hand button \u2014 A little hand pops up and waves hello.", plain: true },
+              { heading: "Discovery \u2014 bring information closer" },
+              { text: "List image preview \u2014 Hover a list row and an image card comes out to introduce it.\nImage stack \u2014 A neat stack fans open to show the rest of the collection.\nBlinds reveal \u2014 Six strips lift in sequence to reveal what's underneath.\nImage accordion \u2014 The image you hover gets more room, revealing its title.\nCursor reveal \u2014 Move a little window across the card to uncover an image.\nPeel reveal \u2014 A folded corner opens to reveal a note beneath the surface.\nCaption reveal \u2014 A photo lifts just enough to make room for a few details.\nLayer explorer \u2014 A composition separates to show how the pieces fit together.", plain: true },
+              { heading: "Delight \u2014 no function, just a smile" },
+              { text: "Jelly text \u2014 A friendly word does a soft wobble. No new function, just a smile.\nHolographic card \u2014 A glossy finish catches the light as you move.\nParallax card \u2014 Photo and caption drift at different speeds.\nOrbiting accents \u2014 Tiny accents orbit a word, then settle back.\nHover marquee \u2014 A typographic strip strolls while you hover, and pauses when you go.\nDynamic text shadow \u2014 The pointer becomes a light source nudging a colourful shadow.\nSquishy labels \u2014 Labels lift and compress while their lettering stays crisp.\nRepelling dots \u2014 A field of dots gives your cursor space, then falls back in.", plain: true },
+            ],
+          },
+          {
+            title: "Build your own \u2014 copy this prompt",
+            items: [
+              {
+                prompt: "I want to add a hover interaction to [component] in my project.\\n\\nFirst, make me classify it before you write anything:\\n- Is this FEEDBACK (confirming the thing is interactive), DISCOVERY (bringing information closer without a click), or DELIGHT (no function, purely a smile)?\\n- If it is Discovery, tell me how the same information is reachable without hovering \u2014 on touch, by keyboard, and by a screen reader. If I can\u2019t answer that, say so and we redesign instead.\\n- If it is Delight, confirm out loud that it adds no function, so we are choosing it deliberately.\\n\\nThen build it against these rules, and call out any you had to bend:\\n- Fixed hit area; animate transforms and opacity only, never layout.\\n- The hover state is mirrored on :focus-visible, and touch gets a tap equivalent.\\n- The real action never fires on hover.\\n- Under prefers-reduced-motion: reduce, the travel goes but the state change stays.\\n- Icons are inline SVG using currentColor.\\n- Pointer listeners and animation frames are cleaned up when the element unmounts.\\n\\nMatch my existing visual system rather than inventing a new one. Give me the complete working code plus where it slots in.",
+              },
+            ],
+          },
+        ],
+      },
     ],
     footer:
       "Foundation, rules, examples, words — run the loop and the AI ships UI that looks good. No magic prompt required.",

@@ -916,9 +916,211 @@
     return wrap;
   }
 
+  // Live hover demos. Each stage builder returns the markup for one
+  // interaction and wires any pointer maths; listeners live on the demo
+  // element itself, so a tab switch that drops the node drops them with it.
+  // Every demo mirrors its hover state on :focus-visible and animates with
+  // transforms only, so nothing reflows and nothing is hover-only.
+  const hoverStages = {
+    // Feedback — the control leans toward the cursor, then springs back.
+    magnet(stage) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "hl-magnet";
+      btn.textContent = "Pull me";
+      stage.appendChild(btn);
+
+      const MAX = 10; // px — small enough that the hit area stays honest
+      stage.addEventListener("pointermove", (e) => {
+        if (e.pointerType === "touch") return;
+        const r = btn.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width / 2);
+        const dy = e.clientY - (r.top + r.height / 2);
+        const d = Math.hypot(dx, dy) || 1;
+        const pull = Math.min(1, 90 / d);
+        btn.style.transform =
+          "translate(" + (dx / d) * MAX * pull + "px," + (dy / d) * MAX * pull + "px)";
+      });
+      stage.addEventListener("pointerleave", () => { btn.style.transform = ""; });
+      btn.addEventListener("blur", () => { btn.style.transform = ""; });
+    },
+
+    // Feedback — colour blooms from wherever the pointer crossed the edge.
+    fill(stage) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "hl-fill";
+      const ink = document.createElement("span");
+      ink.className = "hl-fill-ink";
+      const label = document.createElement("span");
+      label.className = "hl-fill-label";
+      label.textContent = "Fill me";
+      btn.append(ink, label);
+      stage.appendChild(btn);
+
+      btn.addEventListener("pointerenter", (e) => {
+        const r = btn.getBoundingClientRect();
+        ink.style.left = (e.clientX - r.left) + "px";
+        ink.style.top = (e.clientY - r.top) + "px";
+      });
+    },
+
+    // Discovery — the panel lifts just enough to make room for its detail.
+    caption(stage) {
+      stage.innerHTML =
+        '<div class="hl-caption" tabindex="0" role="group" aria-label="Card with hidden caption">' +
+        '<div class="hl-caption-photo"></div>' +
+        '<p class="hl-caption-text">Blue Flower &middot; 2026</p>' +
+        "</div>";
+    },
+
+    // Discovery — strips lift in sequence to uncover what is underneath.
+    blinds(stage) {
+      const wrap = document.createElement("div");
+      wrap.className = "hl-blinds";
+      wrap.tabIndex = 0;
+      wrap.setAttribute("role", "group");
+      wrap.setAttribute("aria-label", "Panel revealed by lifting strips");
+      for (let i = 0; i < 6; i++) {
+        const strip = document.createElement("span");
+        strip.className = "hl-blind";
+        strip.style.setProperty("--i", String(i));
+        wrap.appendChild(strip);
+      }
+      stage.appendChild(wrap);
+    },
+
+    // Delight — letters roll up one after another.
+    roll(stage) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "hl-roll";
+      btn.setAttribute("aria-label", "Read more");
+      const word = "Read more";
+      [...word].forEach((ch, i) => {
+        const slot = document.createElement("span");
+        slot.className = "hl-roll-slot";
+        slot.setAttribute("aria-hidden", "true");
+        slot.style.setProperty("--i", String(i));
+        const inner = document.createElement("span");
+        inner.className = "hl-roll-inner";
+        const a = document.createElement("span");
+        const b = document.createElement("span");
+        a.textContent = ch === " " ? " " : ch;
+        b.textContent = ch === " " ? " " : ch;
+        inner.append(a, b);
+        slot.appendChild(inner);
+        btn.appendChild(slot);
+      });
+      stage.appendChild(btn);
+    },
+
+    // Delight — the field gives the pointer a little space.
+    dots(stage) {
+      const wrap = document.createElement("div");
+      wrap.className = "hl-dots";
+      const dots = [];
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 9; c++) {
+          const d = document.createElement("span");
+          d.className = "hl-dot";
+          wrap.appendChild(d);
+          dots.push(d);
+        }
+      }
+      stage.appendChild(wrap);
+
+      stage.addEventListener("pointermove", (e) => {
+        if (e.pointerType === "touch") return;
+        dots.forEach((d) => {
+          const r = d.getBoundingClientRect();
+          const dx = r.left + r.width / 2 - e.clientX;
+          const dy = r.top + r.height / 2 - e.clientY;
+          const dist = Math.hypot(dx, dy) || 1;
+          if (dist > 70) { d.style.transform = ""; return; }
+          const push = (1 - dist / 70) * 14;
+          d.style.transform = "translate(" + (dx / dist) * push + "px," + (dy / dist) * push + "px)";
+        });
+      });
+      stage.addEventListener("pointerleave", () => {
+        dots.forEach((d) => { d.style.transform = ""; });
+      });
+    },
+  };
+
+  function buildHoverLab(cfg) {
+    const demos = Array.isArray(cfg && cfg.demos) ? cfg.demos : [];
+
+    const wrap = document.createElement("div");
+    wrap.className = "hoverlab";
+
+    const hint = document.createElement("p");
+    hint.className = "hoverlab-hint";
+    hint.textContent =
+      "Hover each one — or tab to it, every demo answers to keyboard focus too.";
+    wrap.appendChild(hint);
+
+    const grid = document.createElement("div");
+    grid.className = "hoverlab-grid";
+
+    demos.forEach((d) => {
+      const card = document.createElement("article");
+      card.className = "hoverlab-card";
+
+      const stage = document.createElement("div");
+      stage.className = "hoverlab-stage";
+      stage.dataset.demo = d.id || "";
+      const build = hoverStages[d.id];
+      if (build) build(stage);
+      card.appendChild(stage);
+
+      const meta = document.createElement("div");
+      meta.className = "hoverlab-meta";
+
+      const head = document.createElement("div");
+      head.className = "hoverlab-head";
+      if (d.principle) {
+        const chip = document.createElement("span");
+        chip.className = "hoverlab-chip";
+        chip.dataset.principle = d.principle;
+        chip.textContent = d.principle;
+        head.appendChild(chip);
+      }
+      const title = document.createElement("h3");
+      title.className = "hoverlab-title";
+      title.textContent = d.title || "";
+      head.appendChild(title);
+      meta.appendChild(head);
+
+      if (d.note) {
+        const note = document.createElement("p");
+        note.className = "hoverlab-note";
+        note.textContent = d.note;
+        meta.appendChild(note);
+      }
+
+      if (d.prompt) {
+        const btn = document.createElement("button");
+        btn.className = "copy-btn hoverlab-copy";
+        btn.type = "button";
+        btn.setAttribute("aria-label", "Copy the build prompt for " + (d.title || "this interaction"));
+        btn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy prompt</span>`;
+        btn.addEventListener("click", () => copyText(d.prompt, btn));
+        meta.appendChild(btn);
+      }
+
+      card.appendChild(meta);
+      grid.appendChild(card);
+    });
+
+    wrap.appendChild(grid);
+    return wrap;
+  }
+
   function buildItem(item, i) {
     if (item && item.deck) return buildPersonaDeck(item.deck);
     if (item && item.ideaDeck) return buildIdeaDeck(item.ideaDeck);
+    if (item && item.hoverLab) return buildHoverLab(item.hoverLab);
     if (item && item.skills) return buildSkillList(item.skills);
     if (item && item.catalog) return buildCatalog(item.catalog);
     if (item && item.compare) return buildBeforeAfter(item.compare);

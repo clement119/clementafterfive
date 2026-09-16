@@ -2057,3 +2057,311 @@ body {
   min-width: 52px;
   text-align: center;
 }
+
+/* ---------- Hover lab — live hover-interaction demos ---------- */
+.hoverlab {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+  margin: 6px 0 4px;
+}
+
+.hoverlab-hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.hoverlab-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 560px) {
+  .hoverlab-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.hoverlab-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* Fixed-height stage so a demo can never reflow the page while animating. */
+.hoverlab-stage {
+  display: grid;
+  place-items: center;
+  height: 150px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.hoverlab-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 14px 16px 16px;
+}
+
+.hoverlab-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hoverlab-chip {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 3px 9px;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.hoverlab-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.hoverlab-note {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.hoverlab-copy {
+  margin-top: 3px;
+}
+
+/* --- 1. Magnetic button --- */
+.hl-magnet {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 26px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: var(--ink);
+  cursor: pointer;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hl-magnet:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  transform: translate(6px, -4px);
+}
+
+/* --- 2. Expanding fill button --- */
+.hl-fill {
+  position: relative;
+  appearance: none;
+  border: 1.5px solid var(--ink);
+  border-radius: 10px;
+  padding: 13px 26px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+}
+.hl-fill-ink {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  margin: -160px 0 0 -160px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: scale(0);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: -1;
+}
+.hl-fill-label {
+  transition: color 0.3s ease 0.06s;
+}
+.hl-fill:hover .hl-fill-ink,
+.hl-fill:focus-visible .hl-fill-ink {
+  transform: scale(1);
+}
+.hl-fill:hover .hl-fill-label,
+.hl-fill:focus-visible .hl-fill-label {
+  color: var(--accent-ink);
+}
+.hl-fill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* --- 3. Caption reveal --- */
+.hl-caption {
+  position: relative;
+  width: 150px;
+  height: 112px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--ink);
+}
+.hl-caption-photo {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6f8cf5, #b57bea 55%, #e08a57);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hl-caption-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0 12px 11px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.1s;
+}
+.hl-caption:hover .hl-caption-photo,
+.hl-caption:focus-visible .hl-caption-photo {
+  transform: translateY(-26px);
+}
+.hl-caption:hover .hl-caption-text,
+.hl-caption:focus-visible .hl-caption-text {
+  opacity: 1;
+}
+.hl-caption:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* --- 4. Blinds reveal --- */
+.hl-blinds {
+  position: relative;
+  display: flex;
+  width: 168px;
+  height: 112px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: linear-gradient(135deg, #f5b44b, #e0575f 50%, #8d5bd6);
+}
+.hl-blind {
+  flex: 1;
+  background: var(--ink);
+  border-right: 1px solid var(--surface-2);
+  transform: translateY(0);
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: calc(var(--i) * 55ms);
+}
+.hl-blind:last-child {
+  border-right: 0;
+}
+.hl-blinds:hover .hl-blind,
+.hl-blinds:focus-visible .hl-blind {
+  transform: translateY(-100%);
+}
+.hl-blinds:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* --- 5. Rolling text --- */
+.hl-roll {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 10px 6px;
+  font: inherit;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+}
+.hl-roll-slot {
+  display: inline-block;
+  height: 1.15em;
+  line-height: 1.15em;
+  overflow: hidden;
+}
+.hl-roll-inner {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 28ms);
+}
+.hl-roll-inner > span {
+  height: 1.15em;
+  line-height: 1.15em;
+}
+.hl-roll-inner > span:last-child {
+  color: var(--accent);
+}
+.hl-roll:hover .hl-roll-inner,
+.hl-roll:focus-visible .hl-roll-inner {
+  transform: translateY(-1.15em);
+}
+.hl-roll:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* --- 6. Repelling dots --- */
+.hl-dots {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 13px;
+  padding: 10px;
+}
+.hl-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line-strong);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Motion is the whole point of these demos, so when it is not wanted the
+   state change still happens — it just arrives without the travel. */
+@media (prefers-reduced-motion: reduce) {
+  .hl-magnet,
+  .hl-fill-ink,
+  .hl-caption-photo,
+  .hl-blind,
+  .hl-roll-inner,
+  .hl-dot {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .hl-caption:hover .hl-caption-photo,
+  .hl-caption:focus-visible .hl-caption-photo {
+    transform: none;
+  }
+  .hl-caption-text {
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+    padding-top: 18px;
+  }
+}
