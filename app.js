@@ -162,6 +162,121 @@
     return h;
   }
 
+  // A copyable monospace snippet. Borrows the catalog's install-command
+  // styling (.skill-install/.skill-cmd) rather than inventing a second
+  // code treatment; multi-line switches to the pre-wrapped variant.
+  function buildCodeBlock(cfg) {
+    const text = typeof cfg === "string" ? cfg : (cfg && cfg.text) || "";
+    const label = cfg && cfg.label;
+
+    const wrap = document.createElement("div");
+    wrap.className = "code-block";
+
+    if (label) {
+      const lab = document.createElement("p");
+      lab.className = "code-block-label";
+      lab.textContent = label;
+      wrap.appendChild(lab);
+    }
+
+    const multi = text.indexOf("\n") > -1;
+    const box = document.createElement("div");
+    box.className = multi ? "skill-install skill-install--multi" : "skill-install";
+
+    const code = document.createElement("code");
+    code.className = multi ? "skill-cmd skill-cmd--multi" : "skill-cmd";
+    code.textContent = text;
+
+    const btn = document.createElement("button");
+    btn.className = "copy-btn";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Copy " + (label || "code snippet"));
+    btn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy</span>`;
+    btn.addEventListener("click", () => copyText(text, btn));
+
+    box.append(code, btn);
+    wrap.appendChild(box);
+    return wrap;
+  }
+
+  // A dependency-free stand-in for the hover-tilt library, so the effect can
+  // actually be felt on the page. Driven by pointer events rather than
+  // :hover, because hover doesn't exist on a phone — which is where this
+  // journal mostly gets read. Stands down entirely under reduced motion.
+  function buildTiltDemo(cfg) {
+    const opts = cfg && typeof cfg === "object" ? cfg : {};
+
+    const wrap = document.createElement("div");
+    wrap.className = "tilt-demo";
+
+    const stage = document.createElement("div");
+    stage.className = "tilt-stage";
+
+    const card = document.createElement("div");
+    card.className = "tilt-card";
+
+    const inner = document.createElement("div");
+    inner.className = "tilt-card-inner";
+    const eyebrow = document.createElement("p");
+    eyebrow.className = "tilt-eyebrow";
+    eyebrow.textContent = opts.eyebrow || "Hover tilt";
+    const title = document.createElement("h4");
+    title.className = "tilt-title";
+    title.textContent = opts.title || "Tilt me";
+    const sub = document.createElement("p");
+    sub.className = "tilt-sub";
+    sub.textContent = opts.subtitle || "Move your cursor across the card — or drag a finger sideways on it.";
+    inner.append(eyebrow, title, sub);
+
+    const glare = document.createElement("span");
+    glare.className = "tilt-glare";
+    glare.setAttribute("aria-hidden", "true");
+
+    card.append(inner, glare);
+    stage.appendChild(card);
+    wrap.appendChild(stage);
+
+    if (opts.note) {
+      const note = document.createElement("p");
+      note.className = "skill-note tilt-note";
+      note.textContent = opts.note;
+      wrap.appendChild(note);
+    }
+
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+    const maxTilt = Number(opts.maxTilt) || 12;
+
+    function reset() {
+      card.style.transform = "";
+      glare.style.opacity = "0";
+    }
+
+    function move(e) {
+      if (reduce && reduce.matches) return;
+      const r = card.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      // rotateY follows the horizontal axis, rotateX the vertical — and X is
+      // inverted so the card leans toward the pointer rather than away.
+      const ry = (px - 0.5) * 2 * maxTilt;
+      const rx = (0.5 - py) * 2 * maxTilt;
+      card.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) scale(1.02)`;
+      glare.style.opacity = "1";
+      glare.style.setProperty("--gx", (px * 100).toFixed(1) + "%");
+      glare.style.setProperty("--gy", (py * 100).toFixed(1) + "%");
+    }
+
+    card.addEventListener("pointermove", move);
+    card.addEventListener("pointerdown", move);
+    card.addEventListener("pointerleave", reset);
+    card.addEventListener("pointercancel", reset);
+    if (reduce && reduce.addEventListener) reduce.addEventListener("change", reset);
+
+    reset();
+    return wrap;
+  }
+
   // A bold group label spanning multiple sections (e.g. "Strategic Planning"
   // over several accordion sections). `isFirst` tightens the top margin for
   // a pillar heading that opens a dimension, right under the subtitle/meta.
@@ -1136,6 +1251,8 @@
     if (item && item.uiStyleLibrary) return buildUIStyleLibrary(item.uiStyleLibrary);
     if (item && item.sketchLibrary) return buildSketchLibrary(item.sketchLibrary);
     if (item && item.stylePicker) return buildStylePicker(item.stylePicker);
+    if (item && item.tiltDemo) return buildTiltDemo(item.tiltDemo);
+    if (item && item.code) return buildCodeBlock(item.code);
     if (item && item.heading != null) return buildHeading(item.heading);
 
     const { text, copyable, plain } = normalizeItem(item);
@@ -1493,7 +1610,19 @@
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "choice-btn";
-        btn.textContent = opt.label;
+        // Optional colour dot, same treatment buildBuilder's choice pills use.
+        if (opt.swatch) {
+          btn.classList.add("choice-btn--swatch");
+          const sw = document.createElement("span");
+          sw.className = "choice-swatch";
+          sw.style.background = opt.swatch;
+          btn.appendChild(sw);
+          const lab = document.createElement("span");
+          lab.textContent = opt.label;
+          btn.appendChild(lab);
+        } else {
+          btn.textContent = opt.label;
+        }
         btn.setAttribute("aria-pressed", opt.key === currentKey ? "true" : "false");
         btn.addEventListener("click", () => {
           choices.querySelectorAll(".choice-btn").forEach((b) => b.setAttribute("aria-pressed", "false"));
@@ -1692,6 +1821,9 @@
     function updateOutput() {
       output.textContent = assemble();
       copyBtn.setAttribute("aria-label", "Copy prompt for " + (activeFont.label || "font"));
+      // The sticker mirrors whichever card is active, so it re-renders from
+      // the same single call every control already funnels through.
+      syncSticker();
     }
 
     function buildPanel() {
@@ -1770,7 +1902,272 @@
       raf = requestAnimationFrame(syncDots);
     });
 
-    wrap.append(globalControls, deck, nav, panel, outBox);
+    // ---- Sticker generator ------------------------------------------------
+    // Renders your text in whichever font the deck is showing and rasterises
+    // it to a transparent PNG for Instagram. Spacing and case ride on the
+    // same wrapper classes as .fl-sample, so the sticker always matches the
+    // card rather than keeping a second copy of that state.
+    const stk = {
+      text: "",
+      color: "#FFFFFF",
+      bg: "none",
+      size: "md",
+      align: "center",
+      legibility: "shadow",
+    };
+
+    const SIZES = { sm: 34, md: 52, lg: 76, xl: 104 };
+
+    const stickerBlock = document.createElement("div");
+    stickerBlock.className = "builder fl-sticker-block";
+
+    const stickerHeading = document.createElement("p");
+    stickerHeading.className = "item-heading";
+    stickerHeading.textContent = "Make a sticker";
+
+    const stickerIntro = document.createElement("p");
+    stickerIntro.className = "skill-note fl-sticker-intro";
+    stickerIntro.textContent =
+      "Type your text, then download or copy it as a transparent PNG and drop it onto an Instagram story.";
+
+    stickerBlock.append(stickerHeading, stickerIntro);
+
+    const textGroup = document.createElement("div");
+    textGroup.className = "builder-control";
+    const textLabel = document.createElement("span");
+    textLabel.className = "builder-label";
+    textLabel.textContent = "Sticker text";
+    const textArea = document.createElement("textarea");
+    textArea.className = "builder-input builder-textarea fl-sticker-input";
+    textArea.rows = 2;
+    textArea.placeholder = "soft launch";
+    textArea.addEventListener("input", () => {
+      stk.text = textArea.value;
+      syncSticker();
+    });
+    textGroup.append(textLabel, textArea);
+    stickerBlock.appendChild(textGroup);
+
+    stickerBlock.appendChild(
+      pillGroup(
+        "Text colour",
+        [
+          { key: "#FFFFFF", label: "White", swatch: "#FFFFFF" },
+          { key: "#151312", label: "Black", swatch: "#151312" },
+          { key: "#C4612F", label: "Terracotta", swatch: "#C4612F" },
+          { key: "#E0553F", label: "Coral", swatch: "#E0553F" },
+          { key: "#1B3A6B", label: "Navy", swatch: "#1B3A6B" },
+          { key: "#F2C230", label: "Yellow", swatch: "#F2C230" },
+        ],
+        stk.color,
+        (key) => {
+          stk.color = key;
+          syncSticker();
+        }
+      )
+    );
+
+    stickerBlock.appendChild(
+      pillGroup(
+        "Background",
+        [
+          { key: "none", label: "Transparent" },
+          { key: "pill", label: "Pill" },
+          { key: "card", label: "Card" },
+        ],
+        stk.bg,
+        (key) => {
+          stk.bg = key;
+          syncSticker();
+        }
+      )
+    );
+
+    stickerBlock.appendChild(
+      pillGroup(
+        "Size",
+        [
+          { key: "sm", label: "S" },
+          { key: "md", label: "M" },
+          { key: "lg", label: "L" },
+          { key: "xl", label: "XL" },
+        ],
+        stk.size,
+        (key) => {
+          stk.size = key;
+          syncSticker();
+        }
+      )
+    );
+
+    stickerBlock.appendChild(
+      pillGroup(
+        "Align",
+        [
+          { key: "left", label: "Left" },
+          { key: "center", label: "Centre" },
+          { key: "right", label: "Right" },
+        ],
+        stk.align,
+        (key) => {
+          stk.align = key;
+          syncSticker();
+        }
+      )
+    );
+
+    stickerBlock.appendChild(
+      pillGroup(
+        "Legibility",
+        [
+          { key: "none", label: "None" },
+          { key: "shadow", label: "Soft shadow" },
+          { key: "outline", label: "Outline" },
+        ],
+        stk.legibility,
+        (key) => {
+          stk.legibility = key;
+          syncSticker();
+        }
+      )
+    );
+
+    // Checkerboard stage makes the transparency legible; only .fl-sticker
+    // itself gets rasterised, so the checks never end up in the PNG.
+    const stickerStage = document.createElement("div");
+    stickerStage.className = "fl-sticker-stage";
+    const stickerEl = document.createElement("div");
+    stickerEl.className = "fl-sticker";
+    const stickerText = document.createElement("span");
+    stickerText.className = "fl-sticker-text";
+    stickerEl.appendChild(stickerText);
+    stickerStage.appendChild(stickerEl);
+    stickerBlock.appendChild(stickerStage);
+
+    // Shown only for the stand-in fonts (Gotham → Montserrat, Futura PT →
+    // Poppins): the PNG will contain the stand-in, not the licensed face,
+    // and a downloaded file shouldn't imply otherwise.
+    const standInWarning = document.createElement("p");
+    standInWarning.className = "skill-note fl-sticker-standin";
+    standInWarning.hidden = true;
+    stickerBlock.appendChild(standInWarning);
+
+    const stickerActions = document.createElement("div");
+    stickerActions.className = "sticker-actions fl-sticker-actions";
+
+    const dlBtn = document.createElement("button");
+    dlBtn.className = "copy-btn sticker-download";
+    dlBtn.type = "button";
+    dlBtn.dataset.copyLabel = "Download PNG";
+    dlBtn.setAttribute("aria-label", "Download the sticker as a PNG image");
+    dlBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Download PNG</span>`;
+    dlBtn.addEventListener("click", () => {
+      // The first export has to inline the webfont, which can take a moment
+      // on a cold cache — say so rather than leaving a dead-looking button.
+      setBusy(dlBtn, true);
+      exportNodeBlob(stickerEl)
+        .then((blob) => {
+          setBusy(dlBtn, false);
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = (activeFont.id || "sticker") + "-sticker.png";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+          flashCopied(dlBtn);
+        })
+        .catch(() => {
+          setBusy(dlBtn, false);
+          showToast("Couldn't export the image — try again");
+        });
+    });
+    stickerActions.appendChild(dlBtn);
+
+    // Same guard the sticker library uses — Firefox can't write images to
+    // the clipboard, so hide the button rather than ship one that fails.
+    if (typeof ClipboardItem !== "undefined" && navigator.clipboard && navigator.clipboard.write) {
+      const copyImgBtn = document.createElement("button");
+      copyImgBtn.className = "copy-btn sticker-copy-image";
+      copyImgBtn.type = "button";
+      copyImgBtn.dataset.copyLabel = "Copy image";
+      copyImgBtn.setAttribute("aria-label", "Copy the sticker image to the clipboard");
+      copyImgBtn.innerHTML = `<span class="copy-icon">${copyIconSVG}</span><span class="copy-label">Copy image</span>`;
+      copyImgBtn.addEventListener("click", () => {
+        // The blob promise must reach ClipboardItem synchronously or Safari
+        // rejects the write as not user-initiated.
+        try {
+          setBusy(copyImgBtn, true);
+          const item = new ClipboardItem({ "image/png": exportNodeBlob(stickerEl) });
+          navigator.clipboard
+            .write([item])
+            .then(() => {
+              setBusy(copyImgBtn, false);
+              flashCopied(copyImgBtn);
+            })
+            .catch(() => {
+              setBusy(copyImgBtn, false);
+              showToast("Couldn't copy the image — try Download instead");
+            });
+        } catch (err) {
+          setBusy(copyImgBtn, false);
+          showToast("Couldn't copy the image — try Download instead");
+        }
+      });
+      stickerActions.appendChild(copyImgBtn);
+    }
+
+    stickerBlock.appendChild(stickerActions);
+
+    function syncSticker() {
+      const font = activeFont || {};
+      const renderFamily = font.paid ? font.paid.standInFamily : font.family;
+      const weight = resolveWeight();
+      const renderWeight = font.paid
+        ? font.paid.standInWeight
+        : (weight && weight.value) ||
+          ((font.weights && (font.weights.find((w) => w.default) || font.weights[0]) || {}).value);
+
+      if (font.familyCSS) stickerText.style.fontFamily = font.familyCSS;
+      else if (renderFamily) stickerText.style.fontFamily = `'${renderFamily}', ${genericFamily(font.category)}`;
+      else stickerText.style.fontFamily = "";
+      stickerText.style.fontWeight = renderWeight ? String(renderWeight) : "";
+      stickerText.style.fontStyle = font.fontStyle || "";
+
+      stickerText.textContent = stk.text || textArea.placeholder;
+      stickerEl.style.color = stk.color;
+      stickerEl.style.textAlign = stk.align;
+      stickerText.style.fontSize = SIZES[stk.size] + "px";
+
+      stickerEl.classList.toggle("fl-sticker--pill", stk.bg === "pill");
+      stickerEl.classList.toggle("fl-sticker--card", stk.bg === "card");
+
+      // The sticker lands on someone's photo, not on this page, so its
+      // backdrop and halo track the chosen text colour rather than the site
+      // theme — var(--surface) would put black text on a black pill in dark
+      // mode. Light text gets a dark backdrop and vice versa.
+      const light = isLight(stk.color);
+      stickerEl.style.background = stk.bg === "none" ? "" : light ? "#151312" : "#FFFDFA";
+
+      const halo = light ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.55)";
+      if (stk.legibility === "shadow") {
+        stickerText.style.textShadow = `0 2px 10px ${halo}, 0 1px 2px ${halo}`;
+        stickerText.style.webkitTextStroke = "";
+      } else if (stk.legibility === "outline") {
+        stickerText.style.textShadow = "";
+        stickerText.style.webkitTextStroke = `2px ${light ? "rgba(0,0,0,0.75)" : "rgba(255,255,255,0.8)"}`;
+      } else {
+        stickerText.style.textShadow = "";
+        stickerText.style.webkitTextStroke = "";
+      }
+
+      const note = font.paid ? font.paid.note : "";
+      standInWarning.hidden = !note;
+      standInWarning.textContent = note ? "Heads up — " + note : "";
+    }
+
+    wrap.append(globalControls, deck, nav, panel, outBox, stickerBlock);
 
     applyWrapperClasses();
     lastActive = 0;
@@ -2697,6 +3094,52 @@
     const node = iframe.contentDocument && iframe.contentDocument.querySelector(".sticker-capture");
     if (!node || !window.htmlToImage) return Promise.reject(new Error("Sticker preview not ready"));
     return window.htmlToImage.toBlob(node, { pixelRatio: 3, backgroundColor: undefined, cacheBust: true });
+  }
+
+  // Same rasterisation for a node living in this document (the font
+  // library's sticker), where there's no iframe to reach into. The webfont
+  // has to be inlined explicitly: without fontEmbedCSS the capture can
+  // silently fall back to a system face and hand back a plausible-looking
+  // PNG in the wrong font. getFontEmbedCSS walks every stylesheet, so it's
+  // computed once and reused rather than on every export.
+  // Swaps a copy-btn's label while an export is in flight and blocks a
+  // second click; flashCopied restores the real label afterwards.
+  function setBusy(btn, busy) {
+    const label = btn.querySelector(".copy-label");
+    btn.disabled = busy;
+    if (!label) return;
+    if (busy) label.textContent = "Preparing\u2026";
+    else label.textContent = btn.dataset.copyLabel || "Copy";
+  }
+
+  // Relative luminance of a #rrggbb colour, used to decide whether a
+  // sticker needs a dark or a light backdrop behind it.
+  function isLight(hex) {
+    const m = /^#?([0-9a-f]{6})$/i.exec(String(hex || ""));
+    if (!m) return false;
+    const n = parseInt(m[1], 16);
+    const r = (n >> 16) & 255;
+    const g = (n >> 8) & 255;
+    const b = n & 255;
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6;
+  }
+
+  let fontEmbedCSSPromise = null;
+  function exportNodeBlob(node) {
+    if (!node || !window.htmlToImage) return Promise.reject(new Error("Sticker not ready"));
+    if (!fontEmbedCSSPromise) {
+      fontEmbedCSSPromise = window.htmlToImage
+        .getFontEmbedCSS(node)
+        .catch(() => "");
+    }
+    return fontEmbedCSSPromise.then((fontEmbedCSS) =>
+      window.htmlToImage.toBlob(node, {
+        pixelRatio: 3,
+        backgroundColor: undefined,
+        cacheBust: true,
+        fontEmbedCSS: fontEmbedCSS || undefined,
+      })
+    );
   }
 
   // Instagram Story sticker mockups: fill in per-sticker fields (or leave

@@ -783,6 +783,72 @@ const journal = [
                   ],
                   "allowCustomUseCase": true,
                   "template": "Use {family} italic, a high-contrast Didone serif, for {useCase}."
+                },
+                {
+                  "id": "libre-baskerville",
+                  "label": "Libre Baskerville",
+                  "family": "Libre Baskerville",
+                  "category": "serif",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 400,
+                      "label": "Regular (400)",
+                      "phrase": "regular"
+                    },
+                    {
+                      "value": 700,
+                      "label": "Bold (700)",
+                      "phrase": "bold",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "editorial",
+                      "label": "an editorial, aesthetic quote carousel",
+                      "default": true
+                    },
+                    {
+                      "key": "long-form",
+                      "label": "a long-form, readable text slide"
+                    },
+                    {
+                      "key": "quote-card",
+                      "label": "a quote-card carousel slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true,
+                  "template": "Use {family}{weightClause}, a classic transitional serif with crisp high-contrast strokes and open, highly readable letterforms, for {useCase}{caseClause}."
+                },
+                {
+                  "id": "libre-baskerville-italic",
+                  "label": "Libre Baskerville Italic",
+                  "family": "Libre Baskerville",
+                  "fontStyle": "italic",
+                  "category": "serif",
+                  "sample": "The best time to plant a tree was 20 years ago.",
+                  "weights": [
+                    {
+                      "value": 400,
+                      "label": "Regular (400)",
+                      "phrase": "regular",
+                      "default": true
+                    }
+                  ],
+                  "useCases": [
+                    {
+                      "key": "editorial-quote",
+                      "label": "an elegant editorial pull-quote",
+                      "default": true
+                    },
+                    {
+                      "key": "reflective",
+                      "label": "a reflective, personal-story slide"
+                    }
+                  ],
+                  "allowCustomUseCase": true,
+                  "template": "Use {family} italic, a classic transitional serif italic with calligraphic, gently flowing letterforms, for {useCase}."
                 }
               ],
               "categoryTemplates": {
@@ -4228,6 +4294,102 @@ const journal = [
                 prompt: "I want to add a hover interaction to [component] in my project.\\n\\nFirst, make me classify it before you write anything:\\n- Is this FEEDBACK (confirming the thing is interactive), DISCOVERY (bringing information closer without a click), or DELIGHT (no function, purely a smile)?\\n- If it is Discovery, tell me how the same information is reachable without hovering \u2014 on touch, by keyboard, and by a screen reader. If I can\u2019t answer that, say so and we redesign instead.\\n- If it is Delight, confirm out loud that it adds no function, so we are choosing it deliberately.\\n\\nThen build it against these rules, and call out any you had to bend:\\n- Fixed hit area; animate transforms and opacity only, never layout.\\n- The hover state is mirrored on :focus-visible, and touch gets a tap equivalent.\\n- The real action never fires on hover.\\n- Under prefers-reduced-motion: reduce, the travel goes but the state change stays.\\n- Icons are inline SVG using currentColor.\\n- Pointer listeners and animation frames are cleaned up when the element unmounts.\\n\\nMatch my existing visual system rather than inventing a new one. Give me the complete working code plus where it slots in.",
               },
             ],
+          },
+        ],
+      },
+      {
+        title: "Hover tilt — 3D cards that follow the cursor",
+        items: [
+          {
+            text: "The card leans toward your cursor and a highlight slides across it. Cheap to add, and it makes a flat grid feel physical — worth it on product cards, pricing tiles and hero art. Not worth it on anything you actually have to read.",
+            plain: true,
+          },
+          {
+            tiltDemo: {
+              eyebrow: "Hover tilt",
+              title: "Tilt me",
+              subtitle: "Move your cursor across the card — or drag a finger sideways on it.",
+              note: "This preview is a ~40-line stand-in so you can feel the effect; it is not the library. The real hover-tilt adds spring physics, dynamic shadows and glare masking on top of this.",
+            },
+          },
+          { heading: "Install" },
+          { code: { label: "npm", text: "npm install hover-tilt" } },
+          { heading: "Use it anywhere — Web Component" },
+          {
+            text: "The web-component build works in vanilla HTML, Vue, React, Angular, Astro and jQuery. Import it once, then use the tag.",
+            plain: true,
+          },
+          {
+            code: {
+              label: "HTML",
+              text:
+                '<script type="module" src="node_modules/hover-tilt/dist/hover-tilt.js"></script>\n\n' +
+                '<hover-tilt tilt-factor="1.5" scale-factor="1.1">\n' +
+                '  <div class="card">Your content here</div>\n' +
+                "</hover-tilt>",
+            },
+          },
+          { heading: "Use it in Svelte 5" },
+          {
+            code: {
+              label: "Svelte",
+              text:
+                "<script>\n" +
+                "  import { HoverTilt } from 'hover-tilt';\n" +
+                "</script>\n\n" +
+                "<HoverTilt tiltFactor={1.5} scaleFactor={1.1}>\n" +
+                '  <div class="card">Your content here</div>\n' +
+                "</HoverTilt>",
+            },
+          },
+          { heading: "Props worth knowing" },
+          {
+            text: "Attribute names below are the web-component (kebab-case) form. In Svelte they're camelCase — tilt-factor becomes tiltFactor, and so on.",
+            plain: true,
+          },
+          {
+            code: {
+              label: "Interaction",
+              text:
+                "tilt-factor          1        horizontal tilt intensity\n" +
+                "tilt-factor-y        = tilt   vertical tilt — set apart for asymmetry\n" +
+                "scale-factor         1        scale on hover (>1 grows, <1 shrinks)\n" +
+                "enter-delay          0        ms before the effect kicks in\n" +
+                "exit-delay           200      ms before it settles back\n" +
+                "spring-options       {stiffness: 0.2, damping: 0.8}\n" +
+                "tilt-spring-options  = spring physics for the tilt alone",
+            },
+          },
+          {
+            code: {
+              label: "Glare & shadow",
+              text:
+                "shadow               false    dynamic shadow that moves with the tilt\n" +
+                "shadow-blur          12       shadow blur radius, px\n" +
+                "glare-intensity      1        glare strength multiplier\n" +
+                "glare-hue            270      glare colour, 0–360\n" +
+                "blend-mode           overlay  CSS blend mode for the glare\n" +
+                "glare-mask           —        mask image to confine the glare\n" +
+                "glare-mask-mode      —        match-source | luminance | alpha | none",
+            },
+          },
+          {
+            text: "Start with tilt-factor and scale-factor alone. Glare and shadow are what tip it from tactile into gaudy, so add them last and keep them low.",
+            plain: true,
+          },
+          {
+            link: {
+              href: "https://github.com/simeydotme/hover-tilt",
+              label: "hover-tilt on GitHub — Simon Goellner, MPL-2.0",
+              compact: true,
+            },
+          },
+          {
+            link: {
+              href: "https://hover-tilt.simey.me/options/props",
+              label: "Full props reference and live examples",
+              compact: true,
+            },
           },
         ],
       },
