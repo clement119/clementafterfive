@@ -3604,7 +3604,12 @@
       const lab = document.createElement("span");
       lab.className = "builder-label";
       const isPicker = f.type === "choice" || f.type === "rowChoice";
-      lab.textContent = isPicker ? f.label : f.label + " (optional — leave blank to let the AI choose)";
+      // Text fields say so when blank means "the AI picks". A field whose
+      // blank means something else (fall back to a preset, say) sets its own
+      // labelNote — "" for none.
+      const labelNote =
+        f.labelNote !== undefined ? f.labelNote : " (optional — leave blank to let the AI choose)";
+      lab.textContent = isPicker ? f.label : f.label + labelNote;
       group.appendChild(lab);
 
       if (f.type === "rowChoice") {

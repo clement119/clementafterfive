@@ -1087,7 +1087,11 @@ const journal = [
                   left:18px;
                   width:14px;
                   height:14px;
-                  background:var(--paper);
+                  /* The tail is its own box, so it can't continue a gradient
+                     painted across the bubble. buildHtml hands it --tail: the
+                     exact colour for a solid, or the midpoint of the two stops
+                     for a gradient, which reads as continuous at this size. */
+                  background:var(--tail,var(--paper));
                   clip-path:polygon(0 0, 100% 0, 0 100%);
                   border-radius:0 0 0 5px;
                 }
@@ -1302,17 +1306,109 @@ const journal = [
                 {
                   id: "chat-bubble",
                   label: "Chat bubble",
+                  // Colour presets are deliberately low-chroma: a story sticker
+                  // sits over a photo, so the bubble has to stay readable
+                  // without competing with it. A gradient preset is stored as
+                  // "from|to"; a solid is a single hex.
                   fields: [
                     { key: "text", label: "Bubble text", type: "paragraph", default: "Here, I used to get comments about how skinny I looked all the time." },
+                    {
+                      key: "bg",
+                      label: "Bubble colour",
+                      type: "choice",
+                      default: "#ffffff",
+                      choices: [
+                        { value: "#ffffff", label: "White", swatch: "#ffffff" },
+                        { value: "#f5efe4", label: "Cream", swatch: "#f5efe4" },
+                        { value: "#e7d9c3", label: "Sand", swatch: "#e7d9c3" },
+                        { value: "#d2dbd0", label: "Sage", swatch: "#d2dbd0" },
+                        { value: "#d9e0e6", label: "Mist", swatch: "#d9e0e6" },
+                        { value: "#efdcd8", label: "Blush", swatch: "#efdcd8" },
+                        { value: "#2f2c29", label: "Charcoal", swatch: "#2f2c29" },
+                        { value: "#f7e2d4|#ecc6bd", label: "Peach fade", swatch: "linear-gradient(135deg,#f7e2d4,#ecc6bd)" },
+                        { value: "#dbe4d6|#c2d2c6", label: "Meadow fade", swatch: "linear-gradient(135deg,#dbe4d6,#c2d2c6)" },
+                        { value: "#e6e0f0|#d0c8e6", label: "Lilac fade", swatch: "linear-gradient(135deg,#e6e0f0,#d0c8e6)" },
+                        { value: "#f0e4d2|#dcc3a6", label: "Dune fade", swatch: "linear-gradient(135deg,#f0e4d2,#dcc3a6)" },
+                        { value: "#dde6ea|#c3d3dd", label: "Harbour fade", swatch: "linear-gradient(135deg,#dde6ea,#c3d3dd)" },
+                        { value: "#3b3b4c|#2a2a36", label: "Dusk fade", swatch: "linear-gradient(135deg,#3b3b4c,#2a2a36)" },
+                        { value: "#4b5668|#2e3647", label: "Slate fade", swatch: "linear-gradient(135deg,#4b5668,#2e3647)" },
+                      ],
+                    },
+                    {
+                      key: "ink",
+                      label: "Text colour",
+                      type: "choice",
+                      default: "#1a1a1a",
+                      choices: [
+                        { value: "#1a1a1a", label: "Black text", swatch: "#1a1a1a" },
+                        { value: "#ffffff", label: "White text", swatch: "#ffffff" },
+                      ],
+                    },
+                    {
+                      key: "angle",
+                      label: "Fade direction",
+                      type: "choice",
+                      default: "135deg",
+                      choices: [
+                        { value: "135deg", label: "Diagonal" },
+                        { value: "180deg", label: "Downward" },
+                        { value: "90deg", label: "Across" },
+                      ],
+                    },
+                    { key: "customFrom", label: "Own colour (hex, e.g. #e7d9c3)", type: "text", default: "", labelNote: " — overrides the preset above" },
+                    { key: "customTo", label: "Fade to (hex)", type: "text", default: "", labelNote: " — leave blank for a solid colour" },
                   ],
                   buildHtml: function (v, esc) {
-                    return `<div class="stage"><div class="sticker-capture"><span class="chat-bubble">${esc(v.text)}</span></div></div>`;
+                    // A typed colour wins over the preset; a second one turns
+                    // it into a gradient. Anything that isn't a hex is ignored
+                    // rather than injected into the style attribute.
+                    const hexOnly = function (x) {
+                      const t = String(x || "").trim();
+                      return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(t) ? t : "";
+                    };
+                    const typed = hexOnly(v.customFrom);
+                    const preset = String(v.bg || "#ffffff").split("|");
+                    const from = typed || preset[0];
+                    const to = typed ? hexOnly(v.customTo) : preset[1] || "";
+                    const angle = /^\d{1,3}deg$/.test(String(v.angle)) ? v.angle : "135deg";
+                    const bg = to ? `linear-gradient(${angle},${from},${to})` : from;
+
+                    // Midpoint of the two stops for the tail — see the --tail
+                    // note in the shared stylesheet.
+                    const rgb = function (h) {
+                      let c = h.replace("#", "");
+                      if (c.length === 3) c = c.split("").map(function (x) { return x + x; }).join("");
+                      return [0, 2, 4].map(function (i) { return parseInt(c.slice(i, i + 2), 16); });
+                    };
+                    const mid = function (a, b) {
+                      const A = rgb(a), B = rgb(b);
+                      return "#" + [0, 1, 2].map(function (i) {
+                        return Math.round((A[i] + B[i]) / 2).toString(16).padStart(2, "0");
+                      }).join("");
+                    };
+                    const tail = to ? mid(from, to) : from;
+                    const ink = hexOnly(v.ink) || "#1a1a1a";
+
+                    return `<div class="stage"><div class="sticker-capture"><span class="chat-bubble" style="background:${bg};color:${ink};--tail:${tail}">${esc(v.text)}</span></div></div>`;
                   },
                   buildPrompt: function (v) {
                     const textClause = v.text
                       ? `reading "${v.text}"`
                       : "with a short caption line that fits the photo's story (invent fitting wording)";
-                    return `Overlay a white rounded message/chat-bubble text sticker (with a small speech-bubble tail at the bottom-left) onto the photo — sized to fit its text and wrapping onto multiple lines rather than stretching wide, ${textClause}.`;
+                    const hexOnly = function (x) {
+                      const t = String(x || "").trim();
+                      return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(t) ? t : "";
+                    };
+                    const typed = hexOnly(v.customFrom);
+                    const preset = String(v.bg || "#ffffff").split("|");
+                    const from = typed || preset[0];
+                    const to = typed ? hexOnly(v.customTo) : preset[1] || "";
+                    const dir = { "135deg": "diagonally", "180deg": "top to bottom", "90deg": "left to right" }[v.angle] || "diagonally";
+                    const fill = to
+                      ? `filled with a soft ${from} to ${to} gradient running ${dir}`
+                      : `filled with solid ${from}`;
+                    const inkWord = hexOnly(v.ink) === "#ffffff" ? "white" : "near-black";
+                    return `Overlay a rounded message/chat-bubble text sticker (with a small speech-bubble tail at the bottom-left) onto the photo, ${fill}, with ${inkWord} text — sized to fit its text and wrapping onto multiple lines rather than stretching wide, ${textClause}.`;
                   },
                 },
                 {
