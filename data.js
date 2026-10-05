@@ -318,12 +318,27 @@ const journal = [
                   "allowCustomUseCase": true
                 },
                 {
-                  "id": "inter-black",
-                  "label": "Inter Black",
+                  "id": "inter",
+                  "label": "Inter",
                   "family": "Inter",
                   "category": "sans",
                   "sample": "The best time to plant a tree was 20 years ago.",
                   "weights": [
+                    {
+                      "value": 400,
+                      "label": "Regular (400)",
+                      "phrase": "regular"
+                    },
+                    {
+                      "value": 500,
+                      "label": "Medium (500)",
+                      "phrase": "medium"
+                    },
+                    {
+                      "value": 600,
+                      "label": "SemiBold (600)",
+                      "phrase": "semibold"
+                    },
                     {
                       "value": 700,
                       "label": "Bold (700)",
@@ -345,6 +360,14 @@ const journal = [
                     {
                       "key": "quote-card",
                       "label": "a quote-card carousel slide"
+                    },
+                    {
+                      "key": "ui",
+                      "label": "a UI mockup or product screenshot"
+                    },
+                    {
+                      "key": "body",
+                      "label": "body copy and captions that stay legible at small sizes"
                     }
                   ],
                   "allowCustomUseCase": true
@@ -1239,9 +1262,11 @@ const journal = [
                   fields: [
                     { key: "title", label: "Title", type: "text", default: "Reminder" },
                     { key: "message", label: "Message", type: "paragraph", default: "I want to be confident in myself. I wanted to prove to others and myself that you can be strong and fit, even if you've always been told something else." },
+                    { key: "btnLeft", label: "Left button", type: "text", default: "Okay" },
+                    { key: "btnRight", label: "Right button", type: "text", default: "Got It!" },
                   ],
                   buildHtml: function (v, esc) {
-                    return `<div class="stage"><div class="sticker-capture"><div class="alert"><div class="body"><div class="title">${esc(v.title)}</div><div class="msg">${esc(v.message)}</div></div><div class="actions"><button>Okay</button><button>Got It!</button></div></div></div></div>`;
+                    return `<div class="stage"><div class="sticker-capture"><div class="alert"><div class="body"><div class="title">${esc(v.title)}</div><div class="msg">${esc(v.message)}</div></div><div class="actions"><button>${esc(v.btnLeft)}</button><button>${esc(v.btnRight)}</button></div></div></div></div>`;
                   },
                   buildPrompt: function (v) {
                     const titleClause = v.title
@@ -1250,7 +1275,9 @@ const journal = [
                     const msgClause = v.message
                       ? `with the message "${v.message}"`
                       : "with a short first-person reminder message that fits the photo's context (invent fitting wording)";
-                    return `Overlay a fake iOS system-alert "reminder" dialog onto the photo — a rounded white popup ${titleClause} ${msgClause}, and a two-button footer reading "Okay" / "Got It!".`;
+                    const left = v.btnLeft || "Okay";
+                    const right = v.btnRight || "Got It!";
+                    return `Overlay a fake iOS system-alert "reminder" dialog onto the photo — a rounded white popup ${titleClause} ${msgClause}, and a two-button footer reading "${left}" / "${right}".`;
                   },
                 },
                 {
