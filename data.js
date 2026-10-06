@@ -4058,6 +4058,8 @@ const journal = [
           { link: { href: "https://mobbin.com", label: "Mobbin — real iOS / app screens", compact: true } },
           { link: { href: "https://21st.dev", label: "21st.dev — polished UI components", compact: true } },
           { link: { href: "https://tympanus.net/codrops/hub/", label: "Codrops Hub — motion + interaction inspiration", compact: true } },
+          { link: { href: "https://inspora.design", label: "Inspora — web, branding, product, motion, 3D, illustration, print; updated hourly", compact: true } },
+          { link: { href: "https://bestdesignsonx.com", label: "Best Designs on X — design Twitter, curated hourly, without the scroll", compact: true } },
         ],
       },
       {
@@ -4066,6 +4068,31 @@ const journal = [
           { text: "Learn the UI basics so you can feel why something's off and describe it like a designer. Say “increase the contrast and tighten the line height so the heading reads first,” not “make it pop.” Precise words get precise UI.", plain: true },
           { link: { href: "https://www.figma.com/resource-library/design-basics/", label: "Figma Design Basics — the fundamentals, free", compact: true } },
           { link: { href: "https://index.how", label: "index.how — name what you see, articulate like a designer", compact: true } },
+        ],
+      },
+      {
+        title: "Drop-in animated components",
+        items: [
+          { text: "Examples tell the agent what good looks like; these hand it the thing already built. All three are React + Tailwind with Motion underneath, so they sit on the same stack and you can mix them.", plain: true },
+
+          { heading: "SmoothUI — animated components, installed by the shadcn CLI" },
+          { text: "Close to 200 animated components and pre-built blocks (heroes, pricing, FAQs) that install straight into a shadcn project — one command each, no wrapper library to adopt. MIT, by Edu López.", plain: true },
+          { code: { label: "Add one component", text: "npx shadcn@latest add @smoothui/<component>" } },
+          { text: "Worth knowing for this library in particular: it also ships an MCP server and a public API, so Claude can browse and pull components itself rather than you copying names across.", plain: true },
+          { link: { href: "https://github.com/educlopez/smoothui", label: "educlopez/smoothui — MIT", compact: true } },
+          { link: { href: "https://smoothui.dev", label: "smoothui.dev — browse and preview them", compact: true } },
+
+          { heading: "Amicro — micro-transitions and mono charts" },
+          { text: "The small stuff nobody budgets time for: entrance animations, hover effects, text reveals, and card layouts (arcs, carousels, 3D stacks), plus a set of monochrome charts. Its own CLI, MIT, by Subhan.", plain: true },
+          { code: { label: "Set up, then add", text: "npx @subhanhq/amicro@latest init\nnpx @subhanhq/amicro@latest add <component>" } },
+          { link: { href: "https://github.com/Subhan-code/Amicro--Micro-transitions-", label: "Subhan-code/Amicro — MIT", compact: true } },
+          { link: { href: "https://amicro.vercel.app", label: "amicro.vercel.app — browse the components", compact: true } },
+
+          { heading: "Bencho — blocks you tweak before you take them" },
+          { text: "Interactive blocks that run live rather than as screenshots, so you adjust one until it is right and then take the code. No public repo and no package — it is a site you copy from, not a dependency you install, which also means nothing to keep updated.", plain: true },
+          { link: { href: "https://bencho.dev", label: "bencho.dev — tweak, then copy", compact: true } },
+
+          { text: "Two of the three are MIT-licensed and installable; Bencho is copy-out-of-the-browser. Either way the code lands in your repo, so it is yours to edit — and worth reading before you ship it.", plain: true },
         ],
       },
       {
