@@ -19,6 +19,54 @@
 
   /* ---------------- Theme ---------------- */
   const THEME_KEY = "lj-theme";
+  const VIEW_KEY = "lj-view";
+
+  // Which tab you were on, which sections you had open, and how far down you
+  // were. Without this, following an external link and coming back rebuilds
+  // the page from defaults — first tab, everything collapsed, scrolled to the
+  // top — because the whole view is re-rendered from data.js on every load.
+  let viewState = { dim: null, open: {}, y: 0 };
+  // Set by renderDimension so the section builders can key their open-state.
+  let currentDim = null;
+  // True while we are putting the scroll position back, so the scroll handler
+  // doesn't save the intermediate positions as if you had scrolled there.
+  let restoringScroll = false;
+
+  function readView() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(VIEW_KEY));
+      if (raw && typeof raw === "object") {
+        return {
+          dim: typeof raw.dim === "string" ? raw.dim : null,
+          open: raw.open && typeof raw.open === "object" ? raw.open : {},
+          y: typeof raw.y === "number" ? raw.y : 0,
+        };
+      }
+    } catch (e) {}
+    return { dim: null, open: {}, y: 0 };
+  }
+
+  function saveView() {
+    try { localStorage.setItem(VIEW_KEY, JSON.stringify(viewState)); } catch (e) {}
+  }
+
+  // Every open <details> in the current tab, by the key its builder gave it.
+  function captureOpen() {
+    if (!currentDim) return;
+    const keys = [];
+    els.content.querySelectorAll("details[data-key]").forEach((d) => {
+      if (d.open) keys.push(d.dataset.key);
+    });
+    viewState.open[currentDim] = keys;
+  }
+
+  // A tab we have never recorded falls back to the data's own `open` flags;
+  // once recorded, the stored list wins, so closing a default-open section
+  // sticks.
+  function shouldOpen(key, fallback) {
+    const saved = currentDim && viewState.open[currentDim];
+    return Array.isArray(saved) ? saved.indexOf(key) > -1 : fallback;
+  }
 
   function systemPrefersDark() {
     return window.matchMedia &&
@@ -4075,7 +4123,11 @@
   function buildSection(section, openByDefault) {
     const details = document.createElement("details");
     details.className = "section";
-    if (openByDefault) details.open = true;
+    // Keyed by title rather than position, so adding a section elsewhere in
+    // the tab doesn't restore the wrong one.
+    const key = section.title || "Untitled";
+    details.dataset.key = key;
+    if (shouldOpen(key, openByDefault)) details.open = true;
 
     const tips = Array.isArray(section.tips) ? section.tips : null;
     const items = Array.isArray(section.items) ? section.items : [];
@@ -4095,7 +4147,7 @@
     const body = document.createElement("div");
     body.className = "section-body";
     if (tips) {
-      tips.forEach((tip) => body.appendChild(buildSubsection(tip)));
+      tips.forEach((tip) => body.appendChild(buildSubsection(tip, key)));
     } else {
       items.forEach((item, i) => body.appendChild(buildItem(item, i)));
     }
@@ -4106,10 +4158,12 @@
   // A nested, collapsible tip inside a section.
   // Open only when the tip asks for it, so a section can expand into a clean
   // list of collapsed subsections.
-  function buildSubsection(tip) {
+  function buildSubsection(tip, parentKey) {
     const details = document.createElement("details");
     details.className = "subsection";
-    if (tip.open === true) details.open = true;
+    const key = (parentKey || "") + "||" + (tip.title || "Untitled");
+    details.dataset.key = key;
+    if (shouldOpen(key, tip.open === true)) details.open = true;
 
     const items = Array.isArray(tip.items) ? tip.items : [];
 
@@ -4129,6 +4183,7 @@
   }
 
   function renderDimension(dimension) {
+    currentDim = dimension;
     const notes = byDimension.get(dimension) || [];
     const primary = notes[0] || {};
 
@@ -4182,17 +4237,49 @@
       btn.type = "button";
       btn.textContent = dim;
       btn.setAttribute("role", "tab");
-      btn.setAttribute("aria-selected", i === 0 ? "true" : "false");
+      btn.setAttribute("aria-selected", dim === activeDim ? "true" : "false");
       btn.addEventListener("click", () => {
         els.dimensions
           .querySelectorAll(".dimension-btn")
           .forEach((b) => b.setAttribute("aria-selected", "false"));
         btn.setAttribute("aria-selected", "true");
         renderDimension(dim);
+        // Switching tabs deliberately starts at the top, so the stored
+        // position has to go with it or the next load would jump.
+        viewState.dim = dim;
+        viewState.y = 0;
+        saveView();
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
       els.dimensions.appendChild(btn);
     });
+  }
+
+  // Put the scroll position back once the content has settled. Sticker
+  // previews live in iframes that resize on load and images arrive late, so
+  // the page keeps growing for a moment after render — one scrollTo would
+  // land short. Retry briefly, and stop the moment the reader takes over.
+  function restoreScroll(y) {
+    if (!(y > 0)) return;
+    restoringScroll = true;
+    let cancelled = false;
+    const stop = () => { cancelled = true; };
+    ["wheel", "touchstart", "keydown"].forEach((ev) =>
+      window.addEventListener(ev, stop, { once: true, passive: true }));
+
+    const deadline = Date.now() + 1500;
+    (function attempt() {
+      if (cancelled) { restoringScroll = false; return; }
+      const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      window.scrollTo(0, Math.min(y, max));
+      if (Date.now() < deadline) {
+        setTimeout(attempt, 120);
+      } else {
+        restoringScroll = false;
+        ["wheel", "touchstart", "keydown"].forEach((ev) =>
+          window.removeEventListener(ev, stop));
+      }
+    })();
   }
 
   /* ---------------- Init ---------------- */
@@ -4204,6 +4291,49 @@
     els.subtitle.textContent = "Add one in data.js to get started.";
     return;
   }
+  // Restore the tab first: the section builders read viewState while the
+  // tab renders, so it has to be loaded before either call.
+  viewState = readView();
+  const activeDim =
+    viewState.dim && dimensions.indexOf(viewState.dim) > -1 ? viewState.dim : dimensions[0];
+  viewState.dim = activeDim;
+
+  // Stop the browser applying its own remembered position on top of ours.
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
   renderDimensionTabs();
-  renderDimension(dimensions[0]);
+  renderDimension(activeDim);
+  restoreScroll(viewState.y);
+
+  // `toggle` doesn't bubble, so listen in the capture phase to catch every
+  // section and subsection without wiring each one up.
+  document.addEventListener("toggle", (e) => {
+    if (e.target instanceof HTMLDetailsElement && e.target.dataset.key) {
+      captureOpen();
+      saveView();
+    }
+  }, true);
+
+  let scrollTimer = null;
+  window.addEventListener("scroll", () => {
+    if (restoringScroll) return;
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      viewState.y = window.scrollY || window.pageYOffset || 0;
+      saveView();
+    }, 150);
+  }, { passive: true });
+
+  // The important one: leaving for an external link fires these, and a
+  // debounced scroll save may still be pending when it does.
+  const flush = () => {
+    if (restoringScroll) return;
+    viewState.y = window.scrollY || window.pageYOffset || 0;
+    captureOpen();
+    saveView();
+  };
+  window.addEventListener("pagehide", flush);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") flush();
+  });
 })();
