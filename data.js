@@ -1289,13 +1289,20 @@ const journal = [
                     const headlineClause = v.headline
                       ? `the bold headline "${v.headline}"`
                       : "a short personal headline that fits the photo's mood (invent fitting wording)";
+                    // A list field that's never been typed into arrives as
+                    // [""] — length 1, but blank. Testing .length alone made
+                    // an untouched card read "a list reading: ." instead of
+                    // falling through. Same check resolved() uses in app.js.
+                    const typed = Array.isArray(v.items) ? v.items : [];
+                    const blank = typed.length === 0 || (typed.length === 1 && typed[0] === "");
+                    const tickCount = isChecklist && ticked ? ticked.size : 0;
                     let itemsClause;
-                    if (v.items && v.items.length) {
-                      itemsClause = `a ${listWord} reading: ${v.items.join("; ")}`;
+                    if (!blank) {
+                      itemsClause = `a ${listWord} reading: ${typed.join("; ")}`;
                       // Describe what's ticked so the generated image matches
                       // the preview instead of coming back all-unticked.
-                      if (isChecklist && ticked && ticked.size) {
-                        const names = v.items
+                      if (tickCount) {
+                        const names = typed
                           .map((t, i) => (ticked.has(i) && String(t).trim() !== "" ? `"${t}"` : null))
                           .filter(Boolean);
                         if (names.length) {
@@ -1304,6 +1311,12 @@ const journal = [
                       }
                     } else {
                       itemsClause = `3-4 ${isChecklist ? "checklist items" : "bullet points"} that fit the photo's story (invent fitting wording)`;
+                      // The lines are the model's to invent, so a tick can't
+                      // name one — but how many are ticked is still part of
+                      // the picture the preview is showing.
+                      if (tickCount) {
+                        itemsClause += `, ${tickCount} of them ticked off with a filled orange circle and the rest empty circles`;
+                      }
                     }
                     return `Overlay a fake iOS Notes app screenshot sticker onto the photo — a white rounded card tilted slightly, with an orange "Notes" nav bar, ${headlineClause}, and ${itemsClause}.`;
                   },

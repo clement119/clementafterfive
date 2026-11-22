@@ -3738,6 +3738,16 @@
     });
     card.appendChild(fieldsWrap);
 
+    // Nothing else on the card says the preview itself is interactive, so
+    // say it — but only while there's actually something tickable in there.
+    // No `display` rule on this element: an author one would beat the UA
+    // [hidden] rule and it would never hide.
+    const tickHint = document.createElement("p");
+    tickHint.className = "skill-note";
+    tickHint.textContent = "Tap a line in the preview to tick it off.";
+    tickHint.hidden = true;
+    card.appendChild(tickHint);
+
     const previewWrap = document.createElement("div");
     previewWrap.className = "sticker-preview";
     const iframe = document.createElement("iframe");
@@ -3752,6 +3762,9 @@
       const doc = iframe.contentDocument;
       if (!doc) return;
       iframe.style.height = Math.max(380, doc.documentElement.scrollHeight) + "px";
+      // Driven off the same data-tickable contract the handlers use, so no
+      // sticker-specific knowledge leaks in here.
+      tickHint.hidden = !doc.querySelector("[data-tickable]");
       if (sticker.tickableList) wireTicking(doc);
     });
 
