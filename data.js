@@ -1274,7 +1274,10 @@ const journal = [
                         // with actual text — a blank line is spacing, not a task.
                         if (!isChecklist || text === "") return `<li>${text}</li>`;
                         const done = ticked && ticked.has(idx) ? ' class="done"' : "";
-                        return `<li${done} tabindex="0">${text}</li>`;
+                        // No tabindex: the keyboard path is the overlay
+                        // buttons in the parent page, and a focusable <li>
+                        // here would make two tab stops per row.
+                        return `<li${done}>${text}</li>`;
                       })
                       .join("");
                     const listClass = isChecklist ? "checklist" : "bullet";

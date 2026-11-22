@@ -3544,6 +3544,7 @@
     // declare `tickableList` use this; see the iframe load handler below.
     const ticked = new Set();
     let refocusRow = -1; // row to re-focus after a keyboard tick reloads the frame
+    let tickViaKeyboard = false; // was the pending toggle a keypress, not a tap?
 
     const fieldsWrap = document.createElement("div");
     fieldsWrap.className = "builder sticker-fields";
@@ -3750,6 +3751,8 @@
 
     const previewWrap = document.createElement("div");
     previewWrap.className = "sticker-preview";
+    const tickLayer = document.createElement("div");
+    tickLayer.className = "sticker-tick-layer";
     const iframe = document.createElement("iframe");
     iframe.className = "sticker-preview-frame";
     iframe.setAttribute("sandbox", "allow-same-origin");
@@ -3765,52 +3768,122 @@
       // Driven off the same data-tickable contract the handlers use, so no
       // sticker-specific knowledge leaks in here.
       tickHint.hidden = !doc.querySelector("[data-tickable]");
-      if (sticker.tickableList) wireTicking(doc);
+      if (sticker.tickableList) {
+        wireTicking(doc);
+        buildTickLayer(doc);
+      }
     });
 
-    // Tap a checklist row in the preview to tick it, the way you would in
-    // iOS Notes. The handlers have to live out here: the preview iframe is
-    // sandboxed without allow-scripts, so a script inside the sticker HTML
-    // would never run — but it is same-origin, so the parent can listen on
-    // its document directly (the same access exportStickerBlob relies on).
-    // Listeners are re-attached per load and die with the document they
-    // were bound to, so the srcdoc rebuild doesn't accumulate them.
+    function toggleRow(idx, keepFocus) {
+      if (idx < 0) return;
+      if (ticked.has(idx)) ticked.delete(idx);
+      else ticked.add(idx);
+      // Ticking rebuilds the srcdoc, which throws away the focused element
+      // — so a keyboard tick asks for focus back on the same row.
+      refocusRow = keepFocus ? idx : -1;
+      // Routed through update() rather than mutating the preview document,
+      // so currentDoc — what "Copy sticker HTML" hands out — stays in step
+      // with the picture.
+      update();
+    }
+
+    // Fallback path only. It works in Chromium, but iOS Safari would not
+    // deliver a tap to it: the row is a plain <li>, the listener is
+    // delegated on the document, and the frame is sandboxed without
+    // allow-scripts. The overlay below is what actually makes tapping work;
+    // this stays because it costs nothing and covers the case where the
+    // overlay can't measure the rows. The two can't both fire for one tap —
+    // an overlay button sitting on a row swallows the click.
     function wireTicking(doc) {
-      function rowIndex(target) {
-        const li = target && target.closest && target.closest("[data-tickable] > li");
-        // A blank row is spacing, not a task — it draws no circle (CSS
-        // :empty) and shouldn't tick either.
-        if (!li || li.textContent === "") return -1;
-        return Array.prototype.indexOf.call(li.parentElement.children, li);
-      }
-      function toggle(idx, keepFocus) {
-        if (idx < 0) return;
-        if (ticked.has(idx)) ticked.delete(idx);
-        else ticked.add(idx);
-        // Ticking rebuilds the srcdoc, which throws away the focused
-        // element — so a keyboard tick asks for focus back on the same row.
-        refocusRow = keepFocus ? idx : -1;
-        // Routed through update() rather than mutating this document, so
-        // currentDoc — what "Copy sticker HTML" hands out — stays in step
-        // with the picture.
-        update();
-      }
-      doc.addEventListener("click", (e) => toggle(rowIndex(e.target), false));
-      doc.addEventListener("keydown", (e) => {
-        if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
-        const idx = rowIndex(e.target);
-        if (idx < 0) return;
-        e.preventDefault(); // Space would scroll the preview otherwise
-        toggle(idx, true);
+      doc.addEventListener("click", (e) => {
+        const li = e.target && e.target.closest && e.target.closest("[data-tickable] > li");
+        // A blank row is spacing, not a task — no circle, no tick.
+        if (!li || li.textContent === "") return;
+        toggleRow(Array.prototype.indexOf.call(li.parentElement.children, li), false);
+      });
+    }
+
+    // The real hit targets: transparent <button>s in THIS document, laid
+    // over the preview. Events inside the iframe can't be relied on —
+    // WebKit won't synthesise a click for a plain <li> reached through a
+    // document-level handler, and may not fire one at all inside a
+    // scripts-disabled sandbox — but a button out here is just a button.
+    // Rebuilt on every srcdoc load, which is also every keystroke.
+    function buildTickLayer(doc) {
+      tickLayer.innerHTML = "";
+      const ul = doc.querySelector("[data-tickable]");
+      if (!ul) return;
+
+      const rows = [];
+      Array.prototype.forEach.call(ul.children, (li, idx) => {
+        if (li.textContent === "") return; // blank rows aren't tickable
+        const r = li.getBoundingClientRect();
+        if (!r.height) return;
+        rows.push({ idx, text: li.textContent, top: r.top, bottom: r.bottom, mid: r.top + r.height / 2 });
+      });
+      if (!rows.length) return;
+
+      // The card is rotated -1.5deg, so each row's *axis-aligned* rect is
+      // taller than the row and overlaps its neighbours' by a few pixels —
+      // a tap near a boundary would hit the wrong line. Splitting at the
+      // midpoints between row centres gives contiguous bands instead: no
+      // overlap, and no dead zone between them either.
+      const ulRect = ul.getBoundingClientRect();
+      const dx = iframe.offsetLeft;
+      const dy = iframe.offsetTop;
+
+      rows.forEach((row, i) => {
+        const top = i === 0 ? row.top : (rows[i - 1].mid + row.mid) / 2;
+        const bottom = i === rows.length - 1 ? row.bottom : (row.mid + rows[i + 1].mid) / 2;
+
+        const hit = document.createElement("button");
+        hit.type = "button";
+        hit.className = "sticker-tick-hit";
+        hit.dataset.row = String(row.idx);
+        hit.setAttribute("aria-pressed", ticked.has(row.idx) ? "true" : "false");
+        hit.setAttribute("aria-label", "Tick off \u201c" + row.text + "\u201d");
+        hit.style.left = dx + ulRect.left + "px";
+        hit.style.top = dy + top + "px";
+        hit.style.width = ulRect.width + "px";
+        hit.style.height = Math.max(1, bottom - top) + "px";
+        // Enter/Space already fire click on a button, so the keydown only
+        // records HOW the click was made. It can't just set refocusRow
+        // directly: the click that follows would immediately clear it.
+        hit.addEventListener("pointerdown", () => {
+          tickViaKeyboard = false;
+        });
+        hit.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") tickViaKeyboard = true;
+        });
+        hit.addEventListener("click", () => {
+          const kb = tickViaKeyboard;
+          tickViaKeyboard = false;
+          toggleRow(row.idx, kb);
+        });
+        tickLayer.appendChild(hit);
       });
 
       if (refocusRow >= 0) {
-        const rows = doc.querySelectorAll("[data-tickable] > li");
-        if (rows[refocusRow]) rows[refocusRow].focus();
+        const back = tickLayer.querySelector('[data-row="' + refocusRow + '"]');
+        if (back) back.focus();
         refocusRow = -1;
       }
     }
+
+    // The iframe is width:100%/max-width:320px, so it reflows — re-measure
+    // rather than leave the buttons stranded where the rows used to be.
+    if (sticker.tickableList) {
+      let reflow;
+      window.addEventListener("resize", () => {
+        cancelAnimationFrame(reflow);
+        reflow = requestAnimationFrame(() => {
+          const doc = iframe.contentDocument;
+          if (doc) buildTickLayer(doc);
+        });
+      });
+    }
     previewWrap.appendChild(iframe);
+    previewWrap.appendChild(tickLayer);
     card.appendChild(previewWrap);
 
     const actionsRow = document.createElement("div");
