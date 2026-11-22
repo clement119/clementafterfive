@@ -3540,6 +3540,10 @@
     const fieldEls = {};
     const choiceState = {};
     const choiceEls = {}; // rowChoice key -> its .builder-choices holder
+    // Rows ticked off in the preview, by position. Only stickers that
+    // declare `tickableList` use this; see the iframe load handler below.
+    const ticked = new Set();
+    let refocusRow = -1; // row to re-focus after a keyboard tick reloads the frame
 
     const fieldsWrap = document.createElement("div");
     fieldsWrap.className = "builder sticker-fields";
@@ -3641,9 +3645,20 @@
         raw[f.key] = choiceState[f.key];
         res[f.key] = choiceState[f.key];
       });
-      currentDoc = wrapStickerDoc(sharedStyle, sticker.buildHtml(res, escapeHtml));
+      // Ticks are positional, like rowChoice's selection: one survives
+      // renaming a row (the common case, since you type your own labels)
+      // and clears only when that position stops existing or goes blank.
+      // Clamped here, before render, so the preview never draws a stale one.
+      if (sticker.tickableList) {
+        const rows = res[sticker.tickableList];
+        const list = Array.isArray(rows) ? rows : [];
+        Array.from(ticked).forEach((i) => {
+          if (i >= list.length || String(list[i]) === "") ticked.delete(i);
+        });
+      }
+      currentDoc = wrapStickerDoc(sharedStyle, sticker.buildHtml(res, escapeHtml, ticked));
       iframe.srcdoc = currentDoc;
-      output.textContent = sticker.buildPrompt(raw);
+      output.textContent = sticker.buildPrompt(raw, ticked);
     }
 
     fields.forEach((f) => {
@@ -3737,7 +3752,51 @@
       const doc = iframe.contentDocument;
       if (!doc) return;
       iframe.style.height = Math.max(380, doc.documentElement.scrollHeight) + "px";
+      if (sticker.tickableList) wireTicking(doc);
     });
+
+    // Tap a checklist row in the preview to tick it, the way you would in
+    // iOS Notes. The handlers have to live out here: the preview iframe is
+    // sandboxed without allow-scripts, so a script inside the sticker HTML
+    // would never run — but it is same-origin, so the parent can listen on
+    // its document directly (the same access exportStickerBlob relies on).
+    // Listeners are re-attached per load and die with the document they
+    // were bound to, so the srcdoc rebuild doesn't accumulate them.
+    function wireTicking(doc) {
+      function rowIndex(target) {
+        const li = target && target.closest && target.closest("[data-tickable] > li");
+        // A blank row is spacing, not a task — it draws no circle (CSS
+        // :empty) and shouldn't tick either.
+        if (!li || li.textContent === "") return -1;
+        return Array.prototype.indexOf.call(li.parentElement.children, li);
+      }
+      function toggle(idx, keepFocus) {
+        if (idx < 0) return;
+        if (ticked.has(idx)) ticked.delete(idx);
+        else ticked.add(idx);
+        // Ticking rebuilds the srcdoc, which throws away the focused
+        // element — so a keyboard tick asks for focus back on the same row.
+        refocusRow = keepFocus ? idx : -1;
+        // Routed through update() rather than mutating this document, so
+        // currentDoc — what "Copy sticker HTML" hands out — stays in step
+        // with the picture.
+        update();
+      }
+      doc.addEventListener("click", (e) => toggle(rowIndex(e.target), false));
+      doc.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+        const idx = rowIndex(e.target);
+        if (idx < 0) return;
+        e.preventDefault(); // Space would scroll the preview otherwise
+        toggle(idx, true);
+      });
+
+      if (refocusRow >= 0) {
+        const rows = doc.querySelectorAll("[data-tickable] > li");
+        if (rows[refocusRow]) rows[refocusRow].focus();
+        refocusRow = -1;
+      }
+    }
     previewWrap.appendChild(iframe);
     card.appendChild(previewWrap);
 

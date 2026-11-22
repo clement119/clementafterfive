@@ -986,9 +986,43 @@ const journal = [
                   content:"• ";
                   color:#8e8e93;
                 }
+                /* iOS Notes checklist: a real circle, tappable in the live
+                   preview (the handlers live in app.js — this iframe is
+                   sandboxed without allow-scripts). */
+                .notes-card ul.checklist li{
+                  display:flex;
+                  align-items:flex-start;
+                  gap:7px;
+                  cursor:pointer;
+                  -webkit-user-select:none;
+                  user-select:none;
+                }
+                /* A blank line gets no circle and can't be ticked, but it
+                   still reserves exactly one line of height — padding a panel
+                   out with blank lines is a real use of this sticker, and
+                   dropping the marker would otherwise collapse the row. */
+                .notes-card ul.checklist li:empty{height:1.9em;cursor:default;}
+                .notes-card ul.checklist li:empty::before{content:none;}
                 .notes-card ul.checklist li::before{
-                  content:"☐ ";
-                  color:#8e8e93;
+                  content:"";
+                  flex:0 0 auto;
+                  width:15px;
+                  height:15px;
+                  margin-top:6px;
+                  border:1.5px solid #c7c7cc;
+                  border-radius:50%;
+                  box-sizing:border-box;
+                  font-size:10px;
+                  line-height:12px;
+                  text-align:center;
+                  color:#fff;
+                }
+                /* Filled with the same orange as this card's own nav, so the
+                   tick reads as part of the card rather than a new colour. */
+                .notes-card ul.checklist li.done::before{
+                  content:"\\2713";
+                  background:#ff9500;
+                  border-color:#ff9500;
                 }
 
                 /* ---------- 2. Flag / highlight text banner ---------- */
@@ -1227,20 +1261,50 @@ const journal = [
                     { key: "items", label: "Bullet lines (one per line)", type: "list", default: ["Introverted", "Very private", "Not natural at photos", "Shy on camera"] },
                     { key: "bulletStyle", label: "Bullet style", type: "choice", choices: [{ value: "bullet", label: "Bullet" }, { value: "checkbox", label: "Checklist" }], default: "bullet" },
                   ],
-                  buildHtml: function (v, esc) {
-                    const items = (v.items || []).map((i) => `<li>${esc(i)}</li>`).join("");
-                    const listClass = v.bulletStyle === "checkbox" ? "checklist" : "bullet";
-                    return `<div class="stage"><div class="sticker-capture"><div class="notes-card"><div class="nav"><span>Notes</span><span>⋯</span></div><h4>${esc(v.headline)}</h4><ul class="${listClass}">${items}</ul></div></div></div>`;
+                  // Opt in to tap-to-tick on the preview. Names the list field
+                  // whose rows are tickable; app.js clamps the ticked indices
+                  // against it and wires the click/keyboard handlers.
+                  tickableList: "items",
+                  buildHtml: function (v, esc, ticked) {
+                    const isChecklist = v.bulletStyle === "checkbox";
+                    const items = (v.items || [])
+                      .map((i, idx) => {
+                        const text = esc(i);
+                        // Only checklist rows are interactive, and only rows
+                        // with actual text — a blank line is spacing, not a task.
+                        if (!isChecklist || text === "") return `<li>${text}</li>`;
+                        const done = ticked && ticked.has(idx) ? ' class="done"' : "";
+                        return `<li${done} tabindex="0">${text}</li>`;
+                      })
+                      .join("");
+                    const listClass = isChecklist ? "checklist" : "bullet";
+                    // data-tickable is the contract app.js looks for, so
+                    // bullets stay inert without app.js knowing this sticker.
+                    const tickAttr = isChecklist ? " data-tickable" : "";
+                    return `<div class="stage"><div class="sticker-capture"><div class="notes-card"><div class="nav"><span>Notes</span><span>⋯</span></div><h4>${esc(v.headline)}</h4><ul class="${listClass}"${tickAttr}>${items}</ul></div></div></div>`;
                   },
-                  buildPrompt: function (v) {
+                  buildPrompt: function (v, ticked) {
                     const isChecklist = v.bulletStyle === "checkbox";
                     const listWord = isChecklist ? "checklist" : "bulleted list";
                     const headlineClause = v.headline
                       ? `the bold headline "${v.headline}"`
                       : "a short personal headline that fits the photo's mood (invent fitting wording)";
-                    const itemsClause = v.items && v.items.length
-                      ? `a ${listWord} reading: ${v.items.join("; ")}`
-                      : `3-4 ${isChecklist ? "checklist items" : "bullet points"} that fit the photo's story (invent fitting wording)`;
+                    let itemsClause;
+                    if (v.items && v.items.length) {
+                      itemsClause = `a ${listWord} reading: ${v.items.join("; ")}`;
+                      // Describe what's ticked so the generated image matches
+                      // the preview instead of coming back all-unticked.
+                      if (isChecklist && ticked && ticked.size) {
+                        const names = v.items
+                          .map((t, i) => (ticked.has(i) && String(t).trim() !== "" ? `"${t}"` : null))
+                          .filter(Boolean);
+                        if (names.length) {
+                          itemsClause += `, where ${names.join(" and ")} ${names.length > 1 ? "are" : "is"} ticked off with a filled circle and the rest are empty circles`;
+                        }
+                      }
+                    } else {
+                      itemsClause = `3-4 ${isChecklist ? "checklist items" : "bullet points"} that fit the photo's story (invent fitting wording)`;
+                    }
                     return `Overlay a fake iOS Notes app screenshot sticker onto the photo — a white rounded card tilted slightly, with an orange "Notes" nav bar, ${headlineClause}, and ${itemsClause}.`;
                   },
                 },
